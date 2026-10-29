@@ -198,10 +198,21 @@ fn extract(bytes: &[u8], zipped: bool, destination: &Path, exe: &str) -> Result<
     if zipped {
         let mut archive = zip::ZipArchive::new(std::io::Cursor::new(bytes))?;
         ensure!(archive.len() <= 64, "Too many Soloist archive entries");
+        // Reject archives whose local headers tell a different story from
+        // their central directory, including aliases and overlapping entries.
+        archive.validate_header_consistency()?;
         for i in 0..archive.len() {
             let mut entry = archive.by_index(i)?;
             ensure!(!entry.is_symlink(), "Link in Soloist archive");
-            let name = accepted(Path::new(entry.name()), exe)?;
+            let name = accepted(
+                Path::new(
+                    entry
+                        .name()
+                        .context("Invalid Soloist archive filename")?
+                        .as_ref(),
+                ),
+                exe,
+            )?;
             if entry.is_file()
                 && let Some(name) = name
             {
@@ -435,6 +446,45 @@ mod tests {
         bytes[start] ^= 1;
         assert!(extract(&bytes, true, &dir, "soloist.exe").is_err());
         std::fs::remove_dir_all(dir).unwrap();
+    }
+    #[test]
+    fn zip_header_disagreements_and_traversal_never_overwrite_outside_files() {
+        use std::io::Write;
+        let mut archive = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+        archive
+            .start_file("soloist.exe", zip::write::SimpleFileOptions::default())
+            .unwrap();
+        archive.write_all(b"executable").unwrap();
+        let bytes = archive.finish().unwrap().into_inner();
+        let local = bytes.windows(4).position(|w| w == b"PK\x03\x04").unwrap() + 30;
+        let central = bytes.windows(4).position(|w| w == b"PK\x01\x02").unwrap() + 46;
+        for offsets in [vec![local], vec![central], vec![local, central]] {
+            let root = scratch();
+            private_dir(&root).unwrap();
+            let outside = root.join("evil.exe");
+            std::fs::write(&outside, b"leave alone").unwrap();
+            let mut forged = bytes.clone();
+            for offset in offsets {
+                forged[offset..offset + 11].copy_from_slice(b"../evil.exe");
+            }
+            assert!(extract(&forged, true, &root.join("build"), "soloist.exe").is_err());
+            assert_eq!(std::fs::read(outside).unwrap(), b"leave alone");
+            std::fs::remove_dir_all(root).unwrap();
+        }
+    }
+    #[test]
+    #[ignore = "requires SOLOIST_QA_ZIP pointing to Spotify's current official Windows archive"]
+    fn official_windows_archive_extracts() {
+        let bytes = std::fs::read(std::env::var("SOLOIST_QA_ZIP").unwrap()).unwrap();
+        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("target")
+            .join(format!(
+                "soloist-windows-archive-qa-{}",
+                rand::random::<u64>()
+            ));
+        let result = extract(&bytes, true, &root, "soloist.exe");
+        let _ = std::fs::remove_dir_all(root);
+        result.unwrap();
     }
     #[tokio::test]
     async fn corrupted_build_is_never_restored_and_updates_are_due_before_expiry() {
