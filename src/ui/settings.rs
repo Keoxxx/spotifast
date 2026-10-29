@@ -400,6 +400,16 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         .unwrap_or(false);
     let mut changed = false;
     let mut any_visible = false;
+    let soloist = gettext(locale, "Spotify Soloist");
+    if row_matches(
+        &needle,
+        &soloist,
+        &gettext(locale, "Playback lossless setup key download updates"),
+    ) {
+        any_visible = true;
+        section(ui, &palette, &soloist, |ui| super::soloist::show(app, ui));
+    }
+
     let open_folder = gettext(locale, "Open folder");
 
     let wanted = app
@@ -734,6 +744,10 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
     if section_matches(&needle, &playback, &playback_rows) {
         any_visible = true;
         section(ui, &palette, &playback, |ui| {
+            if app.settings.soloist_enabled {
+                ui.label(egui::RichText::new(gettext(locale, "Audio quality, output, EQ and local-file settings below apply to the built-in player.")).color(palette.secondary));
+                ui.add_space(10.0);
+            }
             filtered_row(ui, &palette, &needle, &playback, &playback_rows[0], |ui| {
                 if let Some(label) = action {
                     if theme::pill_button(ui, &palette, &label, true).clicked() {

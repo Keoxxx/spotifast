@@ -1096,6 +1096,38 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
     }
     for surface in show.unwrap_or("").split(',').map(str::trim) {
         match surface {
+            "soloist-setup"
+            | "soloist-downloading"
+            | "soloist-pairing"
+            | "soloist-ready"
+            | "soloist-error" => {
+                use crate::soloist::Status;
+                app.open(Page::Settings);
+                app.settings.soloist_enabled = surface != "soloist-setup";
+                app.soloist_status = match surface {
+                    "soloist-downloading" => Status::Downloading {
+                        received: 8_000_000,
+                        total: 14_000_000,
+                    },
+                    "soloist-pairing" => Status::Pairing {
+                        name: "Spotifast Soloist (12345678)".into(),
+                        version: "1.3.10".into(),
+                    },
+                    "soloist-ready" => {
+                        app.soloist_device_id = Some("demo-soloist".into());
+                        Status::Ready {
+                            name: "Spotifast Soloist (12345678)".into(),
+                            version: "1.3.10".into(),
+                            expires: crate::soloist::install::now()
+                                + 75 * crate::soloist::install::DAY,
+                        }
+                    }
+                    "soloist-error" => Status::Failed(
+                        "Soloist could not start. Check your key and try again.".into(),
+                    ),
+                    _ => Status::Off,
+                };
+            }
             "presaved" => {
                 for page in app.album_pages.values_mut() {
                     if let Some(data) = &mut page.prerelease {
@@ -8045,6 +8077,65 @@ mod tests {
             sizes[0], sizes[1],
             "highlighting must not rewrap or resize a line"
         );
+    }
+
+    #[test]
+    fn soloist_can_be_enabled_again_without_pasting_the_saved_key() {
+        if !crate::soloist::install::supported() {
+            return;
+        }
+        use egui::accesskit::{Action as AccessibleAction, Role};
+        let (ctx, mut app) = accessible_app("soloist-saved-key");
+        app.backend.set_offline(true);
+        app.open(Page::Settings);
+        let tree = accessible_frame(&ctx, &mut app, vec![]);
+        let button = accessible_node(&tree, "Enable with saved key", Role::Button);
+        accessible_frame(
+            &ctx,
+            &mut app,
+            vec![accessible_action(button, AccessibleAction::Click, None)],
+        );
+        assert!(app.settings.soloist_enabled);
+        assert!(app.soloist_key.is_empty());
+        assert!(matches!(
+            app.soloist_status,
+            crate::soloist::Status::Starting
+        ));
+        app.backend.shutdown();
+    }
+
+    #[test]
+    fn soloist_setup_states_render_in_both_themes() {
+        let (ctx, mut app) = accessible_app("soloist");
+        app.open(Page::Settings);
+        for dark in [false, true] {
+            app.settings.theme = if dark {
+                crate::settings::ThemeChoice::Dark
+            } else {
+                crate::settings::ThemeChoice::Light
+            };
+            for status in [
+                crate::soloist::Status::Off,
+                crate::soloist::Status::NeedsKey,
+                crate::soloist::Status::Downloading {
+                    received: 5,
+                    total: 10,
+                },
+                crate::soloist::Status::Pairing {
+                    name: "Spotifast Soloist (12345678)".into(),
+                    version: "1.3".into(),
+                },
+                crate::soloist::Status::Ready {
+                    name: "Spotifast Soloist (12345678)".into(),
+                    version: "1.3".into(),
+                    expires: crate::soloist::install::now() + 86400,
+                },
+                crate::soloist::Status::Failed("Could not connect".into()),
+            ] {
+                app.soloist_status = status;
+                frame(&ctx, &mut app);
+            }
+        }
     }
 
     /// Every page, panel, and dialog lays out without panicking.

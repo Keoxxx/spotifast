@@ -1373,6 +1373,8 @@ pub enum Action {
         /// A drag outside the pin block selects this local playlist order.
         playlist_order: Option<Vec<String>>,
     },
+    SetSoloist(bool),
+    RetrySoloist,
     RestartEngine,
     /// Rebuild the HTTP client with the proxy in settings. Local playback
     /// restarts only when its HTTP proxy changed.

@@ -1,16 +1,17 @@
 ---
 title: What Spotify Lets a Client Do
-description: What Spotify's Web API and librespot provide, and what neither supports.
+description: What Spotify's APIs, librespot and Soloist provide, and where support ends.
 nav_order: 3
 ---
 
 Spotifast uses Spotify's
 [Web API](https://developer.spotify.com/documentation/web-api) for account and
 catalogue data. It uses [librespot](https://github.com/librespot-org/librespot)
-for a few extra details and for audio playback.
+for a few extra details and for built-in audio playback. The optional
+[Soloist player](/soloist/) adds Spotify's own playback implementation.
 
-Features missing from both cannot be added to Spotifast. They may become
-possible if Spotify adds an API or librespot adds lawful support.
+Features need support in the connection that serves them. A name in a
+protocol or an internal capability is not enough to expose a working control.
 
 ## Web API
 
@@ -155,6 +156,17 @@ queries, which librespot does not make, stay in Spotifast. Spotify can change
 any of these without notice, so a feature that uses one falls back to the Web
 API where it has an answer, and otherwise leaves out what it could not read.
 
+## Optional Soloist playback
+
+[Spotify Soloist](/soloist/) can be downloaded and managed from Settings.
+It supplies Spotify's own playback implementation on Linux, Apple Silicon
+macOS and x86_64 Windows. Each listener supplies a personal Soloist key and
+pairs once in the official Spotify app. Spotifast renews expiring builds
+from Spotify's download server and retains its existing library connections.
+Basic controls and state use Soloist's loopback API; collection offsets use
+the existing Spotify playback requests. Full queue editing and audio access
+remain unavailable through Soloist's documented API.
+
 ## librespot playback
 
 librespot provides:
@@ -219,28 +231,10 @@ The Web API and librespot do not provide these features:
 - **Spotify DJ.** Its special playlist context does not expose playable tracks
   to librespot, so Spotifast leaves its card out of Made for you. See
   [librespot issue #1604](https://github.com/librespot-org/librespot/issues/1604).
-- **Lossless audio.** librespot does not receive lossless streams. Spotifast
-  will reconsider this if librespot gains lawful support, but it will not
-  bypass Spotify's DRM.
-- **Soloist as an integrated player.** Spotify now publishes
-  [Soloist builds](https://developer.spotify.com/documentation/soloist/reference/downloads-and-updates)
-  for Linux, Apple Silicon Macs (macOS 13 or newer), and x86_64 Windows.
-  Soloist supports lossless playback, but Spotifast does not yet install or
-  manage it. Spotify prohibits redistributing its binaries and directs users
-  to its download page; the documentation does not explicitly approve an
-  installer that downloads and updates Soloist on a user's behalf. Spotify's
-  [Developer Policy](https://developer.spotify.com/policy#iii-some-prohibited-applications)
-  also requires prior written permission for products that replicate its
-  core user experience. A managed integration needs clarification from Spotify.
-  Each listener needs a personal Soloist key and initial pairing through a
-  Spotify app; Soloist then restores its saved session. Its builds expire
-  after 90 days. Its
-  [local control API](https://developer.spotify.com/documentation/soloist/reference/websocket-api)
-  covers playback and queue reads, but not library browsing, search, full
-  queue editing, or audio access for Spotifast's equalizer and visualisers.
-  Desktop builds make an optional player worth reconsidering, while keeping
-  the existing connections for the features Soloist does not provide.
-  See [issue #965](https://github.com/crmne/spotifast/issues/965).
+- **Lossless through librespot.** librespot does not receive lossless streams.
+  The optional [Soloist player](/soloist/) uses Spotify's own implementation.
+  Its API does not report the delivered format or expose raw audio for
+  Spotifast's equalizer and visualisers. Spotifast does not bypass DRM.
 - **Local files from Spotify's Local Files playlist.** librespot cannot play
   that playlist; add the songs to another playlist first. Local files on other
   computers or phones are not shared either: Spotify keeps only their names.

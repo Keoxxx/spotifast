@@ -21,6 +21,7 @@ pub mod search;
 pub mod settings;
 pub mod show;
 pub mod sidebar;
+mod soloist;
 pub mod topbar;
 mod update;
 pub mod widgets;

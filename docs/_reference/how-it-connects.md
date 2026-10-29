@@ -765,3 +765,16 @@ session's own authorization. Spotify refuses the change if the playlist
 changed since. The request is sent once, never retried, and has a 20-second
 deadline. A row that is no longer
 in the playlist removes nothing; the playlist reloads and shows the error.
+
+## Optional Soloist player
+
+[Soloist setup](/soloist/) describes the optional Spotify-owned player.
+Spotifast downloads it directly from Spotify, stores its personal key in the
+system credential store, and starts one child with a loopback-only WebSocket.
+The device must appear in the signed-in account's Spotify device list before
+local control is enabled. Basic commands and state use the local API;
+collection starts keep their offset through the existing playback request.
+Library and metadata connections remain available through the existing Web
+API and librespot session. Signing out stops the child and deletes its saved
+key and pairing data. Soloist's own streaming traffic is not routed by
+Spotifast's proxy settings.
