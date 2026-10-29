@@ -1716,6 +1716,12 @@ impl App {
         }
     }
 
+    /// Presentation only: Soloist's own local process still uses the remote
+    /// command path and must not inherit librespot's audio/queue capabilities.
+    pub fn targets_own_soloist(&self) -> bool {
+        matches!(self.target(), Target::Remote(Some(id)) if self.soloist_device_id.as_ref() == Some(&id))
+    }
+
     /// Context shown as playing, including pending local play requests.
     pub fn playing_context_uri(&self) -> Option<String> {
         let remote = self

@@ -30,8 +30,15 @@ a lossless indicator or offer an unsupported quality selector.
 
 Pairing is normally needed only once. Soloist restores its own saved session
 when Spotifast starts. You can still choose another Spotify Connect device.
-Choose **Turn off Soloist** to stop it. The built-in player remains available
-in the device picker.
+Spotifast shows its managed player as **This computer**, with a small Soloist
+label in the device picker. It does not show a remote-playback badge for it.
+Once Soloist is ready, the inactive built-in player's duplicate entry is hidden.
+Choose **Turn off Soloist** in Settings to stop it and restore the built-in
+player's entry and settings. Saved built-in preferences are kept.
+While Soloist is enabled, built-in audio, EQ and visualization settings are
+hidden. Shared controls for the tray, startup and Spotifast updates remain
+under **Application**. The Soloist card keeps version, expiry and limitations
+under **Details**, while pairing instructions and errors remain visible.
 The saved key and pairing are retained for **Enable with saved key** next time; signing out of Spotifast
 removes them. Closing Spotifast completely stops the child player. Closing to
 the tray leaves both running.
@@ -58,6 +65,14 @@ changes to an installed build; it is not a Spotify signature. Spotify does
 not currently publish a checksum manifest for independent verification.
 
 ## Playback and current limits
+
+Volume, shuffle and repeat use the normal player controls. Soloist's
+[public API](https://developer.spotify.com/documentation/soloist/reference/websocket-api)
+does not currently expose preferences for quality, normalization, autoplay,
+gapless playback or crossfade. Its
+[startup options](https://developer.spotify.com/documentation/soloist/reference/command-line)
+include a cache-size limit and a PipeWire output on Linux; Spotifast does not
+yet expose those as Soloist preferences.
 
 Library browsing, search and playlist management keep using Spotifast's
 existing Spotify connections. Soloist's loopback API handles basic playback

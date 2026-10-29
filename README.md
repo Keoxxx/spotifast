@@ -46,6 +46,8 @@ On `main` (not yet released), Spotify's [Soloist player](https://spotifast.rocks
 optional download in Settings, with guided key setup, one-time pairing and
 automatic renewal of expiring builds. The built-in librespot player remains
 the default and provides Spotifast's EQ, visualizers and full queue editing.
+When enabled, Soloist appears as **This computer**; settings show the controls
+that apply to it. Turning it off restores the built-in player's preferences.
 
 ## Your music, on your desktop
 

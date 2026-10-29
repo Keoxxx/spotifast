@@ -628,7 +628,12 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             Some(gettext(locale, "Enable playback here")),
         ),
     };
-    let playback = gettext(locale, "Playback on this computer");
+    let built_in = !app.settings.soloist_enabled;
+    let playback = if built_in {
+        gettext(locale, "Playback on this computer")
+    } else {
+        gettext(locale, "Application")
+    };
     let normalize_volume = gettext(locale, "Normalize volume");
     let autoplay = gettext(locale, "Autoplay");
     let gapless = gettext(locale, "Gapless playback");
@@ -650,7 +655,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
     let start_available = app
         .autostart
         .is_some_and(|state| state != fastframe_autostart::State::Unsupported);
-    let playback_rows = [
+    let mut playback_rows = [
         RowText::new(
             // Translators: {status} is a playback state such as Ready or Not set up.
             gettext(locale, "Status: {status}").replace("{status}", &status),
@@ -741,13 +746,12 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         .when(!cfg!(target_os = "macos")),
         RowText::new(start_with_computer.clone(), start_detail).when(start_available),
     ];
+    for index in [0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 14] {
+        playback_rows[index].available &= built_in;
+    }
     if section_matches(&needle, &playback, &playback_rows) {
         any_visible = true;
         section(ui, &palette, &playback, |ui| {
-            if app.settings.soloist_enabled {
-                ui.label(egui::RichText::new(gettext(locale, "Audio quality, output, EQ and local-file settings below apply to the built-in player.")).color(palette.secondary));
-                ui.add_space(10.0);
-            }
             filtered_row(ui, &palette, &needle, &playback, &playback_rows[0], |ui| {
                 if let Some(label) = action {
                     if theme::pill_button(ui, &palette, &label, true).clicked() {
@@ -1092,9 +1096,10 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 });
             });
             ui.add_space(4.0);
-            if playback_dirty
-                || playback_rows[10].matches(&needle, &playback)
-                || playback_rows[11].matches(&needle, &playback)
+            if built_in
+                && (playback_dirty
+                    || playback_rows[10].matches(&needle, &playback)
+                    || playback_rows[11].matches(&needle, &playback))
             {
                 ui.horizontal(|ui| {
                     if playback_dirty {
@@ -1148,7 +1153,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         let detail = theme::pair_detail(&app.custom_themes, locale, &app.settings.theme_pair, base);
         RowText::new(title, if detail.is_empty() { usage } else { detail }).when(show_pair)
     };
-    let appearance_rows = [
+    let mut appearance_rows = [
         RowText::new(theme_title.clone(), {
             let detail = theme::catalog_detail(
                 &app.custom_themes,
@@ -1239,6 +1244,9 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         pair_row(fastframe_theme::Base::Light),
         pair_row(fastframe_theme::Base::Dark),
     ];
+    for index in [8, 9, 10] {
+        appearance_rows[index].available &= built_in;
+    }
     if section_matches(&needle, &appearance, &appearance_rows) {
         any_visible = true;
         section(ui, &palette, &appearance, |ui| {
@@ -1951,7 +1959,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 .join(" "),
         ),
     ];
-    if section_matches(&needle, "MilkDrop", &milkdrop_rows) {
+    if built_in && section_matches(&needle, "MilkDrop", &milkdrop_rows) {
         any_visible = true;
         section(ui, &palette, "MilkDrop", |ui| {
             filtered_row(ui, &palette, &needle, "MilkDrop", &milkdrop_rows[0], |ui| {
@@ -2084,7 +2092,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 .join(" "),
         ),
     ];
-    if section_matches(&needle, &equalizer, &equalizer_rows) {
+    if built_in && section_matches(&needle, &equalizer, &equalizer_rows) {
         any_visible = true;
         section(ui, &palette, &equalizer, |ui| {
             filtered_row(
@@ -2179,7 +2187,8 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 "{folder}",
                 &app.dirs.audio_cache_dir().display().to_string(),
             ),
-        ),
+        )
+        .when(built_in),
         RowText::new(
             gettext(locale, "Play history"),
             gettext(

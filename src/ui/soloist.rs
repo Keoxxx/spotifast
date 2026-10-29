@@ -4,10 +4,13 @@ use crate::{app::App, i18n::gettext, model::Action, soloist::Status, theme};
 pub fn show(app: &mut App, ui: &mut egui::Ui) {
     let locale = app.locale;
     let palette = app.palette;
-    ui.label(gettext(locale, "Spotify's own player, with support for lossless audio. Requires Premium, your personal Soloist key, and one pairing in the Spotify app."));
-    ui.add_space(10.0);
-    ui.label(egui::RichText::new(gettext(locale, "Soloist plays through your system audio output. Spotifast's EQ, visualizers, local files, and full queue editing are available with the built-in player." )).color(palette.secondary));
-    ui.add_space(12.0);
+    if !matches!(app.soloist_status, Status::Ready { .. }) {
+        ui.label(gettext(
+            locale,
+            "Spotify's player, with lossless support. Requires Premium.",
+        ));
+        ui.add_space(10.0);
+    }
     if !crate::soloist::install::supported() {
         ui.label(gettext(locale, "Spotify has not published Soloist for this platform. The built-in player remains available."));
         if app.settings.soloist_enabled
@@ -119,39 +122,27 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             ui.label(egui::RichText::new(name).strong());
             ui.label(gettext(locale, "Spotifast will notice when pairing finishes. Future starts reconnect automatically."));
         }
-        Status::Ready {
-            name,
-            version,
-            expires,
-        } => {
-            let ready = app.soloist_device_id.is_some();
-            ui.label(
-                egui::RichText::new(if ready {
-                    gettext(locale, "Soloist is ready")
-                } else {
-                    gettext(locale, "Confirming your Spotify account…")
-                })
-                .strong(),
-            );
-            ui.label(name);
-            if !ready {
-                ui.label(gettext(locale, "If this takes a while, make sure Spotify is signed in to the same account as Spotifast, then select this device there."));
-            }
-            let date = jiff::Timestamp::from_second((*expires).min(i64::MAX as u64) as i64)
-                .ok()
-                .map(|at| at.to_zoned(jiff::tz::TimeZone::system()).date().to_string())
-                .unwrap_or_default();
-            ui.label(
-                gettext(locale, "Version {version} · expires {date}")
-                    .replace("{version}", version)
-                    .replace("{date}", &date),
-            );
-            if app.soloist_update.is_some() {
-                ui.label(gettext(locale, "A fresh build is downloaded. It will be applied when Soloist is inactive or Spotifast restarts."));
+        Status::Ready { .. } => {
+            if app.soloist_device_id.is_some() {
+                ui.label(egui::RichText::new(gettext(locale, "Enabled on this computer")).strong());
+                theme::subtle(ui, &palette, &gettext(locale, "Updates automatically."));
             } else {
-                ui.label(gettext(locale, "Spotifast checks daily for a replacement during the last 30 days of each build. Updates wait until Soloist is inactive."));
+                ui.label(gettext(locale, "Confirming your Spotify account…"));
+                ui.label(gettext(locale, "If this takes a while, make sure Spotify is signed in to the same account as Spotifast, then select this device there."));
+                if let Status::Ready { name, .. } = &app.soloist_status {
+                    ui.label(name);
+                }
             }
-            ui.label(gettext(locale, "Spotify chooses playback quality. Soloist does not report the delivered audio format yet."));
+            if app.soloist_update.is_some() {
+                theme::subtle(
+                    ui,
+                    &palette,
+                    &gettext(
+                        locale,
+                        "Update ready. It will install when Soloist is inactive.",
+                    ),
+                );
+            }
         }
     }
     if app.settings.soloist_enabled {
@@ -168,18 +159,29 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             app.actions.push(Action::SetSoloist(false));
         }
     }
-    ui.add_space(10.0);
-    if theme::soft_button(
-        ui,
-        &palette,
-        None,
-        &gettext(locale, "Soloist setup, privacy and limitations"),
-        false,
-    )
-    .clicked()
-    {
-        app.actions
-            .push(Action::OpenUrl("https://spotifast.rocks/soloist/".into()));
-    }
+    ui.add_space(8.0);
+    egui::CollapsingHeader::new(gettext(locale, "Details"))
+        .id_salt("soloist-details")
+        .show(ui, |ui| {
+            if let Status::Ready { name, version, expires } = &app.soloist_status {
+                ui.label(name);
+                let date = jiff::Timestamp::from_second((*expires).min(i64::MAX as u64) as i64)
+                    .ok()
+                    .map(|at| at.to_zoned(jiff::tz::TimeZone::system()).date().to_string())
+                    .unwrap_or_default();
+                ui.label(gettext(locale, "Version {version} · expires {date}")
+                    .replace("{version}", version)
+                    .replace("{date}", &date));
+                ui.label(gettext(locale, "Spotifast checks daily for a replacement during the last 30 days of each build. Updates wait until Soloist is inactive."));
+                ui.add_space(8.0);
+            }
+            ui.label(gettext(locale, "Soloist uses your system audio output. Turn it off to use the built-in player's EQ, visualizers, local files and queue editing."));
+            ui.label(gettext(locale, "Spotify chooses playback quality. Soloist does not report the delivered audio format yet."));
+            ui.add_space(8.0);
+            if theme::soft_button(ui, &palette, None,
+                &gettext(locale, "Setup, privacy and limitations"), false).clicked() {
+                app.actions.push(Action::OpenUrl("https://spotifast.rocks/soloist/".into()));
+            }
+        });
     ui.add_space(10.0);
 }
