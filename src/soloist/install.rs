@@ -75,6 +75,29 @@ pub fn private_dir(path: &Path) -> Result<()> {
     Ok(())
 }
 
+/// A path alone is not an installation identity: two computers commonly have
+/// the same username and state directory. Keep a random identity across starts.
+pub async fn instance_id(root: &Path) -> Result<String> {
+    let path = root.join("instance-id");
+    match tokio::fs::read_to_string(&path).await {
+        Ok(id) => {
+            ensure!(
+                id.len() == 32 && id.bytes().all(|b| b.is_ascii_hexdigit()),
+                "The saved Soloist installation identity is invalid"
+            );
+            Ok(id)
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            let id = format!("{:032x}", rand::random::<u128>());
+            let bytes = id.as_bytes().to_vec();
+            tokio::task::spawn_blocking(move || fastframe_file::write_private(&path, bytes))
+                .await??;
+            Ok(id)
+        }
+        Err(error) => Err(error.into()),
+    }
+}
+
 pub async fn saved(root: &Path, name: &str) -> Option<Build> {
     let build: Build =
         serde_json::from_slice(&tokio::fs::read(root.join(name)).await.ok()?).ok()?;
@@ -327,6 +350,20 @@ mod tests {
     }
     fn scratch() -> PathBuf {
         std::env::temp_dir().join(format!("soloist-archive-test-{}", rand::random::<u64>()))
+    }
+    #[tokio::test]
+    async fn installation_identity_survives_restart_and_differs_between_computers() {
+        let first = scratch();
+        let second = scratch();
+        private_dir(&first).unwrap();
+        private_dir(&second).unwrap();
+        let id = instance_id(&first).await.unwrap();
+        assert_eq!(id, instance_id(&first).await.unwrap());
+        assert_ne!(id, instance_id(&second).await.unwrap());
+        std::fs::write(first.join("instance-id"), b"broken").unwrap();
+        assert!(instance_id(&first).await.is_err());
+        std::fs::remove_dir_all(first).unwrap();
+        std::fs::remove_dir_all(second).unwrap();
     }
     fn tarball(entries: &[(&str, &[u8], tar::EntryType)]) -> Vec<u8> {
         let mut tar = tar::Builder::new(Vec::new());

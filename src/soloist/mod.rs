@@ -200,10 +200,6 @@ async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
         };
         let root = dirs.state.join("soloist").join("builds");
         let data = account_dir(&dirs, &account);
-        // The profile suffix distinguishes installed and portable copies and
-        // pairing with another account. Never select a device by a generic name.
-        let suffix = format!("{:x}", Sha256::digest(data.to_string_lossy().as_bytes()));
-        let name = format!("Spotifast Soloist ({})", &suffix[..8]);
         let prepare_root = root.clone();
         let prepare_data = data.clone();
         tokio::task::spawn_blocking(move || -> Result<()> {
@@ -215,6 +211,15 @@ async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
             Ok(())
         })
         .await??;
+        let instance =
+            install::instance_id(root.parent().expect("Soloist state directory")).await?;
+        // Include the installation identity as well as the account/profile:
+        // different computers can have identical state paths and usernames.
+        let suffix = format!(
+            "{:x}",
+            Sha256::digest(format!("{instance}:{}", data.to_string_lossy()).as_bytes())
+        );
+        let name = format!("Spotifast Soloist ({})", &suffix[..8]);
         let build = if let Some(build) = install::saved(&root, "pending.json").await {
             build
         } else if let Some(build) = install::saved(&root, "current.json").await {
