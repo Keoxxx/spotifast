@@ -6239,7 +6239,10 @@ async fn spotify_lyrics(
     if let Some(cached) = crate::lyrics::cached(&path) {
         return cached;
     }
-    match engine?.lyrics_json(uri).await {
+    let Some(engine) = engine else {
+        return crate::lyrics::previously_found(&path);
+    };
+    match engine.lyrics_json(uri).await {
         Ok(json) => {
             let found = json.as_ref().and_then(crate::lyrics::from_spotify);
             crate::lyrics::store(&path, &found);
@@ -6247,7 +6250,7 @@ async fn spotify_lyrics(
         }
         Err(error) => {
             log::debug!("spotify lyrics unavailable: {error:#}");
-            None
+            crate::lyrics::previously_found(&path)
         }
     }
 }
@@ -9664,6 +9667,42 @@ mod cover_routing_tests {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn soloist_without_a_playback_login_can_still_use_old_spotify_lyrics() {
+        let root =
+            std::env::temp_dir().join(format!("spotifast-spotify-lyrics-{}", std::process::id()));
+        let path = root.join("spotify-test.json");
+        let found = crate::lyrics::from_text("[00:01.00] A test line");
+        crate::lyrics::store(&path, &found);
+        let stale = std::time::SystemTime::now() - Duration::from_secs(60 * 60 * 24 * 60);
+        std::fs::File::options()
+            .write(true)
+            .open(&path)
+            .unwrap()
+            .set_times(std::fs::FileTimes::new().set_modified(stale))
+            .unwrap();
+        assert!(crate::lyrics::cached(&path).is_none());
+        assert_eq!(
+            spotify_lyrics(None, "spotify:track:test", &root).await,
+            found
+        );
+        assert!(
+            std::fs::metadata(&path)
+                .unwrap()
+                .modified()
+                .unwrap()
+                .elapsed()
+                .unwrap()
+                > Duration::from_secs(60 * 60 * 24 * 30)
+        );
+        assert!(
+            spotify_lyrics(None, "spotify:track:other", &root)
+                .await
+                .is_none()
+        );
+        std::fs::remove_dir_all(root).unwrap();
+    }
 
     /// Avoids shared playlist search after a successful session read.
     #[tokio::test]

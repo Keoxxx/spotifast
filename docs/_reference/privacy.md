@@ -57,7 +57,10 @@ Spotifast connects only to the services below.
 - **LRCLIB.** When the lyrics panel is open and neither Spotify nor, for a
   local file, the file itself has lyrics for the song, Spotifast sends its
   artist, title, album and length to [lrclib.net](https://lrclib.net).
-  Nothing identifying you is included.
+  Nothing identifying you is included. Short overloads are retried within a
+  20-second lookup budget, respecting `Retry-After`; search can recover when
+  the exact lookup is temporarily unavailable. A failed lookup can use older
+  cached lyrics, but never caches an outage as a missing transcription.
 - **GitHub.** Once a day, Spotifast asks GitHub for the latest release. You
   can turn automatic checks off in Settings. Downloading an update, and the
   first opening of MilkDrop, also fetch files from GitHub. No Spotify data is

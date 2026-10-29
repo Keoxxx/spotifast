@@ -95,6 +95,14 @@ controls, state and queue reads. Starting a collection at a chosen row goes
 through the existing Spotify playback request, retaining its context and
 position; it does not skip through earlier songs or shorten the playlist.
 
+Lyrics also keep their existing sources. Spotify's own lyrics are tried when
+the separate librespot session is signed in, even while Soloist plays. Soloist
+does not supply lyrics through its API or replace that session's login. Without
+it, cached Spotify lyrics remain usable and LRCLIB provides the fallback.
+Temporary LRCLIB overloads are retried, then search is tried if the exact lookup
+is still unavailable. Previously cached lyrics remain available during an
+outage; a failed request is never saved as "no lyrics".
+
 Soloist exposes queue additions and reads, but no public command to remove,
 reorder, clear or insert at the front of its queue. Those editing controls
 remain available with the built-in player. Spotifast does not pretend to
