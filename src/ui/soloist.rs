@@ -1,16 +1,101 @@
-//! Guided setup for the optional Spotify player, inside Settings.
+//! Soloist is the first player offered after sign-in, with a built-in fallback.
 use crate::{app::App, i18n::gettext, model::Action, soloist::Status, theme};
+
+/// A native playback icon, not a Spotify or Soloist brand mark.
+fn badge(ui: &mut egui::Ui, palette: &theme::Palette, size: f32) {
+    let (rect, _) = ui.allocate_exact_size(egui::Vec2::splat(size), egui::Sense::hover());
+    ui.painter()
+        .circle_filled(rect.center(), size / 2.0, palette.surface_active);
+    theme::paint_icon(ui, theme::Icon::Headphones, rect, size * 0.52, palette.text);
+}
+
+pub fn onboarding(app: &mut App, ui: &mut egui::Ui) {
+    let palette = app.palette;
+    let locale = app.locale;
+    let welcome = app.soloist_onboarding == crate::settings::SoloistOnboarding::Welcome;
+    egui::CentralPanel::default()
+        .frame(egui::Frame::new().fill(palette.window))
+        .show(ui, |ui| {
+            let rect = ui.max_rect();
+            fastframe_titlebar::drag(ui, egui::Rect::from_min_size(rect.min,
+                egui::vec2(rect.width(), theme::TOP_BAR_HEIGHT + theme::titlebar_inset(ui.ctx()))));
+            super::widgets::paint_vertical_gradient(ui, rect,
+                super::blend(palette.window, palette.accent, 0.08), palette.window);
+            egui::ScrollArea::vertical().id_salt("soloist-onboarding").show(ui, |ui| {
+                ui.add_space(((rect.height() - if welcome { 500.0 } else { 650.0 }) / 2.0).max(48.0));
+                ui.vertical_centered(|ui| {
+                    ui.set_max_width(540.0_f32.min(rect.width() - 48.0));
+                    egui::Frame::new()
+                        .fill(palette.panel)
+                        .stroke(egui::Stroke::new(1.0, palette.outline))
+                        .corner_radius(20)
+                        .inner_margin(28)
+                        .show(ui, |ui| {
+                            ui.set_width(ui.available_width());
+                            ui.with_layout(egui::Layout::top_down(egui::Align::Min), |ui| {
+                                badge(ui, &palette, 56.0);
+                                ui.add_space(16.0);
+                                theme::text(ui, gettext(locale, "Listen with Spotify Soloist"), theme::semibold(25.0), palette.text);
+                                ui.add_space(8.0);
+                                ui.label(gettext(locale, "Spotify's own player, with lossless support."));
+                                ui.add_space(16.0);
+                                if welcome {
+                                    ui.label(gettext(locale, "You'll need Spotify Premium, your personal Soloist key and one pairing in Spotify. Spotifast handles the download and updates."));
+                                    ui.add_space(16.0);
+                                    if theme::pill_button(ui, &palette, &gettext(locale, "Set up Soloist"), true).clicked() {
+                                        app.actions.push(Action::StartSoloistSetup);
+                                    }
+                                } else {
+                                    controls(app, ui, true);
+                                    if app.settings.soloist_enabled && app.soloist_device_id.is_some()
+                                        && matches!(app.soloist_status, Status::Ready { .. })
+                                        && theme::pill_button(ui, &palette, &gettext(locale, "Start listening"), true).clicked()
+                                    {
+                                        app.actions.push(Action::FinishSoloistSetup);
+                                    }
+                                }
+                                ui.add_space(18.0);
+                                ui.separator();
+                                ui.add_space(10.0);
+                                ui.add(egui::Label::new(egui::RichText::new(gettext(locale, "For EQ, visualizers, local files and queue editing, use the built-in player. You can switch later in Settings.")).color(palette.secondary)).wrap());
+                                ui.add_space(8.0);
+                                if theme::soft_button(ui, &palette, None, &gettext(locale, "Use the built-in player"), false).clicked() {
+                                    app.actions.push(Action::UseBuiltInPlayer);
+                                }
+                            });
+                        });
+                });
+                ui.add_space(32.0);
+            });
+        });
+}
 
 pub fn show(app: &mut App, ui: &mut egui::Ui) {
     let locale = app.locale;
     let palette = app.palette;
-    if !matches!(app.soloist_status, Status::Ready { .. }) {
-        ui.label(gettext(
-            locale,
-            "Spotify's player, with lossless support. Requires Premium.",
-        ));
-        ui.add_space(10.0);
-    }
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing.x = 14.0;
+        badge(ui, &palette, 48.0);
+        ui.vertical(|ui| {
+            if matches!(app.soloist_status, Status::Ready { .. }) && app.soloist_device_id.is_some()
+            {
+                ui.label(egui::RichText::new(gettext(locale, "Enabled on this computer")).strong());
+                theme::subtle(ui, &palette, &gettext(locale, "Updates automatically."));
+            } else {
+                ui.label(gettext(
+                    locale,
+                    "Spotify's player, with lossless support. Requires Premium.",
+                ));
+            }
+        });
+    });
+    ui.add_space(10.0);
+    controls(app, ui, false);
+}
+
+fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
+    let locale = app.locale;
+    let palette = app.palette;
     if !crate::soloist::install::supported() {
         ui.label(gettext(locale, "Spotify has not published Soloist for this platform. The built-in player remains available."));
         if app.settings.soloist_enabled
@@ -81,7 +166,8 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     });
                 }
             });
-            if matches!(app.soloist_status, Status::Off)
+            if !onboarding
+                && matches!(app.soloist_status, Status::Off)
                 && app.soloist_key.trim().is_empty()
                 && theme::soft_button(
                     ui,
@@ -124,8 +210,12 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         }
         Status::Ready { .. } => {
             if app.soloist_device_id.is_some() {
-                ui.label(egui::RichText::new(gettext(locale, "Enabled on this computer")).strong());
-                theme::subtle(ui, &palette, &gettext(locale, "Updates automatically."));
+                if onboarding {
+                    ui.label(
+                        egui::RichText::new(gettext(locale, "Enabled on this computer")).strong(),
+                    );
+                    theme::subtle(ui, &palette, &gettext(locale, "Updates automatically."));
+                }
             } else {
                 ui.label(gettext(locale, "Confirming your Spotify account…"));
                 ui.label(gettext(locale, "If this takes a while, make sure Spotify is signed in to the same account as Spotifast, then select this device there."));
@@ -145,7 +235,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             }
         }
     }
-    if app.settings.soloist_enabled {
+    if app.settings.soloist_enabled && !onboarding {
         ui.add_space(10.0);
         if theme::soft_button(
             ui,

@@ -341,6 +341,7 @@ fn demo_local_rows(app: &mut App) {
 
 /// Populates the offline app with cards for screenshots and UI tests.
 pub fn populate(app: &mut App) {
+    app.soloist_onboarding = crate::settings::SoloistOnboarding::Complete;
     app.backend.set_offline(true);
     app.offline = true;
     // A demo never reads the real login registration; it shows it off.
@@ -1096,6 +1097,12 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
     }
     for surface in show.unwrap_or("").split(',').map(str::trim) {
         match surface {
+            "soloist-welcome" => {
+                app.soloist_onboarding = crate::settings::SoloistOnboarding::Welcome;
+            }
+            "soloist-onboarding" => {
+                app.soloist_onboarding = crate::settings::SoloistOnboarding::Setup;
+            }
             "soloist-setup"
             | "soloist-downloading"
             | "soloist-pairing"
@@ -8221,6 +8228,44 @@ mod tests {
         );
         assert!(!app.settings.soloist_enabled);
         assert!(matches!(app.soloist_status, crate::soloist::Status::Off));
+        app.backend.shutdown();
+    }
+
+    #[cfg(feature = "demo")]
+    #[test]
+    fn soloist_setup_is_the_first_screen_and_the_builtin_exit_works_during_pairing() {
+        if !crate::soloist::install::supported() {
+            return;
+        }
+        use crate::settings::SoloistOnboarding;
+        use egui::accesskit::{Action as AccessibleAction, Role};
+        let (ctx, mut app) = accessible_app("soloist-welcome");
+        apply_flags(&mut app, None, Some("soloist-welcome"));
+        accessible_frame(&ctx, &mut app, vec![]);
+        let tree = accessible_frame(&ctx, &mut app, vec![]);
+        let setup = accessible_node(&tree, "Set up Soloist", Role::Button);
+        accessible_node(&tree, "Use the built-in player", Role::Button);
+        accessible_frame(
+            &ctx,
+            &mut app,
+            vec![accessible_action(setup, AccessibleAction::Click, None)],
+        );
+        assert_eq!(app.soloist_onboarding, SoloistOnboarding::Setup);
+        assert!(
+            !app.settings.soloist_enabled,
+            "choosing setup does not download without a key"
+        );
+        apply_flags(&mut app, None, Some("soloist-pairing"));
+        accessible_frame(&ctx, &mut app, vec![]);
+        let tree = accessible_frame(&ctx, &mut app, vec![]);
+        let builtin = accessible_node(&tree, "Use the built-in player", Role::Button);
+        accessible_frame(
+            &ctx,
+            &mut app,
+            vec![accessible_action(builtin, AccessibleAction::Click, None)],
+        );
+        assert!(!app.settings.soloist_enabled);
+        assert_eq!(app.soloist_onboarding, SoloistOnboarding::Complete);
         app.backend.shutdown();
     }
 

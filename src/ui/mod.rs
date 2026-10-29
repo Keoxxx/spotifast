@@ -54,6 +54,14 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         fastframe_titlebar::resize(ui);
         return;
     }
+    if app.show_soloist_onboarding() {
+        player_bar::end_tint_session(ctx);
+        soloist::onboarding(app, ui);
+        toasts(app, ctx, 20.0);
+        caption_buttons(ui, &app.palette, app.locale);
+        fastframe_titlebar::resize(ui);
+        return;
+    }
     if titlebar_spans_window(cfg!(target_os = "macos"), fastframe_titlebar::enabled()) {
         fastframe_titlebar::drag(
             ui,

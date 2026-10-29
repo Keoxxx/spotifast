@@ -431,6 +431,7 @@ pub struct App {
     pub local_ready: bool,
     pub local_playback: LocalPlayback,
     pub soloist_status: crate::soloist::Status,
+    pub soloist_onboarding: crate::settings::SoloistOnboarding,
     pub soloist_key: String,
     pub soloist_device_id: Option<String>,
     pub soloist_update: Option<String>,
@@ -1005,6 +1006,7 @@ impl App {
             applied_proxy
         };
         let session = SessionState::load(&dirs.session_file());
+        let soloist_onboarding = session.soloist_onboarding.restore(settings.soloist_enabled);
         let wake = waker.clone();
         let media_controls = options
             .media_controls
@@ -1114,6 +1116,7 @@ impl App {
             local_ready: false,
             local_playback: LocalPlayback::Unavailable,
             soloist_status: crate::soloist::Status::Off,
+            soloist_onboarding,
             soloist_key: String::new(),
             soloist_device_id: None,
             soloist_update: None,
@@ -1549,6 +1552,17 @@ impl App {
 
     pub fn is_connected(&self) -> bool {
         matches!(self.auth, AuthStatus::Connected { .. })
+    }
+
+    pub fn show_soloist_onboarding(&self) -> bool {
+        self.soloist_onboarding != crate::settings::SoloistOnboarding::Complete
+            && crate::soloist::install::supported()
+            && self.is_connected()
+            && self.user.as_ref().is_some_and(|user| {
+                user.product
+                    .as_deref()
+                    .is_none_or(|product| product == "premium")
+            })
     }
 
     pub fn user_id(&self) -> Option<&str> {
@@ -12057,6 +12071,27 @@ impl App {
                     self.apply(Action::RestartEngine, ctx);
                 }
             }
+            Action::StartSoloistSetup => {
+                self.soloist_onboarding = crate::settings::SoloistOnboarding::Setup;
+                self.save_session();
+            }
+            Action::FinishSoloistSetup => {
+                if self.settings.soloist_enabled
+                    && matches!(self.soloist_status, crate::soloist::Status::Ready { .. })
+                    && self.soloist_device_id.is_some()
+                {
+                    self.soloist_onboarding = crate::settings::SoloistOnboarding::Complete;
+                    self.save_session();
+                }
+            }
+            Action::UseBuiltInPlayer => {
+                if self.settings.soloist_enabled {
+                    self.apply(Action::SetSoloist(false), ctx);
+                }
+                self.soloist_onboarding = crate::settings::SoloistOnboarding::Complete;
+                self.save_session();
+                self.apply(Action::EnablePlayback, ctx);
+            }
             Action::SetSoloist(enabled) => {
                 self.settings.soloist_enabled = enabled;
                 self.mark_settings_dirty();
@@ -13254,6 +13289,7 @@ impl App {
         }
         if !self.offline {
             let session = SessionState {
+                soloist_onboarding: self.soloist_onboarding,
                 device_history: self.device_history.clone(),
                 last_page: Some(self.page().encode()),
                 recent_contexts: self.recent_contexts.clone(),
@@ -20984,6 +21020,64 @@ mod tests {
         });
         app.bind_soloist_device();
         assert!(app.soloist_device_id.is_none());
+    }
+
+    #[test]
+    fn soloist_onboarding_keeps_the_choice_and_requires_verified_pairing() {
+        use crate::settings::SoloistOnboarding;
+        let mut app = test_app("soloist-onboarding");
+        let ctx = egui::Context::default();
+        app.auth = AuthStatus::Connected {
+            username: "listener".into(),
+        };
+        app.user = Some(crate::api::models::User {
+            product: Some("premium".into()),
+            ..Default::default()
+        });
+        app.soloist_onboarding = SoloistOnboarding::Welcome;
+        assert_eq!(
+            app.show_soloist_onboarding(),
+            crate::soloist::install::supported()
+        );
+        app.user.as_mut().unwrap().product = Some("free".into());
+        assert!(!app.show_soloist_onboarding());
+        app.user.as_mut().unwrap().product = Some("premium".into());
+        app.apply(Action::StartSoloistSetup, &ctx);
+        app.settings.soloist_enabled = true;
+        app.apply(Action::FinishSoloistSetup, &ctx);
+        assert_eq!(app.soloist_onboarding, SoloistOnboarding::Setup);
+        app.soloist_status = crate::soloist::Status::Ready {
+            name: "ours".into(),
+            version: "1".into(),
+            expires: u64::MAX,
+        };
+        app.apply(Action::FinishSoloistSetup, &ctx);
+        assert_eq!(
+            app.soloist_onboarding,
+            SoloistOnboarding::Setup,
+            "the account is not verified yet"
+        );
+        app.soloist_device_id = Some("verified".into());
+        app.apply(Action::FinishSoloistSetup, &ctx);
+        assert!(!app.show_soloist_onboarding());
+        app.flush_files();
+        assert_eq!(
+            SessionState::load(&app.dirs.session_file()).soloist_onboarding,
+            SoloistOnboarding::Complete
+        );
+
+        app.apply(Action::StartSoloistSetup, &ctx);
+        app.local_ready = true;
+        app.apply(Action::UseBuiltInPlayer, &ctx);
+        assert!(!app.settings.soloist_enabled);
+        assert!(!app.show_soloist_onboarding());
+        assert!(app.soloist_device_id.is_none());
+        app.flush_files();
+        assert_eq!(
+            SessionState::load(&app.dirs.session_file()).soloist_onboarding,
+            SoloistOnboarding::Complete
+        );
+        app.backend.shutdown();
     }
 
     #[test]

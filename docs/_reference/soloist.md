@@ -1,6 +1,6 @@
 ---
 title: Spotify Soloist
-description: Set up Spotify's optional player, with managed downloads and renewal.
+description: Set up Spotify's player, with managed downloads and renewal.
 nav_order: 5
 permalink: /soloist/
 ---
@@ -8,7 +8,11 @@ permalink: /soloist/
 Available in source builds from `main`; not included in v0.14.2.
 
 Spotifast can run [Spotify Soloist](https://developer.spotify.com/documentation/soloist)
-as an optional player. The built-in librespot player remains the default.
+as its first setup choice. New listeners and people updating see **Set up
+Soloist** after sign-in on supported platforms with a Premium account.
+**Use the built-in player** skips Soloist and keeps librespot. The choice is
+remembered across launches and updates; existing Soloist listeners continue
+straight into the app. An interrupted setup resumes on the next launch.
 Soloist is Spotify's separate software, downloaded from Spotify when you
 choose to enable it. It supports lossless playback; its current API does
 not report the audio format actually delivered, so Spotifast does not show
@@ -17,16 +21,27 @@ a lossless indicator or offer an unsupported quality selector.
 ## Setup
 
 1. Sign in to Spotify in Spotifast. Spotify Premium is required.
-2. Open **Settings → Spotify Soloist**, then **Get your Soloist key from
-   Spotify**. Follow Spotify's instructions to generate a personal Soloist
+2. Choose **Set up Soloist**, then **Get your Soloist key from
+   Spotify**. You can also start from **Settings → Spotify Soloist** later.
+   Follow Spotify's instructions to generate a personal Soloist
    key. This is separate from the Client ID of your Web API app.
 3. Paste the key and choose **Download and enable Soloist**. Spotifast saves
    the key in the system credential store and downloads Spotify's build for
    this computer. No administrator account is needed.
 4. Open the official Spotify app on the same network, signed into the same
-   account. Choose the exact **Spotifast Soloist (…)** name shown in Settings
+   account. Choose the exact **Spotifast Soloist (…)** name shown in setup
    from Spotify's device picker. Spotifast checks that this player appears
-   in your signed-in account's device list before controlling it.
+   in your signed-in account's device list before controlling it. Choose
+   **Start listening** once setup confirms the account.
+
+You can choose **Use the built-in player** at any setup step, including after
+a failed download or while waiting for pairing. This stops Soloist if setup
+started it. The built-in player's separate browser approval is requested only
+if it is not already connected. Setup does not stop existing playback merely
+because its screen is shown. It does not download Soloist until you supply a key.
+The remembered setup step lives in `session.json`, separately from playback
+preferences. The headphones badge is Spotifast's playback icon, not a Soloist
+brand mark.
 
 Pairing is normally needed only once. Soloist restores its own saved session
 when Spotifast starts. You can still choose another Spotify Connect device.

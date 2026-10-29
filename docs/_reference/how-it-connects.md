@@ -6,6 +6,12 @@ nav_order: 1
 
 ## Independent grants, once each
 
+After sign-in, the one-time player setup leads with [Spotify Soloist](/soloist/)
+on supported platforms. This also appears for existing built-in listeners
+after updating. Its personal key and pairing are separate from the grants
+below. Choosing the built-in player is remembered; existing librespot grants
+remain available for playback and library requests.
+
 Spotifast uses separate credentials for Web API access and local playback:
 
 1. **Your own Spotify app**, the personal app, carries the Web API: account,

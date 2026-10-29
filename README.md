@@ -42,10 +42,12 @@ https://github.com/user-attachments/assets/a5f669ce-b3b7-4f8e-9933-976a78876c7e
 
 [Features](#your-music-on-your-desktop) · [Install](#install) · [First playback](#start-listening) · [Mini player](#the-winamp-mini-player) · [MilkDrop](#music-in-motion) · [Help](#guides-and-help)
 
-On `main` (not yet released), Spotify's [Soloist player](https://spotifast.rocks/soloist/) is available as an
-optional download in Settings, with guided key setup, one-time pairing and
-automatic renewal of expiring builds. The built-in librespot player remains
-the default and provides Spotifast's EQ, visualizers and full queue editing.
+On `main` (not yet released), setup leads with Spotify's
+[Soloist player](https://spotifast.rocks/soloist/), with guided key setup,
+one-time pairing and automatic renewal of expiring builds. New listeners and
+people updating see this choice once after sign-in on supported platforms.
+**Use the built-in player** keeps librespot, with Spotifast's EQ, visualizers,
+local files and full queue editing. The choice is remembered.
 When enabled, Soloist appears as **This computer**; settings show the controls
 that apply to it. Turning it off restores the built-in player's preferences.
 

@@ -2,7 +2,7 @@
 
 Spotifast is a native Spotify client. Changes should improve the
 desktop app without adding a browser or fallback audio services. Playback uses
-librespot by default, with Spotify Soloist as an optional managed player.
+Spotify Soloist through guided setup, with librespot as the built-in alternative.
 
 ## Before opening an issue
 

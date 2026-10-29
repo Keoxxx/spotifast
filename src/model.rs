@@ -1375,6 +1375,9 @@ pub enum Action {
     },
     SetSoloist(bool),
     RetrySoloist,
+    StartSoloistSetup,
+    FinishSoloistSetup,
+    UseBuiltInPlayer,
     RestartEngine,
     /// Rebuild the HTTP client with the proxy in settings. Local playback
     /// restarts only when its HTTP proxy changed.
