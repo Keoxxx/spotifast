@@ -344,18 +344,24 @@ mod pipewire {
             "Soloist processing",
             properties! {
                 "media.type" => "Audio", "media.category" => "Capture", "media.role" => "Music",
-                "media.class" => "Stream/Input/Audio", "node.name" => name,
+                // Soloist only selects sink devices, not capture streams.
+                "media.class" => "Audio/Sink", "node.name" => name,
                 "node.description" => "Spotifast Soloist processing", "node.virtual" => "true",
                 "priority.session" => "0", "node.link-group" => name, "node.group" => name,
-                // An explicitly targeted stream cannot become the default
-                // sink or be inserted as a system-wide smart filter.
+                // Exclude this sink from automatic/default device selection.
+                // Its unique target is our output stream, not a speaker or
+                // an absent target shared with another application's filter.
+                "filter.smart" => "true", "filter.smart.targetable" => "true",
+                "filter.smart.target" => format!(r#"{{"node.name":"{name}.output"}}"#),
                 "node.hidden" => "true",
                 "audio.position" => "[ FL FR ]",
             },
         )?;
         let mut output_properties = properties! {
             "media.type" => "Audio", "media.category" => "Playback", "media.role" => "Music",
-            "node.name" => format!("{name}.output"), "node.link-group" => name, "node.group" => name,
+            // This is ordinary playback, not the stream of a smart filter:
+            // WirePlumber must not chain it through other private inputs.
+            "node.name" => format!("{name}.output"), "node.group" => name,
             "audio.position" => "[ FL FR ]",
         };
         if let Some(target) = output_target {
@@ -546,6 +552,21 @@ mod pipewire {
                 done.quit();
                 return;
             }
+            // Linking does not require playback. Show EQ and visualizers as
+            // soon as the owned child is routed, including while paused.
+            match graph
+                .borrow()
+                .route(active_input.node_id(), state.child.load(Ordering::Acquire))
+            {
+                Route::Owned => state.routed.store(true, Ordering::Release),
+                Route::Foreign => {
+                    timer_audio.borrow_mut().clear();
+                    state.failed.store(true, Ordering::Release);
+                    done.quit();
+                    return;
+                }
+                Route::Waiting => {}
+            }
             let playing = state.playing.load(Ordering::Acquire);
             if was_playing.replace(playing) != playing {
                 if !playing {
@@ -687,7 +708,7 @@ mod pipewire {
         /// Run against a temporary null sink created by the caller. Captures
         /// only a synthetic tone and leaves the desktop's default unchanged.
         #[tokio::test]
-        #[ignore = "requires PipeWire, pw-play, pw-record and SOLOIST_AUDIO_TEST_OUTPUT naming a private null sink"]
+        #[ignore = "requires PipeWire, pw-play, pw-record, pw-dump and SOLOIST_AUDIO_TEST_OUTPUT naming a private null sink"]
         async fn native_route_volume_and_pause() {
             use std::process::Stdio;
             use tokio::io::AsyncWriteExt;
@@ -713,9 +734,29 @@ mod pipewire {
                 tap.clone(),
                 eq,
             );
+            // This inactive bridge also exercises ordinary default-output
+            // selection, without sending a tone to the desktop's speakers.
+            let other = Bridge::open(config.clone())
+                .await
+                .expect("second private bridge");
             let bridge = Bridge::open_on(config, Some(output.clone()))
                 .await
                 .expect("private bridge");
+            let graph = tokio::process::Command::new("pw-dump")
+                .output()
+                .await
+                .unwrap();
+            let graph: serde_json::Value = serde_json::from_slice(&graph.stdout).unwrap();
+            let input = graph
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|node| node["info"]["props"]["node.name"] == bridge.name)
+                .expect("private input registered");
+            assert_eq!(
+                input["info"]["props"]["media.class"], "Audio/Sink",
+                "Soloist only selects sink devices, even though pw-play also accepts streams"
+            );
             let mut source = tokio::process::Command::new("pw-play")
                 .args([
                     "--target",
@@ -744,10 +785,43 @@ mod pipewire {
                 let bytes = tone(48_000, 4800);
                 while stdin.write_all(&bytes).await.is_ok() {}
             });
+            tokio::time::sleep(Duration::from_secs(1)).await;
+            assert!(bridge.routed(), "a paused child must establish its route");
+            let graph = tokio::process::Command::new("pw-dump")
+                .output()
+                .await
+                .unwrap();
+            let graph: serde_json::Value = serde_json::from_slice(&graph.stdout).unwrap();
+            let nodes = graph.as_array().unwrap();
+            let other_output = nodes
+                .iter()
+                .find(|node| node["info"]["props"]["node.name"] == format!("{}.output", other.name))
+                .expect("second output registered")["id"]
+                .clone();
+            let links: Vec<_> = nodes
+                .iter()
+                .filter(|node| node["info"]["props"]["link.output.node"] == other_output)
+                .collect();
+            assert!(!links.is_empty(), "default output must connect");
+            for link in links {
+                let target = nodes
+                    .iter()
+                    .find(|node| node["id"] == link["info"]["props"]["link.input.node"])
+                    .unwrap();
+                assert!(
+                    !target["info"]["props"]["node.name"]
+                        .as_str()
+                        .unwrap()
+                        .starts_with("spotifast.soloist."),
+                    "automatic output selection must never choose a private route"
+                );
+            }
             bridge.update(&json!({"status":"playing", "volume":0, "is_active":true}));
             tokio::time::sleep(Duration::from_secs(1)).await;
             assert!(!bridge.failed());
             assert!(bridge.routed(), "route must match the owned child's PID");
+            assert!(!other.routed());
+            assert!(!other.failed(), "private routes must not chain together");
             let tap_peak = tap
                 .window(512, 0)
                 .iter()

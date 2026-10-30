@@ -52,7 +52,8 @@ Choose **Turn off Soloist** in Settings to stop it and restore the built-in
 player's entry and settings. Saved built-in preferences are kept.
 While Soloist is enabled, built-in playback preferences are hidden. On Linux
 with PipeWire, EQ and visualization settings appear once the private Soloist
-audio route is established. Shared controls for the tray, startup and Spotifast updates remain
+audio route is established, even while paused. This is automatic and separate
+from account verification. Shared controls for the tray, startup and Spotifast updates remain
 under **Application**. The Soloist card shows its version, expiry and a short
 capability note, with a link to this guide. **Turn off Soloist** sits in its
 header, like **Sign out** in the Account card.
