@@ -59,7 +59,9 @@ While Soloist starts and its account is verified, the Spotify loading screen sho
 **Verifying Soloist…** and waits to accept playback commands. **Set up Soloist**
 opens setup if pairing needs attention. After downloading, the wizard focuses on
 choosing the named device in Spotify, with the built-in player available as a
-quiet alternative below the card.
+quiet alternative below the card. **Settings → Account → Spotify access**
+connects the separate Spotify session for Made for you, listening activity and
+Spotify lyrics without changing players.
 
 ## Your music, on your desktop
 

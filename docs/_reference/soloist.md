@@ -114,6 +114,10 @@ Lyrics also keep their existing sources. Spotify's own lyrics are tried when
 the separate librespot session is signed in, even while Soloist plays. Soloist
 does not supply lyrics through its API or replace that session's login. Without
 it, cached Spotify lyrics remain usable and LRCLIB provides the fallback.
+If these features are missing, choose **Settings → Account → Spotify access →
+Authorize**. This separate browser approval enables Made for you, listening
+activity and Spotify lyrics while keeping Soloist selected. The listening
+activity panel also offers this approval when its connection is missing.
 Temporary LRCLIB overloads are retried, then search is tried if the exact lookup
 is still unavailable. Previously cached lyrics remain available during an
 outage; a failed request is never saved as "no lyrics".

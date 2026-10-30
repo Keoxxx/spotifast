@@ -1097,6 +1097,15 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
     }
     for surface in show.unwrap_or("").split(',').map(str::trim) {
         match surface {
+            "spotify-access-missing" | "spotify-access-authorizing" => {
+                app.local_ready = false;
+                app.local_playback = if surface == "spotify-access-missing" {
+                    crate::backend::LocalPlayback::Unavailable
+                } else {
+                    crate::backend::LocalPlayback::Authorizing
+                };
+                app.friends = Loadable::Loaded(Vec::new());
+            }
             "soloist-audio" => {
                 app.soloist_audio = true;
                 app.settings.player_bar_vis = crate::settings::PlayerBarVis::Spectrum;
@@ -8170,6 +8179,30 @@ mod tests {
     }
 
     #[test]
+    fn soloist_activity_offers_authorization_for_missing_or_empty_results() {
+        let (ctx, mut app) = accessible_app("soloist-activity-access");
+        app.settings.soloist_enabled = true;
+        app.local_ready = false;
+        app.local_playback = crate::backend::LocalPlayback::Unavailable;
+        for results in [
+            Loadable::NotLoaded,
+            Loadable::Failed("no session".into()),
+            Loadable::Loaded(Vec::new()),
+        ] {
+            app.friends = results;
+            view_frame(&ctx, &mut app, vec![], crate::ui::friends::side_panel);
+            let text = view_frame(&ctx, &mut app, vec![], crate::ui::friends::side_panel);
+            assert!(text.iter().any(|(s, _)| s == "Authorize"), "{text:?}");
+            assert!(
+                text.iter()
+                    .any(|(s, _)| s == "Connect Spotify to see listening activity."),
+                "{text:?}"
+            );
+        }
+        app.backend.shutdown();
+    }
+
+    #[test]
     fn routed_soloist_shows_only_supported_audio_controls() {
         let (ctx, mut app) = accessible_app("soloist-processing");
         app.settings.soloist_enabled = true;
@@ -8201,6 +8234,91 @@ mod tests {
         app.soloist_audio = false;
         assert!(!app.audio_processing_available());
         assert!(!app.visualizers_available());
+        app.backend.shutdown();
+    }
+
+    #[test]
+    fn soloist_keeps_spotify_feature_authorization_available() {
+        use crate::backend::LocalPlayback;
+        let (ctx, mut app) = accessible_app("soloist-spotify-access");
+        app.settings.soloist_enabled = true;
+        app.selected_device = Some("own-soloist".into());
+        app.local_ready = false;
+        app.local_playback = LocalPlayback::Unavailable;
+        for query in ["Spotify access", "lyrics", "activity", "Made for you"] {
+            let text = settings_text(&ctx, &mut app, query);
+            assert!(text.iter().any(|s| s == "Spotify access"), "{text:?}");
+            assert!(text.iter().any(|s| s == "Authorize"), "{text:?}");
+        }
+        for (state, label, can_authorize) in [
+            (LocalPlayback::Unavailable, "Authorize", true),
+            (LocalPlayback::Failed("expired".into()), "Try again", true),
+            (
+                LocalPlayback::Authorizing,
+                "Finish authorizing in your browser.",
+                false,
+            ),
+            (LocalPlayback::Connecting, "Connecting to Spotify…", false),
+            (
+                LocalPlayback::WaitingForNetwork,
+                "Waiting for network…",
+                false,
+            ),
+            (
+                LocalPlayback::Ready {
+                    device_id: "built-in".into(),
+                },
+                "Connected",
+                false,
+            ),
+        ] {
+            app.local_playback = state;
+            settings_text(&ctx, &mut app, "Spotify access");
+            let text = view_frame(&ctx, &mut app, vec![], crate::ui::settings::show);
+            let pos = text
+                .iter()
+                .find(|(s, _)| s == label)
+                .expect(label)
+                .1
+                .center();
+            app.actions.clear();
+            view_frame(
+                &ctx,
+                &mut app,
+                vec![
+                    egui::Event::PointerMoved(pos),
+                    egui::Event::PointerButton {
+                        pos,
+                        button: egui::PointerButton::Primary,
+                        pressed: true,
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                    egui::Event::PointerButton {
+                        pos,
+                        button: egui::PointerButton::Primary,
+                        pressed: false,
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+                crate::ui::settings::show,
+            );
+            assert_eq!(
+                app.actions
+                    .iter()
+                    .any(|a| matches!(a, Action::EnablePlayback)),
+                can_authorize
+            );
+            assert!(
+                !app.actions
+                    .iter()
+                    .any(|a| matches!(a, Action::UseBuiltInPlayer | Action::SetSoloist(false)))
+            );
+            assert!(app.settings.soloist_enabled);
+            assert_eq!(app.selected_device.as_deref(), Some("own-soloist"));
+        }
+        app.settings.soloist_enabled = false;
+        let text = settings_text(&ctx, &mut app, "lyrics");
+        assert!(!text.iter().any(|s| s == "Spotify access"));
         app.backend.shutdown();
     }
 

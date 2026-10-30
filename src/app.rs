@@ -2997,6 +2997,21 @@ impl App {
                         self.load_new_releases();
                     }
                     self.load_hidden_songs();
+                    if self.settings.soloist_enabled {
+                        // Reads made before this separate approval could not
+                        // use Spotify's session. Retry visible missing data.
+                        if self.show_friends_panel {
+                            self.friends_generation += 1;
+                            self.friends_in_flight = false;
+                            self.refresh_friends();
+                        }
+                        if matches!(self.lyrics, Loadable::Loaded(None) | Loadable::Failed(_)) {
+                            self.lyrics = Loadable::NotLoaded;
+                            if self.show_lyrics_panel || self.lyrics_fullscreen.is_some() {
+                                self.request_lyrics();
+                            }
+                        }
+                    }
                 }
                 self.replay_queued_play();
             }
@@ -3012,15 +3027,21 @@ impl App {
                 }
                 self.toast_error(
                     // Translators: {error} is an error message from the playback engine.
-                    gettext(self.locale, "Local playback: {error}").replace("{error}", message),
+                    if self.settings.soloist_enabled {
+                        gettext(self.locale, "Spotify connection: {error}")
+                    } else {
+                        gettext(self.locale, "Local playback: {error}")
+                    }
+                    .replace("{error}", message),
                 );
             }
             LocalPlayback::Authorizing => {
                 if !matches!(self.local_playback, LocalPlayback::Authorizing) {
-                    self.toast(gettext(
-                        self.locale,
-                        "Opening your browser to set up local playback",
-                    ));
+                    self.toast(if self.settings.soloist_enabled {
+                        gettext(self.locale, "Opening your browser to connect Spotify")
+                    } else {
+                        gettext(self.locale, "Opening your browser to set up local playback")
+                    });
                 }
             }
             LocalPlayback::Connecting | LocalPlayback::WaitingForNetwork => {}
@@ -21347,6 +21368,39 @@ mod tests {
         );
         app.reveal_theme_changes = false;
         app
+    }
+
+    #[test]
+    fn soloist_spotify_access_retries_missing_features_without_switching_player() {
+        let mut app = test_app("soloist-spotify-access");
+        app.backend.set_offline(true);
+        app.settings.soloist_enabled = true;
+        app.selected_device = Some("own-soloist".into());
+        app.soloist_device_id = app.selected_device.clone();
+        app.show_friends_panel = true;
+        app.friends = Loadable::Failed("no session".into());
+        app.lyrics = Loadable::Loaded(None);
+        let generation = app.friends_generation;
+        app.handle_playback(LocalPlayback::Ready {
+            device_id: "built-in".into(),
+        });
+        assert!(app.settings.soloist_enabled);
+        assert_eq!(app.selected_device.as_deref(), Some("own-soloist"));
+        assert!(app.friends_generation > generation);
+        assert!(app.friends_in_flight);
+        assert!(app.friends.is_loading());
+        assert!(matches!(app.lyrics, Loadable::NotLoaded));
+        app.receive_friends(generation, Err("stale missing-session error".into()));
+        assert!(app.friends.is_loading());
+        let retried = app.friends_generation;
+        app.handle_playback(LocalPlayback::Ready {
+            device_id: "built-in".into(),
+        });
+        assert_eq!(
+            app.friends_generation, retried,
+            "no repeated refresh on ready updates"
+        );
+        app.backend.shutdown();
     }
 
     /// Friend activity takes the right panel's place: opening it closes the

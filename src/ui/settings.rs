@@ -364,6 +364,51 @@ fn local_files_detail(app: &App) -> String {
     }
 }
 
+/// Soloist supplies audio, while this separate Spotify approval supplies
+/// library features. Reuse the existing grant without changing players.
+pub(super) fn spotify_access_control(app: &mut App, ui: &mut egui::Ui) {
+    use crate::backend::LocalPlayback;
+    let locale = app.locale;
+    let palette = app.palette;
+    let (status, busy, action) = match &app.local_playback {
+        LocalPlayback::Ready { .. } => (gettext(locale, "Connected"), false, None),
+        LocalPlayback::Authorizing => (
+            gettext(locale, "Finish authorizing in your browser."),
+            true,
+            None,
+        ),
+        LocalPlayback::Connecting => (gettext(locale, "Connecting to Spotify…"), true, None),
+        LocalPlayback::WaitingForNetwork => (gettext(locale, "Waiting for network…"), true, None),
+        LocalPlayback::Unavailable => ("".into(), false, Some(gettext(locale, "Authorize"))),
+        LocalPlayback::Failed(_) => ("".into(), false, Some(gettext(locale, "Try again"))),
+    };
+    if let Some(action) = action {
+        let mut response = theme::pill_button(ui, &palette, &action, true);
+        if let LocalPlayback::Failed(error) = &app.local_playback {
+            response = response.on_hover_text(error);
+        }
+        if response.clicked() {
+            app.actions.push(Action::EnablePlayback);
+        }
+    } else {
+        ui.horizontal_wrapped(|ui| {
+            if busy {
+                ui.add(egui::Spinner::new().size(14.0).color(palette.secondary));
+            }
+            let galley = crate::bidi::layout(
+                ui.painter(),
+                &status,
+                theme::regular(13.0),
+                palette.secondary,
+                ui.available_width(),
+                usize::MAX,
+                None,
+            );
+            ui.add(egui::Label::new(galley));
+        });
+    }
+}
+
 pub fn show(app: &mut App, ui: &mut egui::Ui) {
     let palette = app.palette;
     let locale = app.locale;
@@ -468,6 +513,14 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         )
         .when(!in_use && wanted.is_some()),
         RowText::new(sign_out.clone(), account.clone()),
+        RowText::new(
+            gettext(locale, "Spotify access"),
+            gettext(
+                locale,
+                "Made for you, listening activity and Spotify lyrics.",
+            ),
+        )
+        .when(app.settings.soloist_enabled),
     ];
     if section_matches(&needle, &account, &account_rows) {
         any_visible = true;
@@ -587,6 +640,9 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     }
                 });
             }
+            filtered_row(ui, &palette, &needle, &account, &account_rows[5], |ui| {
+                spotify_access_control(app, ui);
+            });
         });
     }
 
