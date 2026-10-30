@@ -6,6 +6,24 @@ use std::sync::{
     atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering},
 };
 
+/// A separate output fader. Spotify's source volume never writes this value.
+/// Clones share one control across the UI, child restarts and the audio worker.
+#[derive(Clone)]
+pub struct OutputVolume(Arc<AtomicU8>);
+impl Default for OutputVolume {
+    fn default() -> Self {
+        Self(Arc::new(AtomicU8::new(100)))
+    }
+}
+impl OutputVolume {
+    pub fn percent(&self) -> u8 {
+        self.0.load(Ordering::Relaxed)
+    }
+    pub fn set(&self, percent: u8) {
+        self.0.store(percent.min(100), Ordering::Relaxed);
+    }
+}
+
 struct State {
     child: AtomicU32,
     routed: AtomicBool,
@@ -13,6 +31,8 @@ struct State {
     failed: AtomicBool,
     playing: AtomicBool,
     volume: AtomicU8,
+    #[cfg(all(feature = "soloist-preview", target_os = "macos"))]
+    output_volume: OutputVolume,
 }
 
 #[cfg(any(
@@ -31,6 +51,8 @@ impl State {
             failed: AtomicBool::new(false),
             playing: AtomicBool::new(false),
             volume: AtomicU8::new(0),
+            #[cfg(all(feature = "soloist-preview", target_os = "macos"))]
+            output_volume: OutputVolume::default(),
         }
     }
 }
@@ -53,13 +75,21 @@ impl Drop for Bridge {
     }
 }
 impl Bridge {
-    pub async fn open(config: crate::player::EngineConfig) -> Option<Self> {
+    pub async fn open(
+        config: crate::player::EngineConfig,
+        output_volume: OutputVolume,
+    ) -> Option<Self> {
+        #[cfg(not(all(
+            feature = "soloist-preview",
+            any(target_os = "macos", target_os = "windows")
+        )))]
+        let _ = output_volume;
         #[cfg(all(
             feature = "soloist-preview",
             any(target_os = "macos", target_os = "windows")
         ))]
         {
-            native::open(config)
+            native::open(config, output_volume)
         }
         #[cfg(not(any(
             target_os = "linux",
@@ -770,7 +800,7 @@ mod pipewire {
             );
             // This inactive bridge also exercises ordinary default-output
             // selection, without sending a tone to the desktop's speakers.
-            let other = Bridge::open(config.clone())
+            let other = Bridge::open(config.clone(), OutputVolume::default())
                 .await
                 .expect("second private bridge");
             let bridge = Bridge::open_on(config, Some(output.clone()))

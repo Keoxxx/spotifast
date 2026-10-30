@@ -171,8 +171,21 @@ running. No virtual driver is installed on either platform and no captured
 audio is saved. The Mac playback path keeps the tap's sample rate; only the
 visualization copy is resampled.
 
-Unlike the Linux route, these native captures follow Soloist's source volume:
-**zero volume stops the visualizers**. This remains a preview limitation.
+On Mac, once capture is ready, Spotifast's volume slider controls its own
+output after EQ and the visualizers. **Zero in Spotifast keeps the visualizers
+moving.** This separate level is remembered in the session file and defaults
+to 100%, leaving the existing source level unchanged. Spotify and your phone
+still control Soloist's source volume, which affects the captured signal;
+muting there still silences the visuals. Before capture is ready, the slider
+controls Soloist's ordinary output. Reconnecting briefly uses that ordinary
+output until capture is confirmed again.
+
+Windows capture still follows Soloist's volume: **zero stops the visualizers**.
+The tested WASAPI session and stream controls affect capture too, so they
+cannot supply a separate output fader. Windows 11's
+[pre-volume loopback option](https://learn.microsoft.com/en-us/windows-hardware/drivers/audio/ksproperty-audioloopback)
+refers to endpoint volume, which affects other apps as well. Spotifast leaves
+that system control alone.
 Mac previews share the installed app's saved setup and run one copy at a time.
 Windows previews use the existing portable layout, with their own settings.
 

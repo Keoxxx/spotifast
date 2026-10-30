@@ -169,8 +169,10 @@ remain unavailable through Soloist's documented API. On Linux with PipeWire,
 Spotifast processes its owned Soloist output through the operating system for
 EQ and visualizers; it does not capture the system mix. Separate
 [native audio previews](/soloist/#native-audio-preview) add process-only Mac
-EQ and visualizers, and Windows visualizers. Their capture follows Soloist
-volume, and Windows capture cannot provide an audible EQ route.
+EQ and visualizers, and Windows visualizers. Mac previews apply Spotifast’s
+separate output volume after the visualizers; Spotify/phone volume still affects
+capture. Windows capture follows source volume and cannot provide an audible
+EQ route.
 
 ## librespot playback
 

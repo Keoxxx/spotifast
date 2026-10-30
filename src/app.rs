@@ -1007,6 +1007,9 @@ impl App {
             applied_proxy
         };
         let session = SessionState::load(&dirs.session_file());
+        backend
+            .soloist_output_volume
+            .set(session.soloist_output_volume.unwrap_or(100));
         let soloist_onboarding = session.soloist_onboarding.restore(settings.soloist_enabled);
         let wake = waker.clone();
         let media_controls = options
@@ -1738,6 +1741,14 @@ impl App {
         matches!(self.target(), Target::Remote(Some(id)) if self.soloist_device_id.as_ref() == Some(&id))
     }
 
+    /// Only the Mac rerenderer owns a fader after capture. Windows observes
+    /// Soloist's output; Linux already applies synchronized Connect volume.
+    fn has_soloist_output_volume(&self) -> bool {
+        cfg!(all(target_os = "macos", feature = "soloist-preview"))
+            && self.settings.soloist_enabled
+            && self.soloist_audio
+    }
+
     /// The built-in sink or an audible processing route from our Soloist child.
     pub fn audio_processing_available(&self) -> bool {
         !self.settings.soloist_enabled || (self.soloist_audio && !cfg!(target_os = "windows"))
@@ -2146,16 +2157,23 @@ impl App {
                 }
             }
         };
-        let volume = match &self.pending_remote_volume {
-            Some(pending)
-                if pending.device_id.as_deref()
-                    == device.and_then(|device| device.id.as_deref()) =>
-            {
-                pending.percent
+        let volume = if self.has_soloist_output_volume()
+            && self.soloist_device_id.is_some()
+            && self.soloist_device_id.as_deref() == device.and_then(|d| d.id.as_deref())
+        {
+            self.backend.soloist_output_volume.percent()
+        } else {
+            match &self.pending_remote_volume {
+                Some(pending)
+                    if pending.device_id.as_deref()
+                        == device.and_then(|device| device.id.as_deref()) =>
+                {
+                    pending.percent
+                }
+                _ => device
+                    .and_then(|device| device.volume_percent)
+                    .unwrap_or(50),
             }
-            _ => device
-                .and_then(|device| device.volume_percent)
-                .unwrap_or(50),
         };
         let (artists, album_name, album_id, show_id, is_episode) = match item {
             PlayableItem::Track(track) => (
@@ -9886,6 +9904,12 @@ impl App {
 
     fn set_volume(&mut self, percent: u8, settle: bool) {
         let percent = percent.min(100);
+        if self.has_soloist_output_volume() && self.targets_own_soloist() {
+            self.backend.soloist_output_volume.set(percent);
+            self.pending_remote_volume = None;
+            self.session_dirty = true;
+            return;
+        }
         match self.target() {
             Target::Local => {
                 let volume = percent_to_volume(percent);
@@ -13411,6 +13435,7 @@ impl App {
         if !self.offline {
             let session = SessionState {
                 soloist_onboarding: self.soloist_onboarding,
+                soloist_output_volume: Some(self.backend.soloist_output_volume.percent()),
                 device_history: self.device_history.clone(),
                 last_page: Some(self.page().encode()),
                 recent_contexts: self.recent_contexts.clone(),
@@ -29252,6 +29277,69 @@ mod tests {
             seq,
             result: Ok(Some(state)),
         });
+    }
+
+    #[test]
+    fn soloist_output_volume_is_local_only_when_mac_capture_is_ready() {
+        let mut app = remote_volume_app();
+        let id = app
+            .remote
+            .as_ref()
+            .unwrap()
+            .state
+            .device
+            .as_ref()
+            .unwrap()
+            .id
+            .clone();
+        app.settings.soloist_enabled = true;
+        app.soloist_device_id = id;
+        app.soloist_status = crate::soloist::Status::Ready {
+            name: "owned".into(),
+            version: "test".into(),
+            expires: u64::MAX,
+        };
+        app.soloist_audio = true;
+        let native_mac = cfg!(all(target_os = "macos", feature = "soloist-preview"));
+        let builtin = app.settings.volume;
+        // Slider motion changes the local fader at once, with no Spotify write.
+        app.set_volume(25, false);
+        assert_eq!(
+            app.now_playing().unwrap().volume_percent,
+            if native_mac { 25 } else { 40 }
+        );
+        app.set_volume(0, true);
+        assert_eq!(app.now_playing().unwrap().volume_percent, 0);
+        assert_eq!(app.remote_volume_request, u64::from(!native_mac));
+        assert_eq!(app.settings.volume, builtin);
+        if native_mac {
+            assert!(app.pending_remote_volume.is_none());
+            report_remote_volume(&mut app, 20, Some(75));
+            assert_eq!(
+                app.now_playing().unwrap().volume_percent,
+                0,
+                "phone volume must not move the local fader"
+            );
+            let ctx = egui::Context::default();
+            app.apply(Action::VolumeBy(5), &ctx);
+            assert_eq!(app.now_playing().unwrap().volume_percent, 5);
+            app.apply(Action::ToggleMute, &ctx);
+            assert_eq!(app.now_playing().unwrap().volume_percent, 0);
+            app.apply(Action::ToggleMute, &ctx);
+            assert_eq!(app.now_playing().unwrap().volume_percent, 5);
+            // Capture failure immediately restores the real source control.
+            app.soloist_audio = false;
+            assert_eq!(app.now_playing().unwrap().volume_percent, 75);
+            app.set_volume(40, true);
+            assert_eq!(app.remote_volume_request, 1);
+            // Another device never uses the Mac's private fader.
+            app.soloist_audio = true;
+            app.soloist_device_id = Some("different-device".into());
+            app.set_volume(60, true);
+            assert_eq!(app.remote_volume_request, 2);
+            assert_eq!(app.backend.soloist_output_volume.percent(), 5);
+        }
+        app.backend.shutdown();
     }
 
     #[test]

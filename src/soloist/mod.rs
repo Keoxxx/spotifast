@@ -9,6 +9,7 @@ use crate::{
     paths::AppDirs,
 };
 use anyhow::{Context, Result, bail, ensure};
+pub use audio::OutputVolume;
 pub use protocol::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -81,41 +82,21 @@ pub struct Handle {
     pub client: Client,
 }
 impl Handle {
-    pub fn start(
-        dirs: AppDirs,
-        account: String,
-        key: Option<String>,
-        lease: Lease,
-        http: Http,
-        notify: Notify,
-        audio_config: crate::player::EngineConfig,
-    ) -> Self {
+    pub fn start(config: Config) -> Self {
         let (stop, stopped) = watch::channel(false);
         let client = Client::default();
         let running = client.clone();
-        let own_account = account.clone();
+        let account = config.account.clone();
+        let notify = config.notify.clone();
         let task = tokio::spawn(async move {
-            let result = run(
-                Run {
-                    dirs,
-                    account,
-                    key,
-                    lease,
-                    http,
-                    notify: notify.clone(),
-                    client: running.clone(),
-                    audio_config,
-                },
-                stopped,
-            )
-            .await;
+            let result = run(config, running.clone(), stopped).await;
             running.clear();
             if let Err(error) = result {
                 notify(Update::Status(Status::Failed(error.to_string())));
             }
         });
         Self {
-            account: own_account,
+            account,
             stop,
             task: Some(task),
             client,
@@ -154,26 +135,27 @@ pub async fn forget(dirs: &AppDirs) -> Result<()> {
     }
 }
 
-struct Run {
-    dirs: AppDirs,
-    account: String,
-    key: Option<String>,
-    lease: Lease,
-    http: Http,
-    notify: Notify,
-    client: Client,
-    audio_config: crate::player::EngineConfig,
+pub struct Config {
+    pub dirs: AppDirs,
+    pub account: String,
+    pub key: Option<String>,
+    pub lease: Lease,
+    pub http: Http,
+    pub notify: Notify,
+    pub audio_config: crate::player::EngineConfig,
+    pub output_volume: OutputVolume,
 }
-async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
-    let Run {
+
+async fn run(args: Config, client: Client, mut stopped: watch::Receiver<bool>) -> Result<()> {
+    let Config {
         dirs,
         account,
         key,
         lease,
         http,
         notify,
-        client,
         audio_config,
+        output_volume,
     } = args;
     ensure!(
         install::supported(),
@@ -267,6 +249,7 @@ async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
                 notify: &notify,
                 client: &client,
                 audio_config: &audio_config,
+                output_volume: &output_volume,
             },
             stopped.clone(),
         )
@@ -324,6 +307,7 @@ struct Player<'a> {
     notify: &'a Notify,
     client: &'a Client,
     audio_config: &'a crate::player::EngineConfig,
+    output_volume: &'a OutputVolume,
 }
 struct CancelDownload(tokio::task::AbortHandle);
 impl Drop for CancelDownload {
@@ -342,11 +326,12 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
         notify,
         client,
         audio_config,
+        output_volume,
     } = player;
     for file in ["ws.addr", "ws.port"] {
         let _ = tokio::fs::remove_file(data.join(file)).await;
     }
-    let bridge = audio::Bridge::open(audio_config.clone()).await;
+    let bridge = audio::Bridge::open(audio_config.clone(), output_volume.clone()).await;
     let mut command = tokio::process::Command::new(build.path(root));
     #[cfg(target_os = "linux")]
     if let Some(bridge) = &bridge {
@@ -589,17 +574,18 @@ mod tests {
             crate::vis::AudioTap::new(),
             crate::eq::shared(),
         );
-        let handle = Handle::start(
+        let handle = Handle::start(Config {
             dirs,
-            "native-smoke-test".into(),
-            Some(value),
-            store.lease(crate::credentials::Slot::Soloist),
-            Http::default(),
-            Arc::new(move |event| {
+            account: "native-smoke-test".into(),
+            key: Some(value),
+            lease: store.lease(crate::credentials::Slot::Soloist),
+            http: Http::default(),
+            notify: Arc::new(move |event| {
                 let _ = events.send(event);
             }),
             audio_config,
-        );
+            output_volume: OutputVolume::default(),
+        });
         let result = tokio::time::timeout(Duration::from_secs(120), async {
             while let Some(event) = receive.recv().await {
                 match event {

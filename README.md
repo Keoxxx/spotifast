@@ -52,7 +52,9 @@ On Linux with PipeWire, Soloist also supports Spotifast’s EQ and visualizers
 through a private audio route. Stable Windows and macOS builds retain Soloist’s direct output.
 Separate [native audio previews](https://spotifast.rocks/soloist/#native-audio-preview)
 add Mac EQ and visualizers, and Windows visualizers, including MilkDrop.
-These previews follow Soloist’s source volume, so visuals stop at zero.
+The Mac preview gives Spotifast its own output volume, so its slider leaves
+visualizers moving even at zero. Spotify/phone volume still affects capture.
+Windows visuals follow Soloist’s source volume and stop when it is muted.
 When enabled, Soloist appears as **This computer**; settings show the controls
 that apply to it. Turning it off restores the built-in player's preferences.
 While Soloist starts and its account is verified, the Spotify loading screen shows
