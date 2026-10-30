@@ -130,7 +130,7 @@ mod adapter {
             _ => {}
         }
     }
-    pub(super) fn open(config: crate::player::EngineConfig) -> Option<Bridge> {
+    pub fn open(config: crate::player::EngineConfig) -> Option<Bridge> {
         let state = Arc::new(State::new());
         let worker = state.clone();
         std::thread::Builder::new().name("soloist-native-audio".into()).spawn(move || {

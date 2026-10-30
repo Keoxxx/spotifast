@@ -37,7 +37,8 @@ jobs:
           manifest = pathlib.Path('Cargo.toml')
           text = manifest.read_text()
           base = re.search(r'^version = "([^"]+)"', text, re.M).group(1)
-          version = base.split('-')[0] + '-soloist.' + os.environ['GITHUB_RUN_NUMBER']
+          major, minor, patch = map(int, base.split('-')[0].split('.'))
+          version = f'{major}.{minor}.{patch + 1}-soloist.' + os.environ['GITHUB_RUN_NUMBER']
           manifest.write_text(text.replace('version = "' + base + '"', 'version = "' + version + '"', 1))
           lock = pathlib.Path('Cargo.lock')
           lock.write_text(lock.read_text().replace('name = "spotifast"\nversion = "' + base + '"', 'name = "spotifast"\nversion = "' + version + '"', 1))
