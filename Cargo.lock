@@ -6224,6 +6224,7 @@ dependencies = [
  "open",
  "pbkdf2",
  "percent-encoding",
+ "pipewire",
  "polib",
  "projectm-sys",
  "protobuf",

@@ -784,3 +784,10 @@ Library and metadata connections remain available through the existing Web
 API and librespot session. Signing out stops the child and deletes its saved
 key and pairing data. Soloist's own streaming traffic is not routed by
 Spotifast's proxy settings.
+
+On Linux with PipeWire, the managed child is given a private input through
+`--pipewire-device`. Native PipeWire streams apply the existing equalizer and
+feed the visualizers before volume, then play through the default output.
+Only that child's stream is held at unity gain; its documented volume events
+set the final processed gain. The route is temporary and local, and writes no
+audio to disk. Other platforms retain Soloist's direct output.

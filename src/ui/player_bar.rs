@@ -66,7 +66,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             // Its empty space is the visualizer's control, as Winamp's
             // visualizer was: a click moves to the next mode. The controls
             // drawn after it take their own clicks.
-            if app.settings.player_bar_vis_click && !app.settings.soloist_enabled {
+            if app.settings.player_bar_vis_click && app.audio_processing_available() {
                 let empty = ui.interact(
                     behind,
                     ui.id().with("player-bar-visualizer"),
@@ -128,7 +128,7 @@ fn visualizer(app: &mut App, ui: &egui::Ui, rect: Rect, now: Option<&NowPlaying>
     use crate::settings::PlayerBarVis;
     use crate::vis;
     let mode = app.settings.player_bar_vis;
-    let sounding = now.is_some_and(|now| (now.playing || now.loading) && now.local);
+    let sounding = app.visualizer_sounding(now);
     let dark = ui.visuals().dark_mode;
     let colours = vis_colours(app.now_playing_palette(), app.palette.accent, dark);
     // Over a light bar the same colour paints more strongly, or white
@@ -142,7 +142,9 @@ fn visualizer(app: &mut App, ui: &egui::Ui, rect: Rect, now: Option<&NowPlaying>
                 return false;
             }
             let samples = if sounding {
-                app.winamp.tap.window(vis::WIDE_SAMPLES, vis::LAG)
+                app.winamp
+                    .tap
+                    .window(vis::WIDE_SAMPLES, app.visualizer_lag())
             } else {
                 Vec::new()
             };
@@ -159,7 +161,10 @@ fn visualizer(app: &mut App, ui: &egui::Ui, rect: Rect, now: Option<&NowPlaying>
             }
             // Winamp's scope with a column every eight points or so.
             let count = (rect.width() / 8.0).clamp(75.0, 320.0) as usize;
-            let samples = app.winamp.tap.window(count * vis::SCOPE_STEP, vis::LAG);
+            let samples = app
+                .winamp
+                .tap
+                .window(count * vis::SCOPE_STEP, app.visualizer_lag());
             waveform(
                 &painter,
                 rect,

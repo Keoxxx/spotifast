@@ -2206,6 +2206,7 @@ impl Worker {
                             self.credentials.lease(CredentialSlot::Soloist),
                             self.http.clone(),
                             notify,
+                            self.engine_config.clone(),
                         ));
                     }
                 }

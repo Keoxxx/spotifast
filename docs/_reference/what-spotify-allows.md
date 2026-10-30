@@ -165,7 +165,9 @@ pairs once in the official Spotify app. Spotifast renews expiring builds
 from Spotify's download server and retains its existing library connections.
 Basic controls and state use Soloist's loopback API; collection offsets use
 the existing Spotify playback requests. Full queue editing and audio access
-remain unavailable through Soloist's documented API.
+remain unavailable through Soloist's documented API. On Linux with PipeWire,
+Spotifast processes its owned Soloist output through the operating system for
+EQ and visualizers; it does not capture the system mix.
 
 ## librespot playback
 
@@ -234,7 +236,8 @@ The Web API and librespot do not provide these features:
 - **Lossless through librespot.** librespot does not receive lossless streams.
   The optional [Soloist player](/soloist/) uses Spotify's own implementation.
   Its API does not report the delivered format or expose raw audio for
-  Spotifast's equalizer and visualisers. Spotifast does not bypass DRM.
+  Spotifast's equalizer and visualisers. The Linux integration uses a private
+  PipeWire audio route instead. Spotifast does not bypass DRM.
 - **Local files from Spotify's Local Files playlist.** librespot cannot play
   that playlist; add the songs to another playlist first. Local files on other
   computers or phones are not shared either: Spotify keeps only their names.

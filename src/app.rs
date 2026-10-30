@@ -431,6 +431,7 @@ pub struct App {
     pub local_ready: bool,
     pub local_playback: LocalPlayback,
     pub soloist_status: crate::soloist::Status,
+    pub soloist_audio: bool,
     pub soloist_onboarding: crate::settings::SoloistOnboarding,
     pub soloist_key: String,
     pub soloist_device_id: Option<String>,
@@ -1116,6 +1117,7 @@ impl App {
             local_ready: false,
             local_playback: LocalPlayback::Unavailable,
             soloist_status: crate::soloist::Status::Off,
+            soloist_audio: false,
             soloist_onboarding,
             soloist_key: String::new(),
             soloist_device_id: None,
@@ -1730,10 +1732,30 @@ impl App {
         }
     }
 
-    /// Presentation only: Soloist's own local process still uses the remote
-    /// command path and must not inherit librespot's audio/queue capabilities.
+    /// Soloist's own local process still uses the remote command path and
+    /// queue capabilities. Its private audio route is tracked separately.
     pub fn targets_own_soloist(&self) -> bool {
         matches!(self.target(), Target::Remote(Some(id)) if self.soloist_device_id.as_ref() == Some(&id))
+    }
+
+    /// The built-in sink or a verified private route from our Soloist child.
+    pub fn audio_processing_available(&self) -> bool {
+        !self.settings.soloist_enabled || self.soloist_audio
+    }
+
+    pub fn visualizer_sounding(&self, now: Option<&NowPlaying>) -> bool {
+        now.is_some_and(|now| {
+            (now.playing || now.loading)
+                && (now.local || (self.soloist_audio && self.targets_own_soloist()))
+        })
+    }
+
+    pub fn visualizer_lag(&self) -> usize {
+        if self.soloist_audio && self.targets_own_soloist() {
+            0
+        } else {
+            crate::vis::LAG
+        }
     }
 
     /// A running child is not usable until its Connect device has been
@@ -2832,6 +2854,7 @@ impl App {
                 let ready = matches!(status, Status::Ready { .. });
                 if matches!(status, Status::Ready { .. } | Status::Pairing { .. }) { self.soloist_key.clear(); }
                 if !ready {
+                    self.soloist_audio = false;
                     self.clear_soloist_target();
                     self.backend.send(Command::SoloistDevice(None));
                 }
@@ -2842,6 +2865,7 @@ impl App {
                     self.refresh_devices();
                 }
             }
+            Update::Audio(available) => self.soloist_audio = available && self.settings.soloist_enabled && matches!(self.soloist_status, Status::Ready { .. }),
             Update::Changed { queue } => {
                 if self.soloist_device_id.is_some() {
                     self.poll_remote_soon();
@@ -2907,6 +2931,7 @@ impl App {
                 self.soloist_key.clear();
                 self.soloist_device_id = None;
                 self.soloist_status = crate::soloist::Status::Off;
+                self.soloist_audio = false;
                 self.soloist_update = None;
                 self.soloist_select = false;
                 if matches!(self.dialog, Some(Dialog::PersonalAppIntro)) {
@@ -12166,6 +12191,7 @@ impl App {
                 self.clear_play_pending();
                 self.supersede_play_search();
                 self.settings.soloist_enabled = enabled;
+                self.soloist_audio = false;
                 self.mark_settings_dirty();
                 self.soloist_select = enabled;
                 self.soloist_update = None;
@@ -21138,6 +21164,40 @@ mod tests {
         assert_eq!(app.page(), &Page::Settings);
         app.apply(Action::SetSoloist(false), &ctx);
         assert!(!app.soloist_waiting());
+        app.backend.shutdown();
+    }
+
+    #[test]
+    fn soloist_audio_capability_is_cleared_on_restart_and_disable() {
+        use crate::soloist::{Status, Update};
+        let mut app = test_app("soloist-audio-capability");
+        app.backend.set_offline(true);
+        app.settings.soloist_enabled = true;
+        assert!(!app.audio_processing_available());
+        app.on_soloist(Update::Audio(true));
+        assert!(
+            !app.soloist_audio,
+            "an unready child cannot enable processing"
+        );
+        app.on_soloist(Update::Status(Status::Ready {
+            name: "owned".into(),
+            version: "test".into(),
+            expires: u64::MAX,
+        }));
+        app.on_soloist(Update::Audio(true));
+        assert!(app.audio_processing_available());
+        app.on_soloist(Update::Status(Status::Starting));
+        assert!(!app.audio_processing_available());
+        app.settings.soloist_enabled = false;
+        app.on_soloist(Update::Audio(true));
+        assert!(
+            !app.soloist_audio,
+            "late events cannot restore a stopped route"
+        );
+        assert!(
+            app.audio_processing_available(),
+            "built-in player remains available"
+        );
         app.backend.shutdown();
     }
 

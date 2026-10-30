@@ -48,6 +48,8 @@ one-time pairing and automatic renewal of expiring builds. New listeners and
 people updating see this choice once after sign-in on supported platforms.
 **Use the built-in player** keeps librespot, with Spotifast's EQ, visualizers,
 local files and full queue editing. The choice is remembered.
+On Linux with PipeWire, Soloist also supports Spotifast’s EQ and visualizers
+through a private audio route. Windows and macOS retain Soloist’s direct output.
 When enabled, Soloist appears as **This computer**; settings show the controls
 that apply to it. Turning it off restores the built-in player's preferences.
 While Soloist starts and its account is verified, the Spotify loading screen shows

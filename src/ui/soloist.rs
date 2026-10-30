@@ -57,7 +57,7 @@ pub fn onboarding(app: &mut App, ui: &mut egui::Ui) {
                                 ui.add_space(18.0);
                                 ui.separator();
                                 ui.add_space(10.0);
-                                ui.add(egui::Label::new(egui::RichText::new(gettext(locale, "For EQ, visualizers, local files and queue editing, use the built-in player. You can switch later in Settings.")).color(palette.secondary)).wrap());
+                                ui.add(egui::Label::new(egui::RichText::new(gettext(locale, "For local files and full queue editing, use the built-in player. You can switch later in Settings.")).color(palette.secondary)).wrap());
                                 ui.add_space(8.0);
                                 if theme::soft_button(ui, &palette, None, &gettext(locale, "Use the built-in player"), false).clicked() {
                                     app.actions.push(Action::UseBuiltInPlayer);
@@ -252,9 +252,13 @@ fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
                 .replace("{date}", &date),
         );
     }
-    ui.add(egui::Label::new(egui::RichText::new(gettext(locale,
-        "Spotify manages audio quality. EQ, visualizers and local files use the built-in player."
-    )).color(palette.secondary)).wrap());
+    ui.add(
+        egui::Label::new(
+            egui::RichText::new(gettext(locale, "Spotify manages audio quality."))
+                .color(palette.secondary),
+        )
+        .wrap(),
+    );
     if ui
         .link(gettext(locale, "Setup, privacy and limitations"))
         .clicked()

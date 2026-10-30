@@ -1097,6 +1097,11 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
     }
     for surface in show.unwrap_or("").split(',').map(str::trim) {
         match surface {
+            "soloist-audio" => {
+                app.soloist_audio = true;
+                app.settings.player_bar_vis = crate::settings::PlayerBarVis::Spectrum;
+                app.winamp.tap.push(&demo_sound(), 1.0);
+            }
             "soloist-welcome" => {
                 app.soloist_onboarding = crate::settings::SoloistOnboarding::Welcome;
             }
@@ -8155,6 +8160,36 @@ mod tests {
         app.backend.shutdown();
     }
 
+    #[test]
+    fn routed_soloist_restores_processing_controls_without_builtin_playback_options() {
+        let (ctx, mut app) = accessible_app("soloist-processing");
+        app.settings.soloist_enabled = true;
+        app.soloist_audio = true;
+        for title in ["Equalizer", "MilkDrop", "Player bar visualizer"] {
+            let text = settings_text(&ctx, &mut app, title);
+            assert!(
+                text.iter().filter(|label| *label == title).count() > 1,
+                "{title}: {text:?}"
+            );
+        }
+        for title in [
+            "Audio quality",
+            "Normalize volume",
+            "Local files",
+            "Audio cache",
+        ] {
+            let text = settings_text(&ctx, &mut app, title);
+            assert_eq!(
+                text.iter().filter(|label| *label == title).count(),
+                1,
+                "{title}: {text:?}"
+            );
+        }
+        app.soloist_audio = false;
+        assert!(!app.audio_processing_available());
+        app.backend.shutdown();
+    }
+
     #[cfg(feature = "demo")]
     #[test]
     fn soloist_local_presentation_keeps_remote_routing_and_other_devices() {
@@ -8185,8 +8220,13 @@ mod tests {
             "Soloist cannot inherit the built-in audio/queue capabilities"
         );
 
+        app.soloist_audio = true;
+        assert!(app.visualizer_sounding(app.now_playing().as_ref()));
+        assert_eq!(app.visualizer_lag(), 0);
         app.selected_device = Some("someone-elses-soloist".into());
         app.remote.as_mut().unwrap().state.device = app.devices.last().cloned();
+        assert!(!app.visualizer_sounding(app.now_playing().as_ref()));
+        assert_eq!(app.visualizer_lag(), crate::vis::LAG);
         accessible_frame(&ctx, &mut app, vec![]);
         let tree = accessible_frame(&ctx, &mut app, vec![]);
         assert!(!app.targets_own_soloist());

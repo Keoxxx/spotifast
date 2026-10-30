@@ -50,8 +50,9 @@ label in the device picker. It does not show a remote-playback badge for it.
 Once Soloist is ready, the inactive built-in player's duplicate entry is hidden.
 Choose **Turn off Soloist** in Settings to stop it and restore the built-in
 player's entry and settings. Saved built-in preferences are kept.
-While Soloist is enabled, built-in audio, EQ and visualization settings are
-hidden. Shared controls for the tray, startup and Spotifast updates remain
+While Soloist is enabled, built-in playback preferences are hidden. On Linux
+with PipeWire, EQ and visualization settings appear once the private Soloist
+audio route is established. Shared controls for the tray, startup and Spotifast updates remain
 under **Application**. The Soloist card shows its version, expiry and a short
 capability note, with a link to this guide. **Turn off Soloist** sits in its
 header, like **Sign out** in the Account card.
@@ -117,18 +118,29 @@ edit a Soloist queue by replacing the playing playlist. Spotify's Connect
 queue-write mechanisms may offer a future route, but have not been verified
 for Soloist's queue identities and concurrent updates.
 
-Soloist sends audio directly to the operating system's default output. Its
-API provides no PCM stream. Spotifast's equalizer, spectrum, oscilloscope,
-MilkDrop and local file playback therefore remain features of the built-in
-player. Ordinary system audio routing is a possible separate integration:
-[PipeWire loopbacks](https://docs.pipewire.org/page_module_loopback.html) can
-route a dedicated player output to a processing input on Linux. Windows
-[WASAPI loopback](https://learn.microsoft.com/en-us/windows/win32/coreaudio/loopback-recording)
-and macOS [Core Audio taps](https://developer.apple.com/documentation/coreaudio/capturing-system-audio-with-core-audio-taps)
-need their own capture and output implementations. This is
-not implemented, and no claim is made that loopback capture is bit-perfect.
-A system-wide loopback would also include unrelated apps, which is unsuitable
-for Spotifast's visualizers.
+On Linux with PipeWire, Spotifast routes its own Soloist process through a
+private audio input, using Soloist's documented `--pipewire-device` option.
+The existing equalizer, spectrum, oscilloscope and MilkDrop work on this route.
+The equalizer runs at the output's negotiated sample rate; the visualization
+copy is converted to 44.1 kHz. Visualizers receive audio after EQ and before
+volume, so zero volume still animates. Spotify's reported volume controls the
+final output gain, including changes made from another Spotify client.
+
+The route uses native PipeWire streams and the system's default output. It
+needs no extra command-line tools, virtual audio driver, or persistent audio
+configuration. The private input is not a default device or a system-wide
+filter. No microphone or system mix is captured, and samples are never saved
+to disk. Pausing clears buffered samples; closing Soloist removes the route.
+If PipeWire is unavailable at startup, Soloist uses its ordinary output and
+EQ and visualizer controls stay hidden. A route that fails during playback
+stops the player and offers retry in Settings.
+
+Windows, macOS and Linux without this route keep Soloist's direct output.
+They do not yet support Spotifast's EQ or visualizers with Soloist. Local files
+and full queue editing still require the built-in player on every platform.
+The Soloist API itself provides no PCM stream. OS audio processing does not
+establish which Spotify format was delivered, and is not advertised as
+bit-perfect or as a DRM workaround.
 
 Spotify lists capabilities such as Smart Shuffle, Jam and crossfade for its
 player. Spotifast only offers controls exposed by the documented Soloist API;

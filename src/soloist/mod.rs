@@ -1,5 +1,6 @@
 //! Optional, user-installed Spotify Soloist. Spotifast owns only the child it
 //! started, and keeps its files and credentials separate from librespot.
+mod audio;
 pub mod install;
 mod protocol;
 use crate::{
@@ -66,6 +67,7 @@ impl Status {
 #[derive(Clone, Debug)]
 pub enum Update {
     Status(Status),
+    Audio(bool),
     Changed { queue: bool },
     UpdateReady(String),
     UpdateFailed,
@@ -86,6 +88,7 @@ impl Handle {
         lease: Lease,
         http: Http,
         notify: Notify,
+        audio_config: crate::player::EngineConfig,
     ) -> Self {
         let (stop, stopped) = watch::channel(false);
         let client = Client::default();
@@ -101,6 +104,7 @@ impl Handle {
                     http,
                     notify: notify.clone(),
                     client: running.clone(),
+                    audio_config,
                 },
                 stopped,
             )
@@ -158,6 +162,7 @@ struct Run {
     http: Http,
     notify: Notify,
     client: Client,
+    audio_config: crate::player::EngineConfig,
 }
 async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
     let Run {
@@ -168,6 +173,7 @@ async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
         http,
         notify,
         client,
+        audio_config,
     } = args;
     ensure!(
         install::supported(),
@@ -260,6 +266,7 @@ async fn run(args: Run, mut stopped: watch::Receiver<bool>) -> Result<()> {
                 http: &http,
                 notify: &notify,
                 client: &client,
+                audio_config: &audio_config,
             },
             stopped.clone(),
         )
@@ -316,6 +323,7 @@ struct Player<'a> {
     http: &'a Http,
     notify: &'a Notify,
     client: &'a Client,
+    audio_config: &'a crate::player::EngineConfig,
 }
 struct CancelDownload(tokio::task::AbortHandle);
 impl Drop for CancelDownload {
@@ -333,11 +341,28 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
         http,
         notify,
         client,
+        audio_config,
     } = player;
     for file in ["ws.addr", "ws.port"] {
         let _ = tokio::fs::remove_file(data.join(file)).await;
     }
+    let bridge = audio::Bridge::open(audio_config.clone()).await;
     let mut command = tokio::process::Command::new(build.path(root));
+    if let Some(bridge) = &bridge {
+        command.args(["--pipewire-device", &bridge.name]);
+        let props = std::env::var("PIPEWIRE_PROPS").unwrap_or_default();
+        let props = props.trim();
+        let props = props
+            .strip_prefix('{')
+            .and_then(|s| s.strip_suffix('}'))
+            .unwrap_or(props);
+        // Only this child's stream stays at unity. Its documented volume
+        // events drive our final gain, after the equalizer and visualizers.
+        command.env(
+            "PIPEWIRE_PROPS",
+            format!("{{ {props} channelmix.lock-volumes = true node.dont-fallback = true node.dont-move = true }}"),
+        );
+    }
     command
         .args([
             "--device-name",
@@ -364,6 +389,9 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
     let mut child = command.spawn().context(
         "Soloist could not start. Check that this operating system supports Spotify's build.",
     )?;
+    if let Some(bridge) = &bridge {
+        bridge.child(child.id().context("Missing Soloist process")?);
+    }
     let mut cancellation = stopped.clone();
     let work = async {
         let port = tokio::time::timeout(Duration::from_secs(20), async {
@@ -393,6 +421,8 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
             name: name.into(),
             version: build.version.clone(),
         }));
+        let mut audio_tick = tokio::time::interval(Duration::from_millis(250));
+        let mut audio_routed = false;
         let mut idle = false;
         let mut active = true;
         let mut player_idle = false;
@@ -410,6 +440,11 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
         loop {
             tokio::select! {
                 _ = stopped.changed() => return Ok(Outcome::Stopped),
+                _ = audio_tick.tick(), if bridge.is_some() => {
+                    let bridge = bridge.as_ref().expect("audio bridge");
+                    if bridge.failed() { bail!("Soloist's audio output stopped. Retry in Settings to reconnect it."); }
+                    if bridge.routed() != audio_routed { audio_routed = bridge.routed(); notify(Update::Audio(audio_routed)); }
+                }
                 exit = child.wait() => {
                     if exit?.code() == Some(10) { return Ok(Outcome::Expired); }
                     bail!("Soloist stopped. Retry in Settings to start it again.");
@@ -453,13 +488,18 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
                 }
                 message = protocol::receive(&mut socket) => {
                     let message = message?;
+                    if let Some(bridge) = &bridge { bridge.update(&message); }
                     let kind = message["type"].as_str().unwrap_or_default();
                     if let Some(value) = message["is_active"].as_bool() { active = value; client.active(active); }
                     if kind == "auth_state" {
                         let authenticated = message["logged_in"].as_bool().unwrap_or(false);
                         if authenticated != logged_in {
                             logged_in = authenticated;
-                            if logged_in { notify(Update::Status(Status::Ready { name: name.into(), version: build.version.clone(), expires: build.built + 90 * install::DAY })); }
+                            if logged_in {
+                                notify(Update::Status(Status::Ready { name: name.into(), version: build.version.clone(), expires: build.built + 90 * install::DAY }));
+                                if let Some(bridge) = &bridge { notify(Update::Audio(bridge.routed())); }
+                                protocol::send(&mut socket, json!({"command":"get_state"})).await?;
+                            }
                             else { client.bind(None); notify(Update::Status(Status::Pairing { name: name.into(), version: build.version.clone() })); }
                         }
                     }
@@ -493,6 +533,8 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
     // Always reap our own child before another launch or sign-out cleanup.
     let _ = child.kill().await;
     let _ = child.wait().await;
+    drop(bridge);
+    notify(Update::Audio(false));
     result
 }
 
@@ -539,6 +581,13 @@ mod tests {
         };
         let store = crate::credentials::Store::in_memory(dirs.clone());
         let (events, mut receive) = tokio::sync::mpsc::unbounded_channel();
+        let audio_config = crate::app::engine_config(
+            &dirs,
+            &crate::settings::Settings::default(),
+            crate::settings::ProxyConfig::Off,
+            crate::vis::AudioTap::new(),
+            crate::eq::shared(),
+        );
         let handle = Handle::start(
             dirs,
             "native-smoke-test".into(),
@@ -548,6 +597,7 @@ mod tests {
             Arc::new(move |event| {
                 let _ = events.send(event);
             }),
+            audio_config,
         );
         let result = tokio::time::timeout(Duration::from_secs(120), async {
             while let Some(event) = receive.recv().await {
