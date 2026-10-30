@@ -57,7 +57,9 @@ When enabled, Soloist appears as **This computer**; settings show the controls
 that apply to it. Turning it off restores the built-in player's preferences.
 While Soloist starts and its account is verified, the Spotify loading screen shows
 **Verifying Soloist…** and waits to accept playback commands. **Set up Soloist**
-opens setup if pairing needs attention.
+opens setup if pairing needs attention. After downloading, the wizard focuses on
+choosing the named device in Spotify, with the built-in player available as a
+quiet alternative below the card.
 
 ## Your music, on your desktop
 

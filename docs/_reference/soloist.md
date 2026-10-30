@@ -65,6 +65,10 @@ Playback commands, including shortcuts and row double-clicks, are unavailable
 until the device is verified; they never start the built-in player as a
 fallback. **Set up Soloist** opens setup if the check needs help. Downloads,
 pairing and errors show setup directly, including its built-in-player option.
+After downloading, setup shows **Connect in Spotify**, the exact device name
+to choose and a waiting indicator. Once verified, **Start listening** opens
+Spotifast. Version, quality and other background details remain in Settings;
+**Use the built-in player** stays available as a small link below each setup card.
 The saved key and pairing are retained for **Enable with saved key** next time; signing out of Spotifast
 removes them. Closing Spotifast completely stops the child player. Closing to
 the tray leaves both running.

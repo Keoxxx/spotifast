@@ -8384,7 +8384,7 @@ mod tests {
         accessible_frame(&ctx, &mut app, vec![]);
         let tree = accessible_frame(&ctx, &mut app, vec![]);
         let setup = accessible_node(&tree, "Set up Soloist", Role::Button);
-        accessible_node(&tree, "Use the built-in player", Role::Button);
+        accessible_node(&tree, "Use the built-in player", Role::Link);
         accessible_frame(
             &ctx,
             &mut app,
@@ -8398,7 +8398,7 @@ mod tests {
         apply_flags(&mut app, None, Some("soloist-pairing"));
         accessible_frame(&ctx, &mut app, vec![]);
         let tree = accessible_frame(&ctx, &mut app, vec![]);
-        let builtin = accessible_node(&tree, "Use the built-in player", Role::Button);
+        let builtin = accessible_node(&tree, "Use the built-in player", Role::Link);
         accessible_frame(
             &ctx,
             &mut app,
@@ -8406,6 +8406,168 @@ mod tests {
         );
         assert!(!app.settings.soloist_enabled);
         assert_eq!(app.soloist_onboarding, SoloistOnboarding::Complete);
+        app.backend.shutdown();
+    }
+
+    #[cfg(feature = "demo")]
+    #[test]
+    fn soloist_pairing_focuses_on_the_instruction_and_exact_device_name() {
+        if !crate::soloist::install::supported() {
+            return;
+        }
+        for light in [false, true] {
+            for size in [egui::vec2(760.0, 520.0), egui::vec2(1240.0, 800.0)] {
+                for (flag, waiting) in [
+                    ("soloist-pairing", "Waiting for Spotify…"),
+                    ("soloist-verifying", "Verifying Soloist…"),
+                ] {
+                    let (ctx, mut app) = accessible_app("soloist-pairing-hierarchy");
+                    app.backend.set_offline(true);
+                    apply_flags(
+                        &mut app,
+                        None,
+                        Some(&format!(
+                            "soloist-onboarding,{flag}{}",
+                            if light { ",light" } else { "" }
+                        )),
+                    );
+                    for _ in 0..3 {
+                        view_frame_sized(&ctx, &mut app, vec![], App::frame_ui, size);
+                    }
+                    let text = view_frame_sized(&ctx, &mut app, vec![], App::frame_ui, size);
+                    let bounds = |label: &str| {
+                        text.iter()
+                            .find(|(s, _)| s == label)
+                            .unwrap_or_else(|| panic!("missing {label}: {text:?}"))
+                            .1
+                    };
+                    let title = bounds("Connect in Spotify");
+                    let instruction = bounds(
+                        "Open Spotify with the same account and network.\nIn its device picker, choose:",
+                    );
+                    let device = bounds("Spotifast Soloist (12345678)");
+                    let status = bounds(waiting);
+                    let fallback = bounds("Use the built-in player");
+                    assert!(title.bottom() < instruction.top());
+                    assert!(instruction.bottom() < device.top());
+                    assert!(device.bottom() < status.top());
+                    assert!(
+                        status.bottom() + 28.0 < fallback.top(),
+                        "fallback outside card"
+                    );
+                    for rect in [title, instruction, device, status, fallback] {
+                        assert!(
+                            rect.left() >= 0.0
+                                && rect.right() <= size.x
+                                && rect.top() >= 0.0
+                                && rect.bottom() <= size.y,
+                            "{rect:?} in {size:?}"
+                        );
+                    }
+                    assert!(title.height() > instruction.height() / 2.0);
+                    for unwanted in [
+                        "Listen with Spotify Soloist",
+                        "Spotify's official player for listening outside the Spotify app.",
+                        "Setup, privacy and limitations",
+                        "Spotify manages audio quality.",
+                        "Start listening",
+                    ] {
+                        assert!(!text.iter().any(|(s, _)| s == unwanted), "{unwanted}");
+                    }
+                    assert!(!text.iter().any(|(s, _)| s.starts_with("Version ")));
+                    let tree = accessible_frame(&ctx, &mut app, vec![]);
+                    accessible_node(
+                        &tree,
+                        "Use the built-in player",
+                        egui::accesskit::Role::Link,
+                    );
+                    app.backend.shutdown();
+                }
+            }
+        }
+    }
+
+    #[cfg(feature = "demo")]
+    #[test]
+    fn soloist_pairing_wraps_a_long_device_name_without_hiding_it() {
+        if !crate::soloist::install::supported() {
+            return;
+        }
+        let (ctx, mut app) = accessible_app("soloist-long-device");
+        app.backend.set_offline(true);
+        apply_flags(&mut app, None, Some("soloist-onboarding,soloist-pairing"));
+        let name = "Spotifast Soloist on the living room computer (12345678)";
+        app.soloist_status = crate::soloist::Status::Pairing {
+            name: name.into(),
+            version: "test".into(),
+        };
+        let size = egui::vec2(760.0, 520.0);
+        for _ in 0..3 {
+            view_frame_sized(&ctx, &mut app, vec![], App::frame_ui, size);
+        }
+        let output = ctx.run_ui(
+            egui::RawInput {
+                screen_rect: Some(egui::Rect::from_min_size(egui::Pos2::ZERO, size)),
+                ..Default::default()
+            },
+            |ui| app.frame_ui(ui),
+        );
+        let text = output
+            .shapes
+            .iter()
+            .find_map(|shape| match &shape.shape {
+                egui::Shape::Text(text) if text.galley.job.text == name => Some(text),
+                _ => None,
+            })
+            .expect("complete device name drawn");
+        assert!(!text.galley.elided);
+        assert!(text.galley.rows.len() > 1);
+        let rect = text.galley.rect.translate(text.pos.to_vec2());
+        assert!(rect.left() >= 0.0 && rect.right() <= size.x && rect.bottom() <= size.y);
+        app.backend.shutdown();
+    }
+
+    #[cfg(feature = "demo")]
+    #[test]
+    fn soloist_verified_setup_offers_one_primary_action() {
+        if !crate::soloist::install::supported() {
+            return;
+        }
+        use egui::accesskit::{Action as AccessibleAction, Role};
+        let (ctx, mut app) = accessible_app("soloist-ready-step");
+        app.backend.set_offline(true);
+        apply_flags(&mut app, None, Some("soloist-onboarding,soloist-ready"));
+        accessible_frame(&ctx, &mut app, vec![]);
+        let tree = accessible_frame(&ctx, &mut app, vec![]);
+        let start = accessible_node(&tree, "Start listening", Role::Button);
+        accessible_node(&tree, "Use the built-in player", Role::Link);
+        assert_eq!(
+            tree.nodes
+                .iter()
+                .filter(|(_, n)| n.role() == Role::Button && n.label() == Some("Start listening"))
+                .count(),
+            1
+        );
+        let text = view_frame_sized(
+            &ctx,
+            &mut app,
+            vec![],
+            App::frame_ui,
+            egui::vec2(760.0, 520.0),
+        );
+        assert!(text.iter().any(|(s, _)| s == "Ready to listen"));
+        assert!(!text.iter().any(|(s, _)| s.starts_with("Version ")
+            || s == "Updates automatically."
+            || s == "Setup, privacy and limitations"));
+        accessible_frame(
+            &ctx,
+            &mut app,
+            vec![accessible_action(start, AccessibleAction::Click, None)],
+        );
+        assert_eq!(
+            app.soloist_onboarding,
+            crate::settings::SoloistOnboarding::Complete
+        );
         app.backend.shutdown();
     }
 
