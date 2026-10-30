@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:08+0100\n"
+"POT-Creation-Date: 2026-10-30 12:57+0100\n"
 "PO-Revision-Date: 2026-10-02 20:30+0300\n"
 "Last-Translator: Barış Berke Çetin <brsberkectn@gmail.com>\n"
 "Language-Team: Turkish\n"
@@ -649,7 +649,7 @@ msgstr "Ağ bağlantısı hatası. Bağlantınızı kontrol edin."
 msgid "Cut"
 msgstr "Kes"
 
-#: src/ui/widgets.rs:3166 src/ui/login.rs:553
+#: src/ui/widgets.rs:3166 src/ui/login.rs:560
 msgid "Copy"
 msgstr "Kopyala"
 
@@ -1334,7 +1334,7 @@ msgstr "Spotify Free, yerel çalma için Premium gerekir"
 msgid "Connected as {username}"
 msgstr "{username} olarak bağlandı"
 
-#: src/ui/settings.rs:543 src/ui/login.rs:384
+#: src/ui/settings.rs:543 src/ui/login.rs:391
 msgid "Client ID"
 msgstr "İstemci Kimliği (Client ID)"
 
@@ -1369,7 +1369,7 @@ msgctxt "playback status"
 msgid "Connecting"
 msgstr "Bağlanıyor"
 
-#: src/ui/settings.rs:606 src/ui/login.rs:277
+#: src/ui/settings.rs:606 src/ui/login.rs:273
 msgid "Connecting to Spotify…"
 msgstr "Spotify'a bağlanıyor…"
 
@@ -1785,7 +1785,7 @@ msgstr ""
 "Kapalı, ortam değişkenlerini yok sayar. Sistem, bu değişkenleri ve macOS ile "
 "Windows'ta işletim sistemi proxy'sini kullanır."
 
-#: src/ui/settings.rs:1657 src/ui/login.rs:637
+#: src/ui/settings.rs:1657 src/ui/login.rs:644
 msgid "Apply settings"
 msgstr "Ayarları uygula"
 
@@ -2201,7 +2201,7 @@ msgstr ""
 "Spotify Premium, kişisel Soloist anahtarınız ve Spotify’da bir kez "
 "eşleştirme gerekir. İndirme ve güncellemeleri Spotifast halleder."
 
-#: src/ui/soloist.rs:45 src/ui/login.rs:345
+#: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
 msgstr "Soloist’i kur"
 
@@ -3159,11 +3159,11 @@ msgstr ""
 "Spotify “Invalid redirect URI” derse {uri} adresini uygulamanıza tam olarak "
 "ekleyin, kaydedin ve yeniden giriş yapın."
 
-#: src/ui/login.rs:303
+#: src/ui/login.rs:310
 msgid "Sign in with Spotify"
 msgstr "Spotify ile giriş yap"
 
-#: src/ui/login.rs:314
+#: src/ui/login.rs:321
 msgid ""
 "Sign in through your browser. Spotifast never sees your password. Local "
 "playback needs Spotify Premium."
@@ -3171,24 +3171,24 @@ msgstr ""
 "Tarayıcınız üzerinden giriş yapın. Spotifast parolanızı asla görmez. Yerel "
 "çalma için Spotify Premium gerekir."
 
-#: src/ui/login.rs:323
+#: src/ui/login.rs:330
 msgid "How to set up your Spotify app"
 msgstr "Spotify uygulamanızı nasıl kurarsınız"
 
-#: src/ui/login.rs:347
+#: src/ui/login.rs:354
 msgid "Proxy Settings"
 msgstr "Proxy Ayarları"
 
-#: src/ui/login.rs:402
+#: src/ui/login.rs:409
 msgid "A Client ID is 32 letters and digits. Copy it from your app's page."
 msgstr ""
 "İstemci Kimliği 32 harf ve rakamdan oluşur. Uygulama sayfanızdan kopyalayın."
 
-#: src/ui/login.rs:454
+#: src/ui/login.rs:461
 msgid "Set up your Spotify app"
 msgstr "Spotify uygulamanızı kurun"
 
-#: src/ui/login.rs:462
+#: src/ui/login.rs:469
 msgid ""
 "Spotifast signs in through your own free Spotify app. Spotify requires its "
 "owner to have Premium."
@@ -3196,28 +3196,28 @@ msgstr ""
 "Spotifast, kendi ücretsiz Spotify uygulamanız üzerinden giriş yapar. "
 "Spotify, uygulama sahibinin Premium olmasını şart koşar."
 
-#: src/ui/login.rs:472
+#: src/ui/login.rs:479
 msgid "Open Spotify's developer dashboard."
 msgstr "Spotify geliştirici panelini açın."
 
-#: src/ui/login.rs:491
+#: src/ui/login.rs:498
 msgid "Click Create app. Any name will do."
 msgstr "“Create app” düğmesine tıklayın. Herhangi bir ad olur."
 
-#: src/ui/login.rs:498
+#: src/ui/login.rs:505
 msgid "Under Redirect URIs, add exactly:"
 msgstr "“Redirect URIs” altına tam olarak şunu ekleyin:"
 
-#: src/ui/login.rs:507
+#: src/ui/login.rs:514
 msgid "Tick Web API, accept the terms, and save."
 msgstr "“Web API” kutusunu işaretleyin, koşulları kabul edin ve kaydedin."
 
-#: src/ui/login.rs:516
+#: src/ui/login.rs:523
 msgid "Paste the app's Client ID into the field and sign in."
 msgstr "Uygulamanın İstemci Kimliği'ni alana yapıştırın ve giriş yapın."
 
 #. Translators: shown on the Copy button for a moment after it copied.
-#: src/ui/login.rs:551
+#: src/ui/login.rs:558
 msgid "Copied"
 msgstr "Kopyalandı"
 

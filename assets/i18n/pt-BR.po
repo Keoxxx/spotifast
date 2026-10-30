@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:08+0100\n"
+"POT-Creation-Date: 2026-10-30 12:57+0100\n"
 "PO-Revision-Date: 2026-09-23 20:00+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -650,7 +650,7 @@ msgstr "Erro de conexão de rede. Verifique sua conexão."
 msgid "Cut"
 msgstr "Recortar"
 
-#: src/ui/widgets.rs:3166 src/ui/login.rs:553
+#: src/ui/widgets.rs:3166 src/ui/login.rs:560
 msgid "Copy"
 msgstr "Copiar"
 
@@ -1334,7 +1334,7 @@ msgstr "Spotify Free, a reprodução local requer Premium"
 msgid "Connected as {username}"
 msgstr "Conectado como {username}"
 
-#: src/ui/settings.rs:543 src/ui/login.rs:384
+#: src/ui/settings.rs:543 src/ui/login.rs:391
 msgid "Client ID"
 msgstr "Client ID"
 
@@ -1369,7 +1369,7 @@ msgctxt "playback status"
 msgid "Connecting"
 msgstr "Conectando"
 
-#: src/ui/settings.rs:606 src/ui/login.rs:277
+#: src/ui/settings.rs:606 src/ui/login.rs:273
 msgid "Connecting to Spotify…"
 msgstr "Conectando ao Spotify…"
 
@@ -1785,7 +1785,7 @@ msgstr ""
 "Desativado ignora as variáveis de ambiente. Sistema usa essas variáveis e, "
 "no macOS e no Windows, o proxy do sistema operacional."
 
-#: src/ui/settings.rs:1657 src/ui/login.rs:637
+#: src/ui/settings.rs:1657 src/ui/login.rs:644
 msgid "Apply settings"
 msgstr "Aplicar configurações"
 
@@ -2192,7 +2192,7 @@ msgstr ""
 "pareamento único no Spotify. O Spotifast cuida do download e das "
 "atualizações."
 
-#: src/ui/soloist.rs:45 src/ui/login.rs:345
+#: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
 msgstr "Configurar Soloist"
 
@@ -3154,11 +3154,11 @@ msgstr ""
 "Se o Spotify mostrar “Invalid redirect URI”, adicione {uri} ao seu app "
 "exatamente assim, salve e entre novamente."
 
-#: src/ui/login.rs:303
+#: src/ui/login.rs:310
 msgid "Sign in with Spotify"
 msgstr "Entrar com o Spotify"
 
-#: src/ui/login.rs:314
+#: src/ui/login.rs:321
 msgid ""
 "Sign in through your browser. Spotifast never sees your password. Local "
 "playback needs Spotify Premium."
@@ -3166,23 +3166,23 @@ msgstr ""
 "Entre pelo navegador. O Spotifast nunca vê sua senha. A reprodução local "
 "requer o Spotify Premium."
 
-#: src/ui/login.rs:323
+#: src/ui/login.rs:330
 msgid "How to set up your Spotify app"
 msgstr "Como configurar seu app do Spotify"
 
-#: src/ui/login.rs:347
+#: src/ui/login.rs:354
 msgid "Proxy Settings"
 msgstr "Configurações de proxy"
 
-#: src/ui/login.rs:402
+#: src/ui/login.rs:409
 msgid "A Client ID is 32 letters and digits. Copy it from your app's page."
 msgstr "Um Client ID tem 32 letras e números. Copie-o da página do seu app."
 
-#: src/ui/login.rs:454
+#: src/ui/login.rs:461
 msgid "Set up your Spotify app"
 msgstr "Configure seu app do Spotify"
 
-#: src/ui/login.rs:462
+#: src/ui/login.rs:469
 msgid ""
 "Spotifast signs in through your own free Spotify app. Spotify requires its "
 "owner to have Premium."
@@ -3190,28 +3190,28 @@ msgstr ""
 "O Spotifast entra pelo seu próprio app gratuito do Spotify. O Spotify exige "
 "que o dono do app tenha Premium."
 
-#: src/ui/login.rs:472
+#: src/ui/login.rs:479
 msgid "Open Spotify's developer dashboard."
 msgstr "Abra o painel de desenvolvedor do Spotify."
 
-#: src/ui/login.rs:491
+#: src/ui/login.rs:498
 msgid "Click Create app. Any name will do."
 msgstr "Clique em “Create app”. Qualquer nome serve."
 
-#: src/ui/login.rs:498
+#: src/ui/login.rs:505
 msgid "Under Redirect URIs, add exactly:"
 msgstr "Em “Redirect URIs”, adicione exatamente:"
 
-#: src/ui/login.rs:507
+#: src/ui/login.rs:514
 msgid "Tick Web API, accept the terms, and save."
 msgstr "Marque “Web API”, aceite os termos e salve."
 
-#: src/ui/login.rs:516
+#: src/ui/login.rs:523
 msgid "Paste the app's Client ID into the field and sign in."
 msgstr "Cole o Client ID do app no campo e entre."
 
 #. Translators: shown on the Copy button for a moment after it copied.
-#: src/ui/login.rs:551
+#: src/ui/login.rs:558
 msgid "Copied"
 msgstr "Copiado"
 

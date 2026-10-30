@@ -8277,6 +8277,45 @@ mod tests {
 
     #[cfg(feature = "demo")]
     #[test]
+    fn connection_status_centers_the_spinner_and_translated_label_together() {
+        use clap::ValueEnum;
+        for &locale in crate::i18n::Locale::value_variants() {
+            for (flag, message) in [
+                ("connecting", "Connecting to Spotify…"),
+                ("soloist-verifying", "Verifying Soloist…"),
+            ] {
+                let (ctx, mut app) = accessible_app("loading-status-centered");
+                app.backend.set_offline(true);
+                apply_flags(&mut app, None, Some(flag));
+                app.locale = locale;
+                for width in [760.0, 1280.0] {
+                    let texts = view_frame_sized(
+                        &ctx,
+                        &mut app,
+                        vec![],
+                        App::frame_ui,
+                        egui::vec2(width, 900.0),
+                    );
+                    let label = &texts
+                        .iter()
+                        .find(|(text, _)| *text == crate::i18n::gettext(locale, message))
+                        .expect("connection status drawn")
+                        .1;
+                    let gap = ctx.style_of(egui::Theme::Dark).spacing.item_spacing.x;
+                    let group_left = label.left() - 18.0 - gap;
+                    let center = (group_left + label.right()) / 2.0;
+                    assert!(
+                        (center - width / 2.0).abs() < 1.0,
+                        "{locale:?} {flag} at {width}: status centered at {center}"
+                    );
+                }
+                app.backend.shutdown();
+            }
+        }
+    }
+
+    #[cfg(feature = "demo")]
+    #[test]
     fn soloist_verification_uses_the_sign_in_loading_screen_and_opens_setup() {
         use egui::accesskit::{Action as AccessibleAction, Role};
         let (ctx, mut app) = accessible_app("soloist-verifying");

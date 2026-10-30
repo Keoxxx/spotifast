@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:08+0100\n"
+"POT-Creation-Date: 2026-10-30 12:57+0100\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Polish\n"
@@ -655,7 +655,7 @@ msgstr "Błąd połączenia sieciowego. Sprawdź połączenie."
 msgid "Cut"
 msgstr "Wytnij"
 
-#: src/ui/widgets.rs:3166 src/ui/login.rs:553
+#: src/ui/widgets.rs:3166 src/ui/login.rs:560
 msgid "Copy"
 msgstr "Kopiuj"
 
@@ -1341,7 +1341,7 @@ msgstr "Spotify Free, lokalne odtwarzanie wymaga Premium"
 msgid "Connected as {username}"
 msgstr "Połączono jako {username}"
 
-#: src/ui/settings.rs:543 src/ui/login.rs:384
+#: src/ui/settings.rs:543 src/ui/login.rs:391
 msgid "Client ID"
 msgstr "Client ID"
 
@@ -1376,7 +1376,7 @@ msgctxt "playback status"
 msgid "Connecting"
 msgstr "Łączenie"
 
-#: src/ui/settings.rs:606 src/ui/login.rs:277
+#: src/ui/settings.rs:606 src/ui/login.rs:273
 msgid "Connecting to Spotify…"
 msgstr "Łączenie ze Spotify…"
 
@@ -1795,7 +1795,7 @@ msgstr ""
 "Wyłączone ignoruje zmienne środowiskowe. System ich używa, a w macOS i "
 "Windows także proxy systemu."
 
-#: src/ui/settings.rs:1657 src/ui/login.rs:637
+#: src/ui/settings.rs:1657 src/ui/login.rs:644
 msgid "Apply settings"
 msgstr "Zastosuj ustawienia"
 
@@ -2205,7 +2205,7 @@ msgstr ""
 "Potrzebujesz Spotify Premium, osobistego klucza Soloist i jednorazowego "
 "parowania w Spotify. Spotifast zajmie się pobieraniem i aktualizacjami."
 
-#: src/ui/soloist.rs:45 src/ui/login.rs:345
+#: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
 msgstr "Skonfiguruj Soloist"
 
@@ -3171,11 +3171,11 @@ msgstr ""
 "Jeśli Spotify pokaże „Invalid redirect URI”, dodaj {uri} do swojej aplikacji "
 "dokładnie w tej postaci, zapisz i zaloguj się ponownie."
 
-#: src/ui/login.rs:303
+#: src/ui/login.rs:310
 msgid "Sign in with Spotify"
 msgstr "Zaloguj się przez Spotify"
 
-#: src/ui/login.rs:314
+#: src/ui/login.rs:321
 msgid ""
 "Sign in through your browser. Spotifast never sees your password. Local "
 "playback needs Spotify Premium."
@@ -3183,25 +3183,25 @@ msgstr ""
 "Zaloguj się w przeglądarce. Spotifast nigdy nie widzi Twojego hasła. Lokalne "
 "odtwarzanie wymaga Spotify Premium."
 
-#: src/ui/login.rs:323
+#: src/ui/login.rs:330
 msgid "How to set up your Spotify app"
 msgstr "Jak skonfigurować aplikację Spotify"
 
-#: src/ui/login.rs:347
+#: src/ui/login.rs:354
 msgid "Proxy Settings"
 msgstr "Ustawienia proxy"
 
-#: src/ui/login.rs:402
+#: src/ui/login.rs:409
 msgid "A Client ID is 32 letters and digits. Copy it from your app's page."
 msgstr ""
 "Client ID składa się z 32 liter i cyfr. Skopiuj go ze strony Twojej "
 "aplikacji."
 
-#: src/ui/login.rs:454
+#: src/ui/login.rs:461
 msgid "Set up your Spotify app"
 msgstr "Skonfiguruj aplikację Spotify"
 
-#: src/ui/login.rs:462
+#: src/ui/login.rs:469
 msgid ""
 "Spotifast signs in through your own free Spotify app. Spotify requires its "
 "owner to have Premium."
@@ -3209,28 +3209,28 @@ msgstr ""
 "Spotifast loguje się przez Twoją własną, darmową aplikację Spotify. Spotify "
 "wymaga, aby jej właściciel miał Premium."
 
-#: src/ui/login.rs:472
+#: src/ui/login.rs:479
 msgid "Open Spotify's developer dashboard."
 msgstr "Otwórz panel dewelopera Spotify."
 
-#: src/ui/login.rs:491
+#: src/ui/login.rs:498
 msgid "Click Create app. Any name will do."
 msgstr "Kliknij „Create app”. Nazwa może być dowolna."
 
-#: src/ui/login.rs:498
+#: src/ui/login.rs:505
 msgid "Under Redirect URIs, add exactly:"
 msgstr "W polu „Redirect URIs” dodaj dokładnie:"
 
-#: src/ui/login.rs:507
+#: src/ui/login.rs:514
 msgid "Tick Web API, accept the terms, and save."
 msgstr "Zaznacz „Web API”, zaakceptuj warunki i zapisz."
 
-#: src/ui/login.rs:516
+#: src/ui/login.rs:523
 msgid "Paste the app's Client ID into the field and sign in."
 msgstr "Wklej Client ID aplikacji w pole i zaloguj się."
 
 #. Translators: shown on the Copy button for a moment after it copied.
-#: src/ui/login.rs:551
+#: src/ui/login.rs:558
 msgid "Copied"
 msgstr "Skopiowano"
 

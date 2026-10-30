@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:08+0100\n"
+"POT-Creation-Date: 2026-10-30 12:57+0100\n"
 "PO-Revision-Date: 2026-09-23 20:00+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Russian\n"
@@ -655,7 +655,7 @@ msgstr "Ошибка сетевого подключения. Проверьте
 msgid "Cut"
 msgstr "Вырезать"
 
-#: src/ui/widgets.rs:3166 src/ui/login.rs:553
+#: src/ui/widgets.rs:3166 src/ui/login.rs:560
 msgid "Copy"
 msgstr "Копировать"
 
@@ -1341,7 +1341,7 @@ msgstr "Spotify Free, для локального воспроизведения
 msgid "Connected as {username}"
 msgstr "Вход выполнен как {username}"
 
-#: src/ui/settings.rs:543 src/ui/login.rs:384
+#: src/ui/settings.rs:543 src/ui/login.rs:391
 msgid "Client ID"
 msgstr "Client ID"
 
@@ -1376,7 +1376,7 @@ msgctxt "playback status"
 msgid "Connecting"
 msgstr "Подключение"
 
-#: src/ui/settings.rs:606 src/ui/login.rs:277
+#: src/ui/settings.rs:606 src/ui/login.rs:273
 msgid "Connecting to Spotify…"
 msgstr "Подключение к Spotify…"
 
@@ -1793,7 +1793,7 @@ msgstr ""
 "«Выкл.» игнорирует переменные окружения. «Системный» использует их, а в "
 "macOS и Windows также прокси ОС."
 
-#: src/ui/settings.rs:1657 src/ui/login.rs:637
+#: src/ui/settings.rs:1657 src/ui/login.rs:644
 msgid "Apply settings"
 msgstr "Применить настройки"
 
@@ -2202,7 +2202,7 @@ msgstr ""
 "Вам понадобятся Spotify Premium, личный ключ Soloist и однократное "
 "сопряжение в Spotify. Spotifast выполнит загрузку и обновления."
 
-#: src/ui/soloist.rs:45 src/ui/login.rs:345
+#: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
 msgstr "Настроить Soloist"
 
@@ -3168,11 +3168,11 @@ msgstr ""
 "Если Spotify пишет «Invalid redirect URI», добавь {uri} в своё приложение "
 "точно в таком виде, сохрани и войди снова."
 
-#: src/ui/login.rs:303
+#: src/ui/login.rs:310
 msgid "Sign in with Spotify"
 msgstr "Войти через Spotify"
 
-#: src/ui/login.rs:314
+#: src/ui/login.rs:321
 msgid ""
 "Sign in through your browser. Spotifast never sees your password. Local "
 "playback needs Spotify Premium."
@@ -3180,25 +3180,25 @@ msgstr ""
 "Вход выполняется в браузере. Spotifast никогда не видит твой пароль. Для "
 "локального воспроизведения нужен Spotify Premium."
 
-#: src/ui/login.rs:323
+#: src/ui/login.rs:330
 msgid "How to set up your Spotify app"
 msgstr "Как настроить своё приложение Spotify"
 
-#: src/ui/login.rs:347
+#: src/ui/login.rs:354
 msgid "Proxy Settings"
 msgstr "Настройки прокси"
 
-#: src/ui/login.rs:402
+#: src/ui/login.rs:409
 msgid "A Client ID is 32 letters and digits. Copy it from your app's page."
 msgstr ""
 "Client ID состоит из 32 букв и цифр. Скопируй его со страницы своего "
 "приложения."
 
-#: src/ui/login.rs:454
+#: src/ui/login.rs:461
 msgid "Set up your Spotify app"
 msgstr "Настрой своё приложение Spotify"
 
-#: src/ui/login.rs:462
+#: src/ui/login.rs:469
 msgid ""
 "Spotifast signs in through your own free Spotify app. Spotify requires its "
 "owner to have Premium."
@@ -3206,28 +3206,28 @@ msgstr ""
 "Spotifast входит через твоё собственное бесплатное приложение Spotify. "
 "Spotify требует, чтобы у его владельца был Premium."
 
-#: src/ui/login.rs:472
+#: src/ui/login.rs:479
 msgid "Open Spotify's developer dashboard."
 msgstr "Открой панель разработчика Spotify."
 
-#: src/ui/login.rs:491
+#: src/ui/login.rs:498
 msgid "Click Create app. Any name will do."
 msgstr "Нажми «Create app». Название может быть любым."
 
-#: src/ui/login.rs:498
+#: src/ui/login.rs:505
 msgid "Under Redirect URIs, add exactly:"
 msgstr "В поле «Redirect URIs» добавь точно этот адрес:"
 
-#: src/ui/login.rs:507
+#: src/ui/login.rs:514
 msgid "Tick Web API, accept the terms, and save."
 msgstr "Отметь «Web API», прими условия и сохрани."
 
-#: src/ui/login.rs:516
+#: src/ui/login.rs:523
 msgid "Paste the app's Client ID into the field and sign in."
 msgstr "Вставь Client ID приложения в поле и войди."
 
 #. Translators: shown on the Copy button for a moment after it copied.
-#: src/ui/login.rs:551
+#: src/ui/login.rs:558
 msgid "Copied"
 msgstr "Скопировано"
 
