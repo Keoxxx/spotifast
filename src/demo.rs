@@ -8170,14 +8170,18 @@ mod tests {
     }
 
     #[test]
-    fn routed_soloist_restores_processing_controls_without_builtin_playback_options() {
+    fn routed_soloist_shows_only_supported_audio_controls() {
         let (ctx, mut app) = accessible_app("soloist-processing");
         app.settings.soloist_enabled = true;
         app.soloist_audio = true;
         for title in ["Equalizer", "MilkDrop", "Player bar visualizer"] {
             let text = settings_text(&ctx, &mut app, title);
-            assert!(
+            // Windows can observe the owned process but cannot apply EQ to
+            // its audible output. Keep the visualizers without promising EQ.
+            let supported = title != "Equalizer" || !cfg!(target_os = "windows");
+            assert_eq!(
                 text.iter().filter(|label| *label == title).count() > 1,
+                supported,
                 "{title}: {text:?}"
             );
         }
@@ -8196,6 +8200,7 @@ mod tests {
         }
         app.soloist_audio = false;
         assert!(!app.audio_processing_available());
+        assert!(!app.visualizers_available());
         app.backend.shutdown();
     }
 
