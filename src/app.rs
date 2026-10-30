@@ -1736,6 +1736,26 @@ impl App {
         matches!(self.target(), Target::Remote(Some(id)) if self.soloist_device_id.as_ref() == Some(&id))
     }
 
+    /// A running child is not usable until its Connect device has been
+    /// verified against the signed-in account. Never fall through to the
+    /// built-in player while the chosen player is starting or needs help.
+    pub fn soloist_waiting(&self) -> bool {
+        self.settings.soloist_enabled
+            && !(matches!(self.soloist_status, crate::soloist::Status::Ready { .. })
+                && self.soloist_device_id.is_some())
+    }
+
+    pub fn soloist_wait_message(&self) -> Cow<'static, str> {
+        use crate::soloist::Status;
+        match self.soloist_status {
+            Status::Starting | Status::Off => gettext(self.locale, "Starting Soloist…"),
+            Status::Downloading { .. } => gettext(self.locale, "Downloading Soloist from Spotify…"),
+            Status::Ready { .. } => gettext(self.locale, "Verifying Soloist…"),
+            Status::Pairing { .. } => gettext(self.locale, "3. Pair once in Spotify"),
+            Status::NeedsKey | Status::Failed(_) => gettext(self.locale, "Soloist needs attention"),
+        }
+    }
+
     /// Context shown as playing, including pending local play requests.
     pub fn playing_context_uri(&self) -> Option<String> {
         let remote = self
@@ -9206,6 +9226,9 @@ impl App {
     /// in one ordered exchange: two independent requests race, and shuffle
     /// sometimes lost.
     fn play_request(&mut self, request: PlayRequest, shuffle_first: bool) {
+        if self.soloist_waiting() {
+            return;
+        }
         // Whatever starts now outranks a play-search still in flight.
         self.supersede_play_search();
         // A play from a row names its row again after this.
@@ -9229,6 +9252,10 @@ impl App {
     }
 
     fn start_play(&mut self, request: PlayRequest, shuffle_first: bool) {
+        if self.soloist_waiting() {
+            self.clear_play_pending();
+            return;
+        }
         // Shuffle applies across contexts until disabled. A selected row still
         // starts first; otherwise choose a random starting track.
         let mut request = request;
@@ -10997,6 +11024,44 @@ impl App {
     /// Apply one queued UI action after drawing, updating optimistic local state
     /// and scheduling any backend work or preference persistence it requires.
     pub(crate) fn apply(&mut self, action: Action, ctx: &egui::Context) {
+        // Covers buttons, row double-clicks, keyboard/media shortcuts and IPC
+        // before any optimistic state or queued request can change.
+        if self.soloist_waiting()
+            && matches!(
+                &action,
+                Action::PlayContext { .. }
+                    | Action::PlaySearch { .. }
+                    | Action::PlaySearchMatch { .. }
+                    | Action::PlayEpisode { .. }
+                    | Action::PlayUris { .. }
+                    | Action::PlayFromRow { .. }
+                    | Action::ShufflePlay(_)
+                    | Action::TogglePlay
+                    | Action::Next
+                    | Action::Previous
+                    | Action::Seek(_)
+                    | Action::SeekBy(_)
+                    | Action::SetVolume(_)
+                    | Action::PreviewVolume(_)
+                    | Action::VolumeBy(_)
+                    | Action::ToggleMute
+                    | Action::ToggleShuffle
+                    | Action::CycleRepeat
+                    | Action::SetShuffle(_)
+                    | Action::SetRepeat(_)
+                    | Action::Transfer(_)
+                    | Action::ActivateReceiver(_)
+                    | Action::AddToQueue { .. }
+                    | Action::QueueMany { .. }
+                    | Action::PlayNext { .. }
+                    | Action::MoveInQueue { .. }
+                    | Action::InsertInQueue { .. }
+                    | Action::RemoveFromQueue { .. }
+                    | Action::ClearQueue
+            )
+        {
+            return;
+        }
         if matches!(
             &action,
             Action::Open(_)
@@ -12093,6 +12158,13 @@ impl App {
                 self.apply(Action::EnablePlayback, ctx);
             }
             Action::SetSoloist(enabled) => {
+                if enabled && self.settings.soloist_enabled && !self.soloist_waiting() {
+                    return;
+                }
+                self.clear_soloist_target();
+                self.queued_play = None;
+                self.clear_play_pending();
+                self.supersede_play_search();
                 self.settings.soloist_enabled = enabled;
                 self.mark_settings_dirty();
                 self.soloist_select = enabled;
@@ -12107,9 +12179,6 @@ impl App {
                 } else {
                     crate::soloist::Status::Off
                 };
-                if !enabled {
-                    self.clear_soloist_target();
-                }
                 self.backend.send(Command::Soloist {
                     enabled,
                     key: (!key.trim().is_empty()).then_some(key),
@@ -20988,6 +21057,87 @@ mod tests {
         assert_eq!(app.tray_wait, None, "a panel shows the item");
         app.check_tray_wait(started + TRAY_WAIT, false);
         assert!(!app.wants_show);
+        app.backend.shutdown();
+    }
+
+    #[test]
+    fn soloist_verification_blocks_playback_until_binding_and_after_failure() {
+        use crate::soloist::{Status, Update};
+        let mut app = test_app("soloist-verification");
+        let ctx = egui::Context::default();
+        app.backend.set_offline(true);
+        app.auth = AuthStatus::Connected {
+            username: "listener".into(),
+        };
+        app.settings.soloist_enabled = true;
+        app.local_ready = true; // A saved librespot grant must not bypass the check.
+        let ready = Status::Ready {
+            name: "owned".into(),
+            version: "test".into(),
+            expires: u64::MAX,
+        };
+        for status in [
+            Status::Off,
+            Status::Starting,
+            Status::Downloading {
+                received: 1,
+                total: 2,
+            },
+            Status::Pairing {
+                name: "owned".into(),
+                version: "test".into(),
+            },
+            ready.clone(),
+            Status::NeedsKey,
+            Status::Failed("unavailable".into()),
+        ] {
+            app.on_soloist(Update::Status(status));
+            assert!(app.soloist_waiting());
+            app.queued_play = Some(PlayRequest::tracks(vec!["spotify:track:old".into()]));
+            app.replay_queued_play();
+            for action in [
+                Action::PlayUris {
+                    uris: vec!["spotify:track:test".into()],
+                    index: 0,
+                },
+                Action::PlayFromRow {
+                    context: RowContext::Uris(vec!["spotify:track:test".into()].into()),
+                    uri: "spotify:track:test".into(),
+                    index: 0,
+                },
+                Action::TogglePlay,
+                Action::Next,
+                Action::Previous,
+                Action::Transfer("other".into()),
+                Action::ToggleShuffle,
+            ] {
+                app.apply(action, &ctx);
+            }
+            assert!(app.intent_track.is_none());
+            assert!(app.played_row.is_none());
+            assert!(!app.any_play_pending());
+            assert!(app.optimistic_playing.is_none());
+            assert!(app.selected_device.is_none());
+            assert!(!app.shuffle_wanted);
+            assert!(app.backend.take_remote_play_requests().is_empty());
+        }
+        app.on_soloist(Update::Status(ready));
+        assert_eq!(app.soloist_wait_message(), "Verifying Soloist…");
+        app.devices = vec![Device {
+            id: Some("own".into()),
+            name: "owned".into(),
+            ..Default::default()
+        }];
+        app.bind_soloist_device();
+        assert!(!app.soloist_waiting());
+        app.apply(Action::ToggleShuffle, &ctx);
+        assert!(app.shuffle_wanted);
+        app.on_soloist(Update::Status(Status::Starting));
+        assert!(app.soloist_waiting());
+        app.apply(Action::Open(Page::Settings), &ctx);
+        assert_eq!(app.page(), &Page::Settings);
+        app.apply(Action::SetSoloist(false), &ctx);
+        assert!(!app.soloist_waiting());
         app.backend.shutdown();
     }
 

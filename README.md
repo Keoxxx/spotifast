@@ -50,6 +50,9 @@ people updating see this choice once after sign-in on supported platforms.
 local files and full queue editing. The choice is remembered.
 When enabled, Soloist appears as **This computer**; settings show the controls
 that apply to it. Turning it off restores the built-in player's preferences.
+While Soloist starts and its account is verified, the Spotify loading screen shows
+**Verifying Soloist…** and waits to accept playback commands. **Set up Soloist**
+opens setup if pairing needs attention.
 
 ## Your music, on your desktop
 

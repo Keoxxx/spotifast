@@ -45,6 +45,7 @@ fn show_steps(app: &App, ctx: &egui::Context) -> bool {
 const STEPS_OPEN: &str = "login-steps-open";
 
 pub fn show(app: &mut App, ui: &mut egui::Ui, connecting: bool) {
+    let soloist = app.is_connected() && app.soloist_waiting();
     let palette = app.palette;
     let ctx = ui.ctx().clone();
     egui::CentralPanel::default()
@@ -78,10 +79,11 @@ pub fn show(app: &mut App, ui: &mut egui::Ui, connecting: bool) {
             let inner = if steps { column * 2.0 + GUTTER } else { COLUMN };
             let card_width = inner + 72.0;
             let proxy_id = egui::Id::new("login-proxy-open");
-            let proxy_open = ui
-                .ctx()
-                .data(|data| data.get_temp::<bool>(proxy_id))
-                .unwrap_or(false);
+            let proxy_open = !soloist
+                && ui
+                    .ctx()
+                    .data(|data| data.get_temp::<bool>(proxy_id))
+                    .unwrap_or(false);
             let card_height: f32 = if !proxy_open {
                 400.0
             } else if app.settings.proxy_mode.is_manual() {
@@ -269,7 +271,11 @@ fn sign_in_column(app: &mut App, ui: &mut egui::Ui, connecting: bool, beside: Op
                 theme::spinner(ui, 18.0, palette.accent);
                 theme::text(
                     ui,
-                    gettext(locale, "Connecting to Spotify…"),
+                    if app.soloist_waiting() && app.is_connected() {
+                        app.soloist_wait_message()
+                    } else {
+                        gettext(locale, "Connecting to Spotify…")
+                    },
                     theme::medium(14.0),
                     palette.text,
                 );
@@ -325,6 +331,7 @@ fn sign_in_column(app: &mut App, ui: &mut egui::Ui, connecting: bool, beside: Op
             }
         }
     }
+    let soloist = app.is_connected() && app.soloist_waiting();
     let proxy_id = egui::Id::new("login-proxy-open");
     let mut proxy_open = ui
         .data(|data| data.get_temp::<bool>(proxy_id))
@@ -334,18 +341,26 @@ fn sign_in_column(app: &mut App, ui: &mut egui::Ui, connecting: bool, beside: Op
         ui.with_layout(Layout::top_down(Align::Center), |ui| {
             if theme::link(
                 ui,
-                gettext(locale, "Proxy Settings"),
+                if soloist {
+                    gettext(locale, "Set up Soloist")
+                } else {
+                    gettext(locale, "Proxy Settings")
+                },
                 theme::regular(13.0),
                 palette.secondary,
             )
             .clicked()
             {
-                proxy_open = !proxy_open;
+                if soloist {
+                    app.actions.push(Action::StartSoloistSetup);
+                } else {
+                    proxy_open = !proxy_open;
+                }
             }
         });
     });
     ui.add_space(4.0);
-    if proxy_open {
+    if proxy_open && !soloist {
         proxy_fields(ui, app);
     }
     ui.data_mut(|data| data.insert_temp(proxy_id, proxy_open));

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-29 19:54+0100\n"
+"POT-Creation-Date: 2026-10-30 11:41+0100\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Japanese\n"
@@ -28,12 +28,12 @@ msgstr "{name}を一時停止"
 msgid "Play {name}"
 msgstr "{name}を再生"
 
-#: src/ui/sidebar.rs:302 src/app.rs:3496 src/app.rs:23183
+#: src/ui/sidebar.rs:302 src/app.rs:3516 src/app.rs:23333
 #: src/ui/collection.rs:2139 src/ui/collection.rs:2368
 msgid "Playlist"
 msgstr "プレイリスト"
 
-#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3470 src/app.rs:23188
+#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3490 src/app.rs:23338
 #: src/ui/collection.rs:2361 src/ui/home.rs:93 src/ui/keys.rs:337
 #: src/ui/winamp/playlist.rs:653
 msgid "Liked Songs"
@@ -79,7 +79,7 @@ msgstr "プレイリスト • {owner}"
 msgid "Home"
 msgstr "ホーム"
 
-#: src/ui/sidebar.rs:979 src/app.rs:8279 src/ui/keys.rs:316
+#: src/ui/sidebar.rs:979 src/app.rs:8299 src/ui/keys.rs:316
 msgid "Search"
 msgstr "検索"
 
@@ -111,7 +111,7 @@ msgstr "ライブラリを検索"
 msgid "Library"
 msgstr "ライブラリ"
 
-#: src/ui/sidebar.rs:1095 src/app.rs:8253 src/model.rs:807 src/ui/search.rs:668
+#: src/ui/sidebar.rs:1095 src/app.rs:8273 src/model.rs:807 src/ui/search.rs:668
 msgid "Playlists"
 msgstr "プレイリスト"
 
@@ -139,7 +139,7 @@ msgstr "あなたが作成"
 msgid "Search in Your Library"
 msgstr "ライブラリ内を検索"
 
-#: src/ui/sidebar.rs:1243 src/app.rs:3531 src/ui/artist.rs:221
+#: src/ui/sidebar.rs:1243 src/app.rs:3551 src/ui/artist.rs:221
 #: src/ui/artist.rs:364 src/ui/home.rs:791 src/ui/library.rs:101
 #: src/ui/search.rs:159 src/ui/search.rs:491 src/ui/winamp/playlist.rs:746
 msgid "Artist"
@@ -225,7 +225,7 @@ msgstr "クリックでビジュアライザーを切り替え"
 msgid "Nothing playing"
 msgstr "再生していません"
 
-#: src/ui/player_bar.rs:441 src/app.rs:9741
+#: src/ui/player_bar.rs:441 src/app.rs:9768
 msgid "Pick a song, album, or playlist"
 msgstr "曲、アルバム、プレイリストを選んでください"
 
@@ -314,7 +314,7 @@ msgid "Recent"
 msgstr "履歴"
 
 #: src/ui/queue.rs:92 src/ui/queue.rs:241 src/ui/lyrics.rs:78
-#: src/ui/friends.rs:65 src/ui/mod.rs:650 src/window.rs:35
+#: src/ui/friends.rs:65 src/ui/mod.rs:666 src/window.rs:35
 msgid "Close"
 msgstr "閉じる"
 
@@ -430,7 +430,7 @@ msgid "No timed lyrics for this track."
 msgstr "この曲には同期された歌詞がありません。"
 
 #: src/ui/lyrics.rs:462 src/ui/widgets.rs:2824 src/ui/widgets.rs:2864
-#: src/ui/widgets.rs:2892 src/app.rs:13503 src/ui/collection.rs:902
+#: src/ui/widgets.rs:2892 src/app.rs:13572 src/ui/collection.rs:902
 msgid "Loading…"
 msgstr "読み込み中…"
 
@@ -635,7 +635,7 @@ msgstr "再生回数"
 msgid "Sort by duration"
 msgstr "再生時間で並べ替え"
 
-#: src/ui/widgets.rs:2903 src/app.rs:13712 src/app.rs:13726
+#: src/ui/widgets.rs:2903 src/app.rs:13781 src/app.rs:13795
 msgid "Network connection error. Check your connection."
 msgstr "ネットワーク接続エラーです。接続を確認してください。"
 
@@ -643,7 +643,7 @@ msgstr "ネットワーク接続エラーです。接続を確認してくださ
 msgid "Cut"
 msgstr "切り取り"
 
-#: src/ui/widgets.rs:3166 src/ui/login.rs:538
+#: src/ui/widgets.rs:3166 src/ui/login.rs:553
 msgid "Copy"
 msgstr "コピー"
 
@@ -704,14 +704,34 @@ msgstr "プロキシ設定を復元中"
 msgid "Couldn't change how Spotifast starts with your computer."
 msgstr "コンピュータの起動時のSpotifastの開き方を変更できませんでした。"
 
+#: src/app.rs:1751 src/ui/soloist.rs:186
+msgid "Starting Soloist…"
+msgstr "Soloistを起動中…"
+
+#: src/app.rs:1752 src/ui/soloist.rs:190
+msgid "Downloading Soloist from Spotify…"
+msgstr "SpotifyからSoloistをダウンロード中…"
+
+#: src/app.rs:1753 src/ui/soloist.rs:219
+msgid "Verifying Soloist…"
+msgstr "Soloist を確認中…"
+
+#: src/app.rs:1754 src/ui/soloist.rs:203
+msgid "3. Pair once in Spotify"
+msgstr "3. Spotifyで初回ペアリング"
+
+#: src/app.rs:1755
+msgid "Soloist needs attention"
+msgstr "Soloist の確認が必要です"
+
 #. Translators: {name} is the name of a speaker or other playback device.
-#: src/app.rs:2566
+#: src/app.rs:2586
 #, rust-format
 msgid "{name} is ready"
 msgstr "{name}の準備ができました"
 
 #. Translators: {error} is a sentence saying why the proxy password could not be stored.
-#: src/app.rs:2597
+#: src/app.rs:2617
 #, rust-format
 msgid ""
 "{error} The original settings file is kept intact; changed preferences are "
@@ -721,22 +741,22 @@ msgstr ""
 "ません。"
 
 #. Translators: {version} is a version number such as 1.4.0.
-#: src/app.rs:2750
+#: src/app.rs:2770
 #, rust-format
 msgid "Spotifast {version} is available"
 msgstr "Spotifast {version}が利用可能です"
 
-#: src/app.rs:2767
+#: src/app.rs:2787
 msgid "Spotifast is up to date"
 msgstr "Spotifastは最新です"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:2775
+#: src/app.rs:2795
 #, rust-format
 msgid "Couldn't check for updates: {error}"
 msgstr "アップデートを確認できませんでした：{error}"
 
-#: src/app.rs:2832
+#: src/app.rs:2852
 msgid ""
 "Soloist could not download its renewal. It will retry tomorrow; the current "
 "build is still installed."
@@ -745,66 +765,66 @@ msgstr ""
 "ジョンは引き続きインストールされています。"
 
 #. Translators: {error} is an error message from the playback engine.
-#: src/app.rs:2965
+#: src/app.rs:2985
 #, rust-format
 msgid "Local playback: {error}"
 msgstr "ローカル再生：{error}"
 
-#: src/app.rs:2972
+#: src/app.rs:2992
 msgid "Opening your browser to set up local playback"
 msgstr "ローカル再生を設定するためにブラウザを開いています"
 
-#: src/app.rs:3360
+#: src/app.rs:3380
 msgid "Spotify audio disconnected. Reconnecting local playback"
 msgstr "Spotifyの音声が切断されました。ローカル再生に再接続しています"
 
-#: src/app.rs:3478 src/app/radio.rs:191 src/ui/radio.rs:35 src/ui/radio.rs:77
+#: src/app.rs:3498 src/app/radio.rs:191 src/ui/radio.rs:35 src/ui/radio.rs:77
 msgid "Radio"
 msgstr "ラジオ"
 
-#: src/app.rs:3512 src/api/models.rs:299 src/ui/prerelease.rs:71
+#: src/app.rs:3532 src/api/models.rs:299 src/ui/prerelease.rs:71
 msgid "Album"
 msgstr "アルバム"
 
-#: src/app.rs:3550 src/ui/show.rs:189
+#: src/app.rs:3570 src/ui/show.rs:189
 msgid "Podcast"
 msgstr "ポッドキャスト"
 
 #. Translators: {count} is the number of visualizer presets added.
-#: src/app.rs:4085
+#: src/app.rs:4105
 #, rust-format
 msgid "Added {count} MilkDrop preset"
 msgid_plural "Added {count} MilkDrop presets"
 msgstr[0] "MilkDropのプリセットを{count}個追加しました"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:4101
+#: src/app.rs:4121
 #, rust-format
 msgid "Couldn't fetch presets: {error}"
 msgstr "プリセットを取得できませんでした：{error}"
 
 #. Translators: {folder} is a folder path and {error} is an error message.
-#: src/app.rs:4234
+#: src/app.rs:4254
 #, rust-format
 msgid "Couldn't open {folder}: {error}"
 msgstr "{folder}を開けませんでした：{error}"
 
 #. Translators: {skin} is the name of a Winamp skin.
-#: src/app.rs:4250
+#: src/app.rs:4270
 #, rust-format
 msgid "Added {skin} skin"
 msgstr "スキン「{skin}」を追加しました"
 
-#: src/app.rs:4351
+#: src/app.rs:4371
 msgid "Proxy applied. Restarting local playback."
 msgstr "プロキシを適用しました。ローカル再生を再起動しています。"
 
-#: src/app.rs:4353
+#: src/app.rs:4373
 msgid "Proxy settings applied"
 msgstr "プロキシ設定を適用しました"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:4360
+#: src/app.rs:4380
 #, rust-format
 msgid ""
 "Proxy could not be applied: {error}. Previous connection settings are still "
@@ -813,250 +833,250 @@ msgstr ""
 "プロキシを適用できませんでした：{error}。以前の接続設定を引き続き使用していま"
 "す。"
 
-#: src/app.rs:6370
+#: src/app.rs:6390
 msgid "Queue cleared"
 msgstr "再生待ちリストをクリアしました"
 
 #. Translators: Keep {date} unchanged. It is a date in YYYY-MM-DD form.
-#: src/app.rs:6400 src/app.rs:23173
+#: src/app.rs:6420 src/app.rs:23323
 #, rust-format
 msgid "Queue {date}"
 msgstr "再生待ち {date}"
 
-#: src/app.rs:6961 src/ui/login.rs:183
+#: src/app.rs:6981 src/ui/login.rs:185
 msgid "Your Spotify sign-in expired. Please sign in again."
 msgstr ""
 "Spotifyのログインの有効期限が切れました。もう一度ログインしてください。"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:6968
+#: src/app.rs:6988
 #, rust-format
 msgid "Couldn't load your profile: {error}"
 msgstr "プロフィールを読み込めませんでした：{error}"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:7030
+#: src/app.rs:7050
 #, rust-format
 msgid "Couldn't list devices: {error}"
 msgstr "デバイスの一覧を取得できませんでした：{error}"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:7497
+#: src/app.rs:7517
 #, rust-format
 msgid "Couldn't load more playlists: {error}"
 msgstr "プレイリストをさらに読み込めませんでした：{error}"
 
-#: src/app.rs:7543
+#: src/app.rs:7563
 msgid ""
 "Spotify hasn't confirmed your playlist changes yet. Try refreshing again."
 msgstr ""
 "Spotifyがまだプレイリストの変更を確認していません。もう一度更新してください。"
 
 #. Translators: {name} is a playlist name.
-#: src/app.rs:7747
+#: src/app.rs:7767
 #, rust-format
 msgid "Created {name}"
 msgstr "{name}を作成しました"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:7773
+#: src/app.rs:7793
 #, rust-format
 msgid "Couldn't create the playlist: {error}"
 msgstr "プレイリストを作成できませんでした：{error}"
 
-#: src/app.rs:7827
+#: src/app.rs:7847
 msgid "Playlist cover updated"
 msgstr "プレイリストのカバーを更新しました"
 
-#: src/app.rs:7836
+#: src/app.rs:7856
 msgid "Playlist updated"
 msgstr "プレイリストを更新しました"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:7846 src/app.rs:7963
+#: src/app.rs:7866 src/app.rs:7983
 #, rust-format
 msgid "Couldn't update the playlist: {error}"
 msgstr "プレイリストを更新できませんでした：{error}"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:7920
+#: src/app.rs:7940
 #, rust-format
 msgid "Playlist change failed: {error}"
 msgstr "プレイリストの変更に失敗しました：{error}"
 
-#: src/app.rs:7947
+#: src/app.rs:7967
 msgid "Added to Your Library"
 msgstr "マイライブラリに追加しました"
 
-#: src/app.rs:7949 src/app.rs:8157
+#: src/app.rs:7969 src/app.rs:8177
 msgid "Removed from Your Library"
 msgstr "マイライブラリから削除しました"
 
-#: src/app.rs:8150
+#: src/app.rs:8170
 msgid "Added to Liked Songs"
 msgstr "お気に入りの曲に追加しました"
 
-#: src/app.rs:8152
+#: src/app.rs:8172
 msgid "Removed from Liked Songs"
 msgstr "お気に入りの曲から削除しました"
 
-#: src/app.rs:8154
+#: src/app.rs:8174
 msgid "Following artist"
 msgstr "アーティストをフォローしました"
 
-#: src/app.rs:8155
+#: src/app.rs:8175
 msgid "Unfollowed artist"
 msgstr "アーティストのフォローを解除しました"
 
-#: src/app.rs:8156
+#: src/app.rs:8176
 msgid "Saved to Your Library"
 msgstr "マイライブラリに保存しました"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:8171
+#: src/app.rs:8191
 #, rust-format
 msgid "Couldn't update your library: {error}"
 msgstr "ライブラリを更新できませんでした：{error}"
 
 #. Translators: {query} is the words someone searched for.
-#: src/app.rs:8223
+#: src/app.rs:8243
 #, rust-format
 msgid "Nothing on Spotify matches “{query}”"
 msgstr "Spotify に「{query}」に一致するものはありません"
 
 #. Translators: {query} is the words someone searched for; {error} is an error message.
-#: src/app.rs:8231
+#: src/app.rs:8251
 #, rust-format
 msgid "Couldn't search for “{query}”: {error}"
 msgstr "「{query}」を検索できませんでした：{error}"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:8481
+#: src/app.rs:8501
 #, rust-format
 msgid "Cannot open this song: {error}"
 msgstr "この曲を開けません：{error}"
 
-#: src/app.rs:8495
+#: src/app.rs:8515
 msgid "This episode's podcast is not on Spotify"
 msgstr "このエピソードのポッドキャストはSpotifyにありません"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:8500
+#: src/app.rs:8520
 #, rust-format
 msgid "Cannot open this episode: {error}"
 msgstr "このエピソードを開けません：{error}"
 
-#: src/app.rs:8552
+#: src/app.rs:8572
 msgid "Choose a device from the devices menu first."
 msgstr "先にデバイスメニューからデバイスを選んでください。"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:8576
+#: src/app.rs:8596
 #, rust-format
 msgid "Couldn't switch device: {error}"
 msgstr "デバイスを切り替えられませんでした：{error}"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:8587 src/app.rs:8611
+#: src/app.rs:8607 src/app.rs:8631
 #, rust-format
 msgid "Couldn't add to queue: {error}"
 msgstr "再生待ちリストに追加できませんでした：{error}"
 
-#: src/app.rs:8702
+#: src/app.rs:8722
 msgid "This song's album is not on Spotify"
 msgstr "この曲のアルバムはSpotifyにありません"
 
-#: src/app.rs:8719
+#: src/app.rs:8739
 msgid "Spotifast cannot open this kind of Spotify link"
 msgstr "Spotifastはこの種類のSpotifyリンクを開けません"
 
-#: src/app.rs:8967
+#: src/app.rs:8987
 msgid "Nothing is playing. Pick something first"
 msgstr "再生中の曲はありません。先に何か選んでください"
 
-#: src/app.rs:9362
+#: src/app.rs:9389
 msgid "Choose a device, or enable playback on this computer"
 msgstr "デバイスを選ぶか、このコンピューターでの再生を有効にしてください"
 
-#: src/app.rs:9724 src/app.rs:9729
+#: src/app.rs:9751 src/app.rs:9756
 msgid "Pick something to play"
 msgstr "再生するものを選んでください"
 
 #. Translators: {name} is an album name.
-#: src/app.rs:10115
+#: src/app.rs:10142
 #, rust-format
 msgid "Loading {name} to queue…"
 msgstr "{name}を再生待ちリストに読み込み中…"
 
-#: src/app.rs:10134
+#: src/app.rs:10161
 msgid "Playback device changed. Add the album to queue again"
 msgstr ""
 "再生デバイスが変わりました。もう一度アルバムを再生待ちリストに追加してくださ"
 "い"
 
-#: src/app.rs:10143 src/app.rs:10161 src/app.rs:10170
+#: src/app.rs:10170 src/app.rs:10188 src/app.rs:10197
 msgid "Couldn't load the album's songs in order. Try again"
 msgstr "アルバムの曲を順番どおりに読み込めませんでした。もう一度お試しください"
 
 #. Translators: {name} is an album name and {error} is an error message.
-#: src/app.rs:10150
+#: src/app.rs:10177
 #, rust-format
 msgid "Couldn't add {name} to queue: {error}"
 msgstr "{name}を再生待ちリストに追加できませんでした：{error}"
 
-#: src/app.rs:10208
+#: src/app.rs:10235
 msgid "This album has no playable songs to queue"
 msgstr "このアルバムには再生待ちリストに追加できる曲がありません"
 
 #. Translators: {count} is a number of songs and {name} is an album name.
-#: src/app.rs:10217
+#: src/app.rs:10244
 #, rust-format
 msgid "{count} song from {name} added to queue"
 msgid_plural "{count} songs from {name} added to queue"
 msgstr[0] "{name}の{count}曲を再生待ちリストに追加しました"
 
 #. Translators: {count} is a number of songs.
-#: src/app.rs:10265
+#: src/app.rs:10292
 #, rust-format
 msgid "{count} song added to queue"
 msgid_plural "{count} songs added to queue"
 msgstr[0] "{count}曲を再生待ちリストに追加しました"
 
 #. Translators: {name} is a song, episode, album, or playlist name.
-#: src/app.rs:10305
+#: src/app.rs:10332
 #, rust-format
 msgid "{name} added to queue"
 msgstr "{name}を再生待ちリストに追加しました"
 
-#: src/app.rs:10855
+#: src/app.rs:10882
 msgid "The clipboard has no Spotify song links"
 msgstr "クリップボードにSpotifyの曲のリンクがありません"
 
 #. Translators: {count} is the number of pasted links that failed.
-#: src/app.rs:10936
+#: src/app.rs:10963
 #, rust-format
 msgid "{count} pasted link could not be added"
 msgid_plural "{count} pasted links could not be added"
 msgstr[0] "貼り付けたリンクのうち{count}件を追加できませんでした"
 
-#: src/app.rs:11616
+#: src/app.rs:11681
 msgid "Spotify doesn't let apps remove a playlist description, so it was kept"
 msgstr ""
 "Spotifyではアプリからプレイリストの説明を削除できないため、説明はそのまま残り"
 "ました"
 
-#: src/app.rs:11678 src/app.rs:11691
+#: src/app.rs:11743 src/app.rs:11756
 msgid "Link copied"
 msgstr "リンクをコピーしました"
 
 #. Translators: {count} is a number of song links, always more than one.
-#: src/app.rs:11695
+#: src/app.rs:11760
 #, rust-format
 msgid "{count} link copied"
 msgid_plural "{count} links copied"
 msgstr[0] "{count}件のリンクをコピーしました"
 
-#: src/app.rs:11989
+#: src/app.rs:12054
 msgid ""
 "Spotify doesn't let apps reorder your playlists, so this order is saved on "
 "this computer"
@@ -1064,77 +1084,77 @@ msgstr ""
 "Spotifyではアプリからプレイリストを並べ替えられないため、この順序はこのコン"
 "ピューターに保存されます"
 
-#: src/app.rs:12130
+#: src/app.rs:12199
 msgid "Restarting local playback"
 msgstr "ローカル再生を再起動しています"
 
-#: src/app.rs:12166
+#: src/app.rs:12235
 msgid "Local playback needs Spotify Premium"
 msgstr "ローカル再生にはSpotify Premiumが必要です"
 
-#: src/app.rs:12216
+#: src/app.rs:12285
 msgid "Play history cleared"
 msgstr "再生履歴を消去しました"
 
 #. Translators: {size} is a size in megabytes, such as 12.5.
-#: src/app.rs:12227
+#: src/app.rs:12296
 #, rust-format
 msgid "Cleared {size} MB of artwork"
 msgstr "アートワークを{size} MB削除しました"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:12233
+#: src/app.rs:12302
 #, rust-format
 msgid "Couldn't clear artwork: {error}"
 msgstr "アートワークを削除できませんでした：{error}"
 
-#: src/app.rs:12460
+#: src/app.rs:12529
 msgid "Downloading MilkDrop preset packs"
 msgstr "MilkDropのプリセットパックをダウンロード中"
 
 #. Translators: {name} is the name of a visualizer preset pack.
-#: src/app.rs:12494
+#: src/app.rs:12563
 #, rust-format
 msgid "Downloading {name} presets"
 msgstr "{name}のプリセットをダウンロード中"
 
-#: src/app.rs:13646
+#: src/app.rs:13715
 msgid "Couldn't start playback"
 msgstr "再生を開始できませんでした"
 
-#: src/app.rs:13647
+#: src/app.rs:13716
 msgid "Couldn't pause"
 msgstr "一時停止できませんでした"
 
-#: src/app.rs:13648
+#: src/app.rs:13717
 msgid "Couldn't skip"
 msgstr "スキップできませんでした"
 
-#: src/app.rs:13649
+#: src/app.rs:13718
 msgid "Couldn't go back"
 msgstr "前に戻れませんでした"
 
-#: src/app.rs:13650
+#: src/app.rs:13719
 msgid "Couldn't seek"
 msgstr "再生位置を変更できませんでした"
 
-#: src/app.rs:13651
+#: src/app.rs:13720
 msgid "Couldn't change the volume"
 msgstr "音量を変更できませんでした"
 
-#: src/app.rs:13652
+#: src/app.rs:13721
 msgid "Couldn't change shuffle"
 msgstr "シャッフルを変更できませんでした"
 
-#: src/app.rs:13653
+#: src/app.rs:13722
 msgid "Couldn't change repeat"
 msgstr "リピートを変更できませんでした"
 
-#: src/app.rs:13696 src/ui/mod.rs:417
+#: src/app.rs:13765 src/ui/mod.rs:433
 msgid "Spotify won't let this computer play this song right now."
 msgstr "Spotifyが今このコンピューターでこの曲を再生させてくれません。"
 
-#: src/app.rs:13703
+#: src/app.rs:13772
 msgid ""
 "No audio output device was found. Connect or enable one, then press play "
 "again."
@@ -1142,19 +1162,19 @@ msgstr ""
 "音声出力デバイスが見つかりません。デバイスを接続するか有効にしてから、もう一"
 "度再生してください。"
 
-#: src/app.rs:13717
+#: src/app.rs:13786
 msgid ""
 "Spotify doesn't make this playlist's songs available to third-party apps."
 msgstr ""
 "Spotifyはこのプレイリストの曲をサードパーティ製アプリに提供していません。"
 
-#: src/app.rs:13838
+#: src/app.rs:13907
 msgid "Spotify sign-in expired. Sign in again, then retry the cover upload."
 msgstr ""
 "Spotifyのログインの有効期限が切れました。もう一度ログインしてから、カバーの"
 "アップロードをやり直してください。"
 
-#: src/app.rs:13843
+#: src/app.rs:13912
 msgid ""
 "Spotify refused this cover. Check that you own the playlist, then sign in "
 "again to grant image upload permission. If using a personal app, reconnect "
@@ -1164,12 +1184,12 @@ msgstr ""
 "一度ログインして画像アップロードの権限を許可してください。個人用アプリを使っ"
 "ている場合は、設定でも再接続してください。"
 
-#: src/app.rs:13847
+#: src/app.rs:13916
 msgid "Spotify rejected the image size. Choose a smaller image."
 msgstr "Spotifyが画像サイズを拒否しました。もっと小さい画像を選んでください。"
 
 #. Translators: {error} is an error message.
-#: src/app.rs:13850
+#: src/app.rs:13919
 #, rust-format
 msgid "Couldn't upload the cover: {error}. Try again."
 msgstr ""
@@ -1177,7 +1197,7 @@ msgstr ""
 
 #. Translators: Keep {track} unchanged. It is the name of the song,
 #. playlist, album, or artist the radio is based on, not translated.
-#: src/app.rs:23193 src/app/radio.rs:38
+#: src/app.rs:23343 src/app/radio.rs:38
 #, rust-format
 msgid "{track} Radio"
 msgstr "{track} のラジオ"
@@ -1304,7 +1324,7 @@ msgstr "Spotify Free。ローカル再生にはPremiumが必要です"
 msgid "Connected as {username}"
 msgstr "{username}として接続中"
 
-#: src/ui/settings.rs:543 src/ui/login.rs:369
+#: src/ui/settings.rs:543 src/ui/login.rs:384
 msgid "Client ID"
 msgstr "クライアントID"
 
@@ -1339,7 +1359,7 @@ msgctxt "playback status"
 msgid "Connecting"
 msgstr "接続中"
 
-#: src/ui/settings.rs:606 src/ui/login.rs:272
+#: src/ui/settings.rs:606 src/ui/login.rs:277
 msgid "Connecting to Spotify…"
 msgstr "Spotifyに接続中…"
 
@@ -1754,7 +1774,7 @@ msgstr ""
 "「オフ」では環境変数を無視します。「システム」では環境変数と、macOSとWindows"
 "ではOSのプロキシを使います。"
 
-#: src/ui/settings.rs:1656 src/ui/login.rs:622
+#: src/ui/settings.rs:1656 src/ui/login.rs:637
 msgid "Apply settings"
 msgstr "設定を適用"
 
@@ -2163,7 +2183,7 @@ msgstr ""
 "Spotify Premium、個人用のSoloistキー、Spotifyでの初回ペアリングが必要です。ダ"
 "ウンロードと更新はSpotifastが行います。"
 
-#: src/ui/soloist.rs:45
+#: src/ui/soloist.rs:45 src/ui/login.rs:345
 msgid "Set up Soloist"
 msgstr "Soloistを設定"
 
@@ -2183,11 +2203,11 @@ msgstr ""
 msgid "Use the built-in player"
 msgstr "内蔵プレーヤーを使用"
 
-#: src/ui/soloist.rs:82 src/ui/soloist.rs:215
+#: src/ui/soloist.rs:82 src/ui/soloist.rs:212
 msgid "Enabled on this computer"
 msgstr "このコンピューターで有効"
 
-#: src/ui/soloist.rs:83 src/ui/soloist.rs:217
+#: src/ui/soloist.rs:83 src/ui/soloist.rs:214
 msgid "Updates automatically."
 msgstr "自動で更新されます。"
 
@@ -2195,7 +2215,11 @@ msgstr "自動で更新されます。"
 msgid "Spotify's player, with lossless support. Requires Premium."
 msgstr "ロスレス音声に対応したSpotifyのプレーヤーです。Premiumが必要です。"
 
-#: src/ui/soloist.rs:100
+#: src/ui/soloist.rs:93
+msgid "Turn off Soloist"
+msgstr "Soloistをオフにする"
+
+#: src/ui/soloist.rs:109
 msgid ""
 "Spotify has not published Soloist for this platform. The built-in player "
 "remains available."
@@ -2203,19 +2227,15 @@ msgstr ""
 "このプラットフォーム向けのSoloistはSpotifyから公開されていません。内蔵プレー"
 "ヤーは引き続き利用できます。"
 
-#: src/ui/soloist.rs:106 src/ui/soloist.rs:244
-msgid "Turn off Soloist"
-msgstr "Soloistをオフにする"
-
-#: src/ui/soloist.rs:118
+#: src/ui/soloist.rs:115
 msgid "Sign in to Spotify before setting up Soloist."
 msgstr "Soloistを設定する前にSpotifyにログインしてください。"
 
-#: src/ui/soloist.rs:132
+#: src/ui/soloist.rs:129
 msgid "1. Get your Soloist key from Spotify"
 msgstr "1. SpotifyでSoloistキーを取得"
 
-#: src/ui/soloist.rs:141
+#: src/ui/soloist.rs:138
 msgid ""
 "Create a Soloist key in Spotify's developer dashboard. This is separate from "
 "your Web API app's Client ID."
@@ -2223,7 +2243,7 @@ msgstr ""
 "Spotifyの開発者ダッシュボードでSoloistキーを作成してください。Web APIアプリの"
 "Client IDとは別のものです。"
 
-#: src/ui/soloist.rs:143
+#: src/ui/soloist.rs:140
 msgid ""
 "Soloist makes its own Spotify connections. Spotifast's proxy settings do not "
 "route its audio traffic."
@@ -2231,23 +2251,23 @@ msgstr ""
 "Soloistは独自にSpotifyに接続します。Spotifastのプロキシ設定はSoloistの音声通"
 "信には適用されません。"
 
-#: src/ui/soloist.rs:149
+#: src/ui/soloist.rs:146
 msgid "Paste your personal Soloist key"
 msgstr "個人用のSoloistキーを貼り付け"
 
-#: src/ui/soloist.rs:156
+#: src/ui/soloist.rs:153
 msgid "Retry with saved key"
 msgstr "保存したキーで再試行"
 
-#: src/ui/soloist.rs:158
+#: src/ui/soloist.rs:155
 msgid "2. Download and enable Soloist"
 msgstr "2. Soloistをダウンロードして有効化"
 
-#: src/ui/soloist.rs:176
+#: src/ui/soloist.rs:173
 msgid "Enable with saved key"
 msgstr "保存済みのキーで有効にする"
 
-#: src/ui/soloist.rs:184
+#: src/ui/soloist.rs:181
 msgid ""
 "Downloads directly from Spotify and saves your key in the system credential "
 "store. By enabling Soloist, you use Spotify's separate software under its "
@@ -2257,19 +2277,7 @@ msgstr ""
 "Soloistを有効にすると、Spotifyの別ソフトウェアをその利用規約に従って使用する"
 "ことになります。"
 
-#: src/ui/soloist.rs:189
-msgid "Starting Soloist…"
-msgstr "Soloistを起動中…"
-
-#: src/ui/soloist.rs:193
-msgid "Downloading Soloist from Spotify…"
-msgstr "SpotifyからSoloistをダウンロード中…"
-
-#: src/ui/soloist.rs:206
-msgid "3. Pair once in Spotify"
-msgstr "3. Spotifyで初回ペアリング"
-
-#: src/ui/soloist.rs:207
+#: src/ui/soloist.rs:204
 msgid ""
 "Open Spotify on the same network, using the account signed in here. In the "
 "device picker, choose:"
@@ -2277,17 +2285,13 @@ msgstr ""
 "同じネットワーク上で、ここにログインしているアカウントを使ってSpotifyを開いて"
 "ください。デバイス一覧で次を選択します："
 
-#: src/ui/soloist.rs:209
+#: src/ui/soloist.rs:206
 msgid ""
 "Spotifast will notice when pairing finishes. Future starts reconnect "
 "automatically."
 msgstr ""
 "ペアリングの完了はSpotifastが検出します。次回以降の起動時は自動的に再接続しま"
 "す。"
-
-#: src/ui/soloist.rs:220
-msgid "Confirming your Spotify account…"
-msgstr "Spotifyアカウントを確認中…"
 
 #: src/ui/soloist.rs:221
 msgid ""
@@ -2302,41 +2306,20 @@ msgid "Update ready. It will install when Soloist is inactive."
 msgstr ""
 "更新の準備ができました。Soloistが非アクティブになるとインストールされます。"
 
-#: src/ui/soloist.rs:253
-msgid "Details"
-msgstr "詳細"
-
-#: src/ui/soloist.rs:262
+#: src/ui/soloist.rs:250
 #, rust-format
 msgid "Version {version} · expires {date}"
 msgstr "バージョン {version} · 有効期限 {date}"
 
-#: src/ui/soloist.rs:265
+#: src/ui/soloist.rs:256
 msgid ""
-"Spotifast checks daily for a replacement during the last 30 days of each "
-"build. Updates wait until Soloist is inactive."
+"Spotify manages audio quality. EQ, visualizers and local files use the built-"
+"in player."
 msgstr ""
-"各バージョンの有効期限までの最後の30日間、Spotifastは更新版を毎日確認します。"
-"更新はSoloistが非アクティブになるまで待機します。"
+"音質は Spotify が管理します。EQ、ビジュアライザー、ローカルファイルには内蔵プ"
+"レーヤーを使用します。"
 
-#: src/ui/soloist.rs:268
-msgid ""
-"Soloist uses your system audio output. Turn it off to use the built-in "
-"player's EQ, visualizers, local files and queue editing."
-msgstr ""
-"Soloistはシステムの音声出力を使用します。内蔵プレーヤーのイコライザー、ビジュ"
-"アライザー、ローカルファイル、キュー編集を使うには、Soloistをオフにしてくださ"
-"い。"
-
-#: src/ui/soloist.rs:269
-msgid ""
-"Spotify chooses playback quality. Soloist does not report the delivered "
-"audio format yet."
-msgstr ""
-"再生品質はSpotifyが選択します。Soloistは実際に受信した音声形式をまだ報告しま"
-"せん。"
-
-#: src/ui/soloist.rs:272
+#: src/ui/soloist.rs:259
 msgid "Setup, privacy and limitations"
 msgstr "設定、プライバシーと制限"
 
@@ -2686,7 +2669,7 @@ msgstr ""
 "リの提供を終了しており、Spotifyもいつ受け付けなくなるかわかりません。音楽が止"
 "まらないよう、自分の無料Spotifyアプリを設定してください。数分で終わります。"
 
-#: src/ui/dialogs.rs:50 src/ui/mod.rs:392
+#: src/ui/dialogs.rs:50 src/ui/mod.rs:408
 msgid "Set up personal app"
 msgstr "個人用アプリを設定"
 
@@ -2715,7 +2698,7 @@ msgid "“{name}” will no longer appear in Your Library."
 msgstr "「{name}」はマイライブラリに表示されなくなります。"
 
 #: src/ui/dialogs.rs:104 src/ui/dialogs.rs:147 src/ui/dialogs.rs:425
-#: src/ui/dialogs.rs:606 src/ui/login.rs:262
+#: src/ui/dialogs.rs:606 src/ui/login.rs:264
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -3097,12 +3080,12 @@ msgid "New albums and singles from artists you follow will appear here."
 msgstr ""
 "フォローしているアーティストの新しいアルバムやシングルがここに表示されます。"
 
-#: src/ui/login.rs:154
+#: src/ui/login.rs:156
 #, rust-format
 msgid "Spotifast {version} • not affiliated with Spotify"
 msgstr "Spotifast {version} • Spotifyとは関係ありません"
 
-#: src/ui/login.rs:168
+#: src/ui/login.rs:170
 msgid ""
 "That doesn't look like a Client ID. It is 32 letters and digits, shown on "
 "your app's page in the dashboard."
@@ -3110,7 +3093,7 @@ msgstr ""
 "クライアントIDではないようです。クライアントIDは32文字の英数字で、ダッシュ"
 "ボードのアプリのページに表示されています。"
 
-#: src/ui/login.rs:172
+#: src/ui/login.rs:174
 msgid ""
 "Spotify doesn't know this Client ID. Copy it again from your app's page in "
 "the dashboard."
@@ -3118,7 +3101,7 @@ msgstr ""
 "SpotifyはこのクライアントIDを認識できません。ダッシュボードのアプリのページか"
 "らもう一度コピーしてください。"
 
-#: src/ui/login.rs:176
+#: src/ui/login.rs:178
 msgid ""
 "Spotify didn't let this account use the app. Sign in with the Spotify "
 "account that created it, which needs Premium."
@@ -3127,7 +3110,7 @@ msgstr ""
 "Spotifyアカウントでログインしてください。そのアカウントにはPremiumが必要で"
 "す。"
 
-#: src/ui/login.rs:180
+#: src/ui/login.rs:182
 msgid ""
 "Spotify no longer accepts the shared sign-in Spotifast used before. Set up "
 "your own Spotify app to keep listening."
@@ -3135,19 +3118,19 @@ msgstr ""
 "Spotifyは、Spotifastが以前使っていた共有ログインを受け付けなくなりました。聴"
 "き続けるには自分のSpotifyアプリを設定してください。"
 
-#: src/ui/login.rs:217
+#: src/ui/login.rs:219
 msgid "A native Spotify client."
 msgstr "ネイティブなSpotifyクライアント。"
 
-#: src/ui/login.rs:231
+#: src/ui/login.rs:233
 msgid "Waiting for Spotify in your browser…"
 msgstr "ブラウザでSpotifyを待っています…"
 
-#: src/ui/login.rs:239
+#: src/ui/login.rs:241
 msgid "Didn't open? Open the sign-in page again"
 msgstr "開きませんか？ログインページをもう一度開く"
 
-#: src/ui/login.rs:255
+#: src/ui/login.rs:257
 #, rust-format
 msgid ""
 "If Spotify says “Invalid redirect URI”, add {uri} to your app exactly, save, "
@@ -3156,11 +3139,11 @@ msgstr ""
 "Spotifyに「Invalid redirect URI」と表示された場合は、{uri}をそのままアプリに"
 "追加して保存し、もう一度ログインしてください。"
 
-#: src/ui/login.rs:297
+#: src/ui/login.rs:303
 msgid "Sign in with Spotify"
 msgstr "Spotifyでログイン"
 
-#: src/ui/login.rs:308
+#: src/ui/login.rs:314
 msgid ""
 "Sign in through your browser. Spotifast never sees your password. Local "
 "playback needs Spotify Premium."
@@ -3168,24 +3151,24 @@ msgstr ""
 "ブラウザでログインします。Spotifastがパスワードを見ることはありません。ローカ"
 "ル再生にはSpotify Premiumが必要です。"
 
-#: src/ui/login.rs:317
+#: src/ui/login.rs:323
 msgid "How to set up your Spotify app"
 msgstr "Spotifyアプリの設定方法"
 
-#: src/ui/login.rs:337
+#: src/ui/login.rs:347
 msgid "Proxy Settings"
 msgstr "プロキシ設定"
 
-#: src/ui/login.rs:387
+#: src/ui/login.rs:402
 msgid "A Client ID is 32 letters and digits. Copy it from your app's page."
 msgstr ""
 "クライアントIDは32文字の英数字です。アプリのページからコピーしてください。"
 
-#: src/ui/login.rs:439
+#: src/ui/login.rs:454
 msgid "Set up your Spotify app"
 msgstr "Spotifyアプリを設定"
 
-#: src/ui/login.rs:447
+#: src/ui/login.rs:462
 msgid ""
 "Spotifast signs in through your own free Spotify app. Spotify requires its "
 "owner to have Premium."
@@ -3193,36 +3176,36 @@ msgstr ""
 "Spotifastは、あなた自身の無料Spotifyアプリでログインします。Spotifyでは、アプ"
 "リの所有者がPremiumである必要があります。"
 
-#: src/ui/login.rs:457
+#: src/ui/login.rs:472
 msgid "Open Spotify's developer dashboard."
 msgstr "Spotifyの開発者ダッシュボードを開きます。"
 
-#: src/ui/login.rs:476
+#: src/ui/login.rs:491
 msgid "Click Create app. Any name will do."
 msgstr "「Create app」をクリックします。名前は何でも構いません。"
 
-#: src/ui/login.rs:483
+#: src/ui/login.rs:498
 msgid "Under Redirect URIs, add exactly:"
 msgstr "「Redirect URIs」に次のアドレスを正確に追加します："
 
-#: src/ui/login.rs:492
+#: src/ui/login.rs:507
 msgid "Tick Web API, accept the terms, and save."
 msgstr "「Web API」にチェックを入れ、規約に同意して保存します。"
 
-#: src/ui/login.rs:501
+#: src/ui/login.rs:516
 msgid "Paste the app's Client ID into the field and sign in."
 msgstr "アプリのクライアントIDを入力欄に貼り付けて、ログインします。"
 
 #. Translators: shown on the Copy button for a moment after it copied.
-#: src/ui/login.rs:536
+#: src/ui/login.rs:551
 msgid "Copied"
 msgstr "コピーしました"
 
-#: src/ui/mod.rs:385
+#: src/ui/mod.rs:401
 msgid "Spotify is being slow on the shared app."
 msgstr "共有アプリでSpotifyが遅くなっています。"
 
-#: src/ui/mod.rs:388
+#: src/ui/mod.rs:404
 msgid ""
 "Spotifast no longer offers the shared app, and Spotify can stop accepting it "
 "at any time. Set up your own free Spotify app and you won't have to wait."
@@ -3232,11 +3215,11 @@ msgstr ""
 
 #. Translators: a button that opens a page explaining why
 #. the banner it sits in appeared.
-#: src/ui/mod.rs:398 src/ui/mod.rs:429
+#: src/ui/mod.rs:414 src/ui/mod.rs:445
 msgid "Why?"
 msgstr "なぜ？"
 
-#: src/ui/mod.rs:421
+#: src/ui/mod.rs:437
 msgid ""
 "Spotify refused the key that unlocks the audio. Spotifast can't fix that, "
 "but it sometimes clears up on its own. You can still play on your phone or "
@@ -3246,23 +3229,23 @@ msgstr ""
 "が、しばらくすると自然に直ることがあります。スマートフォンや他のSpotifyデバイ"
 "スでは再生できます。"
 
-#: src/ui/mod.rs:425
+#: src/ui/mod.rs:441
 msgid "Play on another device"
 msgstr "別のデバイスで再生"
 
-#: src/ui/mod.rs:476
+#: src/ui/mod.rs:492
 msgid "Close banner"
 msgstr "バナーを閉じる"
 
-#: src/ui/mod.rs:647
+#: src/ui/mod.rs:663
 msgid "Minimize"
 msgstr "最小化"
 
-#: src/ui/mod.rs:648
+#: src/ui/mod.rs:664
 msgid "Maximize"
 msgstr "最大化"
 
-#: src/ui/mod.rs:649
+#: src/ui/mod.rs:665
 msgid "Restore"
 msgstr "元に戻す"
 
@@ -3892,6 +3875,34 @@ msgstr ""
 "この PC または仮想マシンにはありません。グラフィックドライバーをインストール"
 "するか、仮想マシンの GPU アクセラレーションを有効にしてください。詳しくは "
 "{url} を開きますか？"
+
+#~ msgid "Confirming your Spotify account…"
+#~ msgstr "Spotifyアカウントを確認中…"
+
+#~ msgid "Details"
+#~ msgstr "詳細"
+
+#~ msgid ""
+#~ "Spotifast checks daily for a replacement during the last 30 days of each "
+#~ "build. Updates wait until Soloist is inactive."
+#~ msgstr ""
+#~ "各バージョンの有効期限までの最後の30日間、Spotifastは更新版を毎日確認しま"
+#~ "す。更新はSoloistが非アクティブになるまで待機します。"
+
+#~ msgid ""
+#~ "Soloist uses your system audio output. Turn it off to use the built-in "
+#~ "player's EQ, visualizers, local files and queue editing."
+#~ msgstr ""
+#~ "Soloistはシステムの音声出力を使用します。内蔵プレーヤーのイコライザー、ビ"
+#~ "ジュアライザー、ローカルファイル、キュー編集を使うには、Soloistをオフにし"
+#~ "てください。"
+
+#~ msgid ""
+#~ "Spotify chooses playback quality. Soloist does not report the delivered "
+#~ "audio format yet."
+#~ msgstr ""
+#~ "再生品質はSpotifyが選択します。Soloistは実際に受信した音声形式をまだ報告し"
+#~ "ません。"
 
 #~ msgid ""
 #~ "Audio quality, output, EQ and local-file settings below apply to the "

@@ -52,8 +52,15 @@ Choose **Turn off Soloist** in Settings to stop it and restore the built-in
 player's entry and settings. Saved built-in preferences are kept.
 While Soloist is enabled, built-in audio, EQ and visualization settings are
 hidden. Shared controls for the tray, startup and Spotifast updates remain
-under **Application**. The Soloist card keeps version, expiry and limitations
-under **Details**, while pairing instructions and errors remain visible.
+under **Application**. The Soloist card shows its version, expiry and a short
+capability note, with a link to this guide. **Turn off Soloist** sits in its
+header, like **Sign out** in the Account card.
+Starting and account verification use the same loading screen as Spotify
+sign-in, with **Starting Soloist…** or **Verifying Soloist…** as its status.
+Playback commands, including shortcuts and row double-clicks, are unavailable
+until the device is verified; they never start the built-in player as a
+fallback. **Set up Soloist** opens setup if the check needs help. Downloads,
+pairing and errors show setup directly, including its built-in-player option.
 The saved key and pairing are retained for **Enable with saved key** next time; signing out of Spotifast
 removes them. Closing Spotifast completely stops the child player. Closing to
 the tray leaves both running.

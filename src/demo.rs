@@ -1107,6 +1107,7 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
             | "soloist-downloading"
             | "soloist-pairing"
             | "soloist-ready"
+            | "soloist-verifying"
             | "soloist-playing"
             | "soloist-error" => {
                 use crate::soloist::Status;
@@ -1123,8 +1124,9 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                         name: "Spotifast Soloist (12345678)".into(),
                         version: "1.3.10".into(),
                     },
-                    "soloist-ready" | "soloist-playing" => {
-                        app.soloist_device_id = Some("demo-soloist".into());
+                    "soloist-ready" | "soloist-playing" | "soloist-verifying" => {
+                        app.soloist_device_id =
+                            (surface != "soloist-verifying").then(|| "demo-soloist".into());
                         if surface == "soloist-playing" {
                             let device = Device {
                                 id: app.soloist_device_id.clone(),
@@ -8204,7 +8206,7 @@ mod tests {
 
     #[cfg(feature = "demo")]
     #[test]
-    fn soloist_ready_card_keeps_details_collapsed_and_can_switch_back() {
+    fn soloist_ready_card_keeps_details_visible_and_can_switch_back() {
         if !crate::soloist::install::supported() {
             return;
         }
@@ -8214,11 +8216,13 @@ mod tests {
         apply_flags(&mut app, None, Some("soloist-ready"));
         let text = settings_text(&ctx, &mut app, "Spotify Soloist");
         assert!(text.iter().any(|s| s == "Enabled on this computer"));
+        assert!(text.iter().any(|s| s.contains("Version 1.3.10")));
         assert!(
             !text
                 .iter()
-                .any(|s| s.contains("expires") || s.contains("12345678"))
+                .any(|s| s == "Details" || s.contains("12345678"))
         );
+        assert!(text.iter().any(|s| s == "Setup, privacy and limitations"));
         let tree = accessible_frame(&ctx, &mut app, vec![]);
         let off = accessible_node(&tree, "Turn off Soloist", Role::Button);
         accessible_frame(
@@ -8228,6 +8232,49 @@ mod tests {
         );
         assert!(!app.settings.soloist_enabled);
         assert!(matches!(app.soloist_status, crate::soloist::Status::Off));
+        app.backend.shutdown();
+    }
+
+    #[cfg(feature = "demo")]
+    #[test]
+    fn soloist_verification_uses_the_sign_in_loading_screen_and_opens_setup() {
+        use egui::accesskit::{Action as AccessibleAction, Role};
+        let (ctx, mut app) = accessible_app("soloist-verifying");
+        app.backend.set_offline(true);
+        apply_flags(&mut app, None, Some("soloist-verifying"));
+        app.open(Page::Home);
+        accessible_frame(&ctx, &mut app, vec![]);
+        let tree = accessible_frame(&ctx, &mut app, vec![]);
+        let texts = view_frame_sized(
+            &ctx,
+            &mut app,
+            vec![],
+            App::frame_ui,
+            egui::vec2(1280.0, 800.0),
+        );
+        assert!(texts.iter().any(|(text, _)| text == "Verifying Soloist…"));
+        assert!(
+            texts
+                .iter()
+                .any(|(text, _)| text == "A native Spotify client.")
+        );
+        assert!(
+            !tree
+                .nodes
+                .iter()
+                .any(|(_, node)| node.label() == Some("Next"))
+        );
+        let status = accessible_node(&tree, "Set up Soloist", Role::Link);
+        accessible_frame(
+            &ctx,
+            &mut app,
+            vec![accessible_action(status, AccessibleAction::Click, None)],
+        );
+        assert_eq!(
+            app.soloist_onboarding,
+            crate::settings::SoloistOnboarding::Setup
+        );
+        assert!(app.soloist_waiting());
         app.backend.shutdown();
     }
 
