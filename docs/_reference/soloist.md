@@ -145,6 +145,29 @@ The Soloist API itself provides no PCM stream. OS audio processing does not
 establish which Spotify format was delivered, and is not advertised as
 bit-perfect or as a DRM workaround.
 
+### Native audio preview
+
+Maintainer audition builds made with `--features soloist-preview` also enable
+native process capture on macOS 14.2 or newer and Windows build 20348 or newer.
+These builds are separate from stable releases. On Mac, allow **System Audio
+Recording** for Spotifast, then play a song: a private Core Audio tap passes
+only Spotifast's Soloist child through its EQ, limiter and visualizers,
+including MilkDrop. Until capture receives audio, Soloist's ordinary output
+continues. Denying permission leaves ordinary playback available. Once routed,
+an output-device or sample-rate change stops the player and offers reconnect.
+
+On Windows, WASAPI captures only the owned Soloist process and its children
+for the spectrum, oscilloscope and MilkDrop. It does not change the audio
+output, so Soloist EQ remains unavailable. Capture failure leaves playback
+running. No virtual driver is installed on either platform and no captured
+audio is saved. The Mac playback path keeps the tap's sample rate; only the
+visualization copy is resampled.
+
+Unlike the Linux route, these native captures follow Soloist's source volume:
+**zero volume stops the visualizers**. This remains a preview limitation.
+Mac previews share the installed app's saved setup and run one copy at a time.
+Windows previews use the existing portable layout, with their own settings.
+
 Spotify lists capabilities such as Smart Shuffle, Jam and crossfade for its
 player. Spotifast only offers controls exposed by the documented Soloist API;
 those names alone do not establish an integration.

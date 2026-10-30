@@ -348,6 +348,7 @@ async fn process(player: Player<'_>, mut stopped: watch::Receiver<bool>) -> Resu
     }
     let bridge = audio::Bridge::open(audio_config.clone()).await;
     let mut command = tokio::process::Command::new(build.path(root));
+    #[cfg(target_os = "linux")]
     if let Some(bridge) = &bridge {
         command.args(["--pipewire-device", &bridge.name]);
         let props = std::env::var("PIPEWIRE_PROPS").unwrap_or_default();

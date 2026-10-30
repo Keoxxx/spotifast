@@ -236,6 +236,8 @@ zbus = { version = "5", default-features = false, features = ["tokio"] }
 x11rb = { version = "0.13", default-features = false }
 
 [build-dependencies]
+# Compile the small native audio adapters only in the Soloist audition build.
+cc = { version = "1", optional = true }
 # Drops unfinished PO entries and compiles catalog text and gettext plural
 # expressions to Rust. Ordinary builds do not need gettext tools.
 fastframe-i18n = { git = "https://github.com/crmne/fastframe", tag = "v0.15.2", features = ["build"] }
@@ -254,6 +256,9 @@ winresource = "0.1"
 
 [features]
 default = ["milkdrop"]
+# Maintainer audition builds. Native capture follows Soloist volume; this is
+# deliberately not enabled in stable builds until that behavior is settled.
+soloist-preview = ["dep:cc"]
 # Sample data and screenshot flags; never part of a release build.
 demo = []
 # MilkDrop, through libprojectM: a C++ library that CMake builds into the

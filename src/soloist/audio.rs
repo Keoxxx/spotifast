@@ -1,6 +1,6 @@
 //! Private OS audio routing for the managed Soloist process. No system mix is
-//! recorded. Linux uses two native PipeWire streams; other platforms keep
-//! Soloist's ordinary output until they have their own tested implementation.
+//! recorded. Linux uses PipeWire. The audition feature adds native process
+//! capture on macOS and Windows; stable builds keep their ordinary output.
 use std::sync::{
     Arc,
     atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering},
@@ -15,7 +15,35 @@ struct State {
     volume: AtomicU8,
 }
 
+#[cfg(any(
+    target_os = "linux",
+    all(
+        feature = "soloist-preview",
+        any(target_os = "macos", target_os = "windows")
+    )
+))]
+impl State {
+    fn new() -> Self {
+        Self {
+            child: AtomicU32::new(0),
+            routed: AtomicBool::new(false),
+            stop: AtomicBool::new(false),
+            failed: AtomicBool::new(false),
+            playing: AtomicBool::new(false),
+            volume: AtomicU8::new(0),
+        }
+    }
+}
+
+#[cfg(all(
+    feature = "soloist-preview",
+    any(test, target_os = "macos", target_os = "windows")
+))]
+#[path = "native.rs"]
+mod native;
+
 pub struct Bridge {
+    #[cfg(target_os = "linux")]
     pub name: String,
     state: Arc<State>,
 }
@@ -26,7 +54,20 @@ impl Drop for Bridge {
 }
 impl Bridge {
     pub async fn open(config: crate::player::EngineConfig) -> Option<Self> {
-        #[cfg(not(target_os = "linux"))]
+        #[cfg(all(
+            feature = "soloist-preview",
+            any(target_os = "macos", target_os = "windows")
+        ))]
+        {
+            native::open(config)
+        }
+        #[cfg(not(any(
+            target_os = "linux",
+            all(
+                feature = "soloist-preview",
+                any(target_os = "macos", target_os = "windows")
+            )
+        )))]
         {
             let _ = config;
             None
@@ -41,14 +82,7 @@ impl Bridge {
     async fn open_on(config: crate::player::EngineConfig, output: Option<String>) -> Option<Self> {
         let bridge = Self {
             name: format!("spotifast.soloist.{:016x}", rand::random::<u64>()),
-            state: Arc::new(State {
-                child: AtomicU32::new(0),
-                routed: AtomicBool::new(false),
-                stop: AtomicBool::new(false),
-                failed: AtomicBool::new(false),
-                playing: AtomicBool::new(false),
-                volume: AtomicU8::new(0),
-            }),
+            state: Arc::new(State::new()),
         };
         let state = bridge.state.clone();
         let name = bridge.name.clone();

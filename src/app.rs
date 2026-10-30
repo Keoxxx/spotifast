@@ -1738,8 +1738,13 @@ impl App {
         matches!(self.target(), Target::Remote(Some(id)) if self.soloist_device_id.as_ref() == Some(&id))
     }
 
-    /// The built-in sink or a verified private route from our Soloist child.
+    /// The built-in sink or an audible processing route from our Soloist child.
     pub fn audio_processing_available(&self) -> bool {
+        !self.settings.soloist_enabled || (self.soloist_audio && !cfg!(target_os = "windows"))
+    }
+
+    /// Windows process capture can observe audio without processing its output.
+    pub fn visualizers_available(&self) -> bool {
         !self.settings.soloist_enabled || self.soloist_audio
     }
 
@@ -21185,9 +21190,14 @@ mod tests {
             expires: u64::MAX,
         }));
         app.on_soloist(Update::Audio(true));
-        assert!(app.audio_processing_available());
+        assert!(app.visualizers_available());
+        assert_eq!(
+            app.audio_processing_available(),
+            !cfg!(target_os = "windows")
+        );
         app.on_soloist(Update::Status(Status::Starting));
         assert!(!app.audio_processing_available());
+        assert!(!app.visualizers_available());
         app.settings.soloist_enabled = false;
         app.on_soloist(Update::Audio(true));
         assert!(

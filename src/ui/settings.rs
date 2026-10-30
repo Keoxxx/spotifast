@@ -630,6 +630,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
     };
     let built_in = !app.settings.soloist_enabled;
     let audio_processing = app.audio_processing_available();
+    let visualizers = app.visualizers_available();
     let playback = if built_in {
         gettext(locale, "Playback on this computer")
     } else {
@@ -1246,7 +1247,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         pair_row(fastframe_theme::Base::Dark),
     ];
     for index in [8, 9, 10] {
-        appearance_rows[index].available &= audio_processing;
+        appearance_rows[index].available &= visualizers;
     }
     if section_matches(&needle, &appearance, &appearance_rows) {
         any_visible = true;
@@ -1960,7 +1961,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 .join(" "),
         ),
     ];
-    if audio_processing && section_matches(&needle, "MilkDrop", &milkdrop_rows) {
+    if visualizers && section_matches(&needle, "MilkDrop", &milkdrop_rows) {
         any_visible = true;
         section(ui, &palette, "MilkDrop", |ui| {
             filtered_row(ui, &palette, &needle, "MilkDrop", &milkdrop_rows[0], |ui| {

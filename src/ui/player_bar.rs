@@ -66,7 +66,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             // Its empty space is the visualizer's control, as Winamp's
             // visualizer was: a click moves to the next mode. The controls
             // drawn after it take their own clicks.
-            if app.settings.player_bar_vis_click && app.audio_processing_available() {
+            if app.settings.player_bar_vis_click && app.visualizers_available() {
                 let empty = ui.interact(
                     behind,
                     ui.id().with("player-bar-visualizer"),
