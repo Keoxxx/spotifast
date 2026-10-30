@@ -10,6 +10,8 @@ Available in source builds from `main`; not included in v0.14.2.
 Spotifast can run [Spotify Soloist](https://developer.spotify.com/documentation/soloist)
 as its first setup choice. New listeners and people updating see **Set up
 Soloist** after sign-in on supported platforms with a Premium account.
+Setup shows the key, download and pairing steps; this guide holds the details
+about privacy, updates and playback limitations.
 **Use the built-in player** skips Soloist and keeps librespot. The choice is
 remembered across launches and updates; existing Soloist listeners continue
 straight into the app. An interrupted setup resumes on the next launch.

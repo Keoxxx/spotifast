@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:57+0100\n"
+"POT-Creation-Date: 2026-10-30 13:46+0100\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Polish\n"
@@ -717,19 +717,19 @@ msgstr "Przywracanie ustawień proxy"
 msgid "Couldn't change how Spotifast starts with your computer."
 msgstr "Nie udało się zmienić sposobu uruchamiania Spotifast z komputerem."
 
-#: src/app.rs:1773 src/ui/soloist.rs:186
+#: src/app.rs:1773 src/ui/soloist.rs:179
 msgid "Starting Soloist…"
 msgstr "Uruchamianie Soloist…"
 
-#: src/app.rs:1774 src/ui/soloist.rs:190
+#: src/app.rs:1774 src/ui/soloist.rs:183
 msgid "Downloading Soloist from Spotify…"
 msgstr "Pobieranie Soloist ze Spotify…"
 
-#: src/app.rs:1775 src/ui/soloist.rs:219
+#: src/app.rs:1775 src/ui/soloist.rs:214
 msgid "Verifying Soloist…"
 msgstr "Weryfikowanie Soloist…"
 
-#: src/app.rs:1776 src/ui/soloist.rs:203
+#: src/app.rs:1776 src/ui/soloist.rs:196
 msgid "3. Pair once in Spotify"
 msgstr "3. Sparuj raz w Spotify"
 
@@ -2194,16 +2194,12 @@ msgid "Listen with Spotify Soloist"
 msgstr "Słuchaj przez Spotify Soloist"
 
 #: src/ui/soloist.rs:40
-msgid "Spotify's own player, with lossless support."
-msgstr "Odtwarzacz Spotify z obsługą bezstratnego dźwięku."
+msgid "Spotify's official player for listening outside the Spotify app."
+msgstr "Oficjalny odtwarzacz Spotify do słuchania muzyki poza aplikacją Spotify."
 
 #: src/ui/soloist.rs:43
-msgid ""
-"You'll need Spotify Premium, your personal Soloist key and one pairing in "
-"Spotify. Spotifast handles the download and updates."
-msgstr ""
-"Potrzebujesz Spotify Premium, osobistego klucza Soloist i jednorazowego "
-"parowania w Spotify. Spotifast zajmie się pobieraniem i aktualizacjami."
+msgid "Requires Spotify Premium. Spotifast handles downloads and updates."
+msgstr "Wymaga Spotify Premium. Spotifast zajmuje się pobieraniem i aktualizacjami."
 
 #: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
@@ -2214,34 +2210,26 @@ msgid "Start listening"
 msgstr "Zacznij słuchać"
 
 #: src/ui/soloist.rs:60
-msgid ""
-"For local files and full queue editing, use the built-in player. You can "
-"switch later in Settings."
-msgstr ""
-"Do plików lokalnych i pełnej edycji kolejki użyj wbudowanego odtwarzacza. "
-"Możesz go później zmienić w Ustawieniach."
-
-#: src/ui/soloist.rs:62
 msgid "Use the built-in player"
 msgstr "Użyj wbudowanego odtwarzacza"
 
-#: src/ui/soloist.rs:82 src/ui/soloist.rs:212
+#: src/ui/soloist.rs:80 src/ui/soloist.rs:207
 msgid "Enabled on this computer"
 msgstr "Włączony na tym komputerze"
 
-#: src/ui/soloist.rs:83 src/ui/soloist.rs:214
+#: src/ui/soloist.rs:81 src/ui/soloist.rs:209
 msgid "Updates automatically."
 msgstr "Aktualizuje się automatycznie."
 
-#: src/ui/soloist.rs:87
+#: src/ui/soloist.rs:85
 msgid "Spotify's player, with lossless support. Requires Premium."
 msgstr "Odtwarzacz Spotify z obsługą dźwięku bezstratnego. Wymaga Premium."
 
-#: src/ui/soloist.rs:93
+#: src/ui/soloist.rs:91
 msgid "Turn off Soloist"
 msgstr "Wyłącz Soloist"
 
-#: src/ui/soloist.rs:109
+#: src/ui/soloist.rs:107
 msgid ""
 "Spotify has not published Soloist for this platform. The built-in player "
 "remains available."
@@ -2249,86 +2237,41 @@ msgstr ""
 "Spotify nie udostępniło Soloist na tę platformę. Wbudowany odtwarzacz "
 "pozostaje dostępny."
 
-#: src/ui/soloist.rs:115
+#: src/ui/soloist.rs:113
 msgid "Sign in to Spotify before setting up Soloist."
 msgstr "Zaloguj się do Spotify przed konfiguracją Soloist."
 
-#: src/ui/soloist.rs:129
+#: src/ui/soloist.rs:127
 msgid "1. Get your Soloist key from Spotify"
 msgstr "1. Pobierz swój klucz Soloist ze Spotify"
 
-#: src/ui/soloist.rs:138
-msgid ""
-"Create a Soloist key in Spotify's developer dashboard. This is separate from "
-"your Web API app's Client ID."
-msgstr ""
-"Utwórz klucz Soloist w panelu deweloperskim Spotify. To osobny klucz, "
-"niezależny od Client ID aplikacji Web API."
-
-#: src/ui/soloist.rs:140
-msgid ""
-"Soloist makes its own Spotify connections. Spotifast's proxy settings do not "
-"route its audio traffic."
-msgstr ""
-"Soloist nawiązuje własne połączenia ze Spotify. Ustawienia proxy Spotifast "
-"nie obejmują jego transmisji audio."
-
-#: src/ui/soloist.rs:146
+#: src/ui/soloist.rs:141
 msgid "Paste your personal Soloist key"
 msgstr "Wklej osobisty klucz Soloist"
 
-#: src/ui/soloist.rs:153
+#: src/ui/soloist.rs:148
 msgid "Retry with saved key"
 msgstr "Spróbuj ponownie z zapisanym kluczem"
 
-#: src/ui/soloist.rs:155
+#: src/ui/soloist.rs:150
 msgid "2. Download and enable Soloist"
 msgstr "2. Pobierz i włącz Soloist"
 
-#: src/ui/soloist.rs:173
+#: src/ui/soloist.rs:168
 msgid "Enable with saved key"
 msgstr "Włącz z zapisanym kluczem"
 
-#: src/ui/soloist.rs:181
+#: src/ui/soloist.rs:199 src/ui/soloist.rs:218
 msgid ""
-"Downloads directly from Spotify and saves your key in the system credential "
-"store. By enabling Soloist, you use Spotify's separate software under its "
-"terms."
-msgstr ""
-"Pobiera bezpośrednio ze Spotify i zapisuje klucz w systemowym magazynie "
-"poświadczeń. Włączając Soloist, korzystasz z osobnego oprogramowania Spotify "
-"na jego warunkach."
+"Open Spotify with the same account and network. In its device picker, choose:"
+msgstr "Otwórz Spotify na tym samym koncie i w tej samej sieci. Z listy urządzeń wybierz:"
 
-#: src/ui/soloist.rs:204
-msgid ""
-"Open Spotify on the same network, using the account signed in here. In the "
-"device picker, choose:"
-msgstr ""
-"Otwórz Spotify w tej samej sieci, używając konta zalogowanego tutaj. Na "
-"liście urządzeń wybierz:"
-
-#: src/ui/soloist.rs:206
-msgid ""
-"Spotifast will notice when pairing finishes. Future starts reconnect "
-"automatically."
-msgstr ""
-"Spotifast wykryje zakończenie parowania. Przy kolejnych uruchomieniach "
-"połączenie zostanie nawiązane automatycznie."
-
-#: src/ui/soloist.rs:221
-msgid ""
-"If this takes a while, make sure Spotify is signed in to the same account as "
-"Spotifast, then select this device there."
-msgstr ""
-"Jeśli trwa to długo, sprawdź, czy Spotify używa tego samego konta co "
-"Spotifast, a następnie wybierz to urządzenie w Spotify."
-
-#: src/ui/soloist.rs:232
+#: src/ui/soloist.rs:230
 msgid "Update ready. It will install when Soloist is inactive."
 msgstr ""
 "Aktualizacja gotowa. Zostanie zainstalowana, gdy Soloist będzie nieaktywny."
 
-#: src/ui/soloist.rs:250
+#: src/ui/soloist.rs:248
 #, rust-format
 msgid "Version {version} · expires {date}"
 msgstr "Wersja {version} · wygasa {date}"
@@ -2337,7 +2280,7 @@ msgstr "Wersja {version} · wygasa {date}"
 msgid "Spotify manages audio quality."
 msgstr "Spotify zarządza jakością dźwięku."
 
-#: src/ui/soloist.rs:263
+#: src/ui/soloist.rs:261
 msgid "Setup, privacy and limitations"
 msgstr "Konfiguracja, prywatność i ograniczenia"
 
@@ -3924,6 +3867,67 @@ msgstr ""
 "komputer lub ta maszyna wirtualna go nie zapewnia. Zainstaluj sterownik "
 "graficzny albo włącz akcelerację GPU maszyny wirtualnej. Otworzyć {url}, aby "
 "dowiedzieć się więcej?"
+
+#~ msgid "Spotify's own player, with lossless support."
+#~ msgstr "Odtwarzacz Spotify z obsługą bezstratnego dźwięku."
+
+#~ msgid ""
+#~ "You'll need Spotify Premium, your personal Soloist key and one pairing in "
+#~ "Spotify. Spotifast handles the download and updates."
+#~ msgstr ""
+#~ "Potrzebujesz Spotify Premium, osobistego klucza Soloist i jednorazowego "
+#~ "parowania w Spotify. Spotifast zajmie się pobieraniem i aktualizacjami."
+
+#~ msgid ""
+#~ "For local files and full queue editing, use the built-in player. You can "
+#~ "switch later in Settings."
+#~ msgstr ""
+#~ "Do plików lokalnych i pełnej edycji kolejki użyj wbudowanego odtwarzacza. "
+#~ "Możesz go później zmienić w Ustawieniach."
+
+#~ msgid ""
+#~ "Create a Soloist key in Spotify's developer dashboard. This is separate "
+#~ "from your Web API app's Client ID."
+#~ msgstr ""
+#~ "Utwórz klucz Soloist w panelu deweloperskim Spotify. To osobny klucz, "
+#~ "niezależny od Client ID aplikacji Web API."
+
+#~ msgid ""
+#~ "Soloist makes its own Spotify connections. Spotifast's proxy settings do "
+#~ "not route its audio traffic."
+#~ msgstr ""
+#~ "Soloist nawiązuje własne połączenia ze Spotify. Ustawienia proxy "
+#~ "Spotifast nie obejmują jego transmisji audio."
+
+#~ msgid ""
+#~ "Downloads directly from Spotify and saves your key in the system "
+#~ "credential store. By enabling Soloist, you use Spotify's separate "
+#~ "software under its terms."
+#~ msgstr ""
+#~ "Pobiera bezpośrednio ze Spotify i zapisuje klucz w systemowym magazynie "
+#~ "poświadczeń. Włączając Soloist, korzystasz z osobnego oprogramowania "
+#~ "Spotify na jego warunkach."
+
+#~ msgid ""
+#~ "Open Spotify on the same network, using the account signed in here. In "
+#~ "the device picker, choose:"
+#~ msgstr ""
+#~ "Otwórz Spotify w tej samej sieci, używając konta zalogowanego tutaj. Na "
+#~ "liście urządzeń wybierz:"
+
+#~ msgid ""
+#~ "Spotifast will notice when pairing finishes. Future starts reconnect "
+#~ "automatically."
+#~ msgstr ""
+#~ "Spotifast wykryje zakończenie parowania. Przy kolejnych uruchomieniach "
+#~ "połączenie zostanie nawiązane automatycznie."
+
+#~ msgid ""
+#~ "If this takes a while, make sure Spotify is signed in to the same account "
+#~ "as Spotifast, then select this device there."
+#~ msgstr ""
+#~ "Jeśli trwa to długo, sprawdź, czy Spotify używa tego samego konta co "
+#~ "Spotifast, a następnie wybierz to urządzenie w Spotify."
 
 #~ msgid ""
 #~ "For EQ, visualizers, local files and queue editing, use the built-in "

@@ -37,10 +37,10 @@ pub fn onboarding(app: &mut App, ui: &mut egui::Ui) {
                                 ui.add_space(16.0);
                                 theme::text(ui, gettext(locale, "Listen with Spotify Soloist"), theme::semibold(25.0), palette.text);
                                 ui.add_space(8.0);
-                                ui.label(gettext(locale, "Spotify's own player, with lossless support."));
+                                ui.label(gettext(locale, "Spotify's official player for listening outside the Spotify app."));
                                 ui.add_space(16.0);
                                 if welcome {
-                                    ui.label(gettext(locale, "You'll need Spotify Premium, your personal Soloist key and one pairing in Spotify. Spotifast handles the download and updates."));
+                                    ui.label(gettext(locale, "Requires Spotify Premium. Spotifast handles downloads and updates."));
                                     ui.add_space(16.0);
                                     if theme::pill_button(ui, &palette, &gettext(locale, "Set up Soloist"), true).clicked() {
                                         app.actions.push(Action::StartSoloistSetup);
@@ -57,8 +57,6 @@ pub fn onboarding(app: &mut App, ui: &mut egui::Ui) {
                                 ui.add_space(18.0);
                                 ui.separator();
                                 ui.add_space(10.0);
-                                ui.add(egui::Label::new(egui::RichText::new(gettext(locale, "For local files and full queue editing, use the built-in player. You can switch later in Settings.")).color(palette.secondary)).wrap());
-                                ui.add_space(8.0);
                                 if theme::soft_button(ui, &palette, None, &gettext(locale, "Use the built-in player"), false).clicked() {
                                     app.actions.push(Action::UseBuiltInPlayer);
                                 }
@@ -135,9 +133,6 @@ fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
                     "https://developer.spotify.com/dashboard/soloist".into(),
                 ));
             }
-            ui.label(gettext(locale, "Create a Soloist key in Spotify's developer dashboard. This is separate from your Web API app's Client ID."));
-            ui.add_space(8.0);
-            ui.label(egui::RichText::new(gettext(locale, "Soloist makes its own Spotify connections. Spotifast's proxy settings do not route its audio traffic.")).small().color(palette.secondary));
             ui.add_space(8.0);
             ui.add(
                 egui::TextEdit::singleline(&mut app.soloist_key)
@@ -177,8 +172,6 @@ fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
             {
                 app.actions.push(Action::RetrySoloist);
             }
-            ui.add_space(8.0);
-            ui.label(egui::RichText::new(gettext(locale, "Downloads directly from Spotify and saves your key in the system credential store. By enabling Soloist, you use Spotify's separate software under its terms." )).small().color(palette.secondary));
         }
         Status::Starting => {
             ui.horizontal(|ui| {
@@ -201,9 +194,11 @@ fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
         }
         Status::Pairing { name, .. } => {
             ui.label(egui::RichText::new(gettext(locale, "3. Pair once in Spotify")).strong());
-            ui.label(gettext(locale, "Open Spotify on the same network, using the account signed in here. In the device picker, choose:"));
+            ui.label(gettext(
+                locale,
+                "Open Spotify with the same account and network. In its device picker, choose:",
+            ));
             ui.label(egui::RichText::new(name).strong());
-            ui.label(gettext(locale, "Spotifast will notice when pairing finishes. Future starts reconnect automatically."));
         }
         Status::Ready { .. } => {
             if app.soloist_device_id.is_some() {
@@ -218,7 +213,10 @@ fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
                     ui.spinner();
                     ui.label(gettext(locale, "Verifying Soloist…"));
                 });
-                ui.label(gettext(locale, "If this takes a while, make sure Spotify is signed in to the same account as Spotifast, then select this device there."));
+                ui.label(gettext(
+                    locale,
+                    "Open Spotify with the same account and network. In its device picker, choose:",
+                ));
                 if let Status::Ready { name, .. } = &app.soloist_status {
                     ui.label(name);
                 }
@@ -252,13 +250,13 @@ fn controls(app: &mut App, ui: &mut egui::Ui, onboarding: bool) {
                 .replace("{date}", &date),
         );
     }
-    ui.add(
-        egui::Label::new(
-            egui::RichText::new(gettext(locale, "Spotify manages audio quality."))
-                .color(palette.secondary),
-        )
-        .wrap(),
-    );
+    if matches!(app.soloist_status, Status::Ready { .. }) {
+        theme::subtle(
+            ui,
+            &palette,
+            &gettext(locale, "Spotify manages audio quality."),
+        );
+    }
     if ui
         .link(gettext(locale, "Setup, privacy and limitations"))
         .clicked()

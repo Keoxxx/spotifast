@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:57+0100\n"
+"POT-Creation-Date: 2026-10-30 13:46+0100\n"
 "PO-Revision-Date: 2026-10-15 12:00+0900\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Korean\n"
@@ -704,19 +704,19 @@ msgstr "프록시 설정을 복원하는 중"
 msgid "Couldn't change how Spotifast starts with your computer."
 msgstr "컴퓨터와 함께 Spotifast를 시작하는 방식을 바꾸지 못했습니다."
 
-#: src/app.rs:1773 src/ui/soloist.rs:186
+#: src/app.rs:1773 src/ui/soloist.rs:179
 msgid "Starting Soloist…"
 msgstr "Soloist 시작 중…"
 
-#: src/app.rs:1774 src/ui/soloist.rs:190
+#: src/app.rs:1774 src/ui/soloist.rs:183
 msgid "Downloading Soloist from Spotify…"
 msgstr "Spotify에서 Soloist 다운로드 중…"
 
-#: src/app.rs:1775 src/ui/soloist.rs:219
+#: src/app.rs:1775 src/ui/soloist.rs:214
 msgid "Verifying Soloist…"
 msgstr "Soloist 확인 중…"
 
-#: src/app.rs:1776 src/ui/soloist.rs:203
+#: src/app.rs:1776 src/ui/soloist.rs:196
 msgid "3. Pair once in Spotify"
 msgstr "3. Spotify에서 한 번 페어링"
 
@@ -2140,16 +2140,12 @@ msgid "Listen with Spotify Soloist"
 msgstr "Spotify Soloist로 듣기"
 
 #: src/ui/soloist.rs:40
-msgid "Spotify's own player, with lossless support."
-msgstr "무손실 오디오를 지원하는 Spotify 공식 플레이어입니다."
+msgid "Spotify's official player for listening outside the Spotify app."
+msgstr "Spotify 앱 밖에서 음악을 듣기 위한 Spotify 공식 플레이어입니다."
 
 #: src/ui/soloist.rs:43
-msgid ""
-"You'll need Spotify Premium, your personal Soloist key and one pairing in "
-"Spotify. Spotifast handles the download and updates."
-msgstr ""
-"Spotify Premium, 개인 Soloist 키, Spotify에서 한 번의 페어링이 필요합니다. 다"
-"운로드와 업데이트는 Spotifast가 처리합니다."
+msgid "Requires Spotify Premium. Spotifast handles downloads and updates."
+msgstr "Spotify Premium이 필요합니다. 다운로드와 업데이트는 Spotifast가 처리합니다."
 
 #: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
@@ -2160,34 +2156,26 @@ msgid "Start listening"
 msgstr "듣기 시작"
 
 #: src/ui/soloist.rs:60
-msgid ""
-"For local files and full queue editing, use the built-in player. You can "
-"switch later in Settings."
-msgstr ""
-"로컬 파일과 전체 대기열 편집 기능을 사용하려면 내장 플레이어를 선택하세요. 나"
-"중에 설정에서 전환할 수 있습니다."
-
-#: src/ui/soloist.rs:62
 msgid "Use the built-in player"
 msgstr "내장 플레이어 사용"
 
-#: src/ui/soloist.rs:82 src/ui/soloist.rs:212
+#: src/ui/soloist.rs:80 src/ui/soloist.rs:207
 msgid "Enabled on this computer"
 msgstr "이 컴퓨터에서 활성화됨"
 
-#: src/ui/soloist.rs:83 src/ui/soloist.rs:214
+#: src/ui/soloist.rs:81 src/ui/soloist.rs:209
 msgid "Updates automatically."
 msgstr "자동으로 업데이트됩니다."
 
-#: src/ui/soloist.rs:87
+#: src/ui/soloist.rs:85
 msgid "Spotify's player, with lossless support. Requires Premium."
 msgstr "무손실 오디오를 지원하는 Spotify 플레이어입니다. Premium이 필요합니다."
 
-#: src/ui/soloist.rs:93
+#: src/ui/soloist.rs:91
 msgid "Turn off Soloist"
 msgstr "Soloist 끄기"
 
-#: src/ui/soloist.rs:109
+#: src/ui/soloist.rs:107
 msgid ""
 "Spotify has not published Soloist for this platform. The built-in player "
 "remains available."
@@ -2195,85 +2183,40 @@ msgstr ""
 "Spotify가 이 플랫폼용 Soloist를 출시하지 않았습니다. 내장 플레이어는 계속 사"
 "용할 수 있습니다."
 
-#: src/ui/soloist.rs:115
+#: src/ui/soloist.rs:113
 msgid "Sign in to Spotify before setting up Soloist."
 msgstr "Soloist를 설정하기 전에 Spotify에 로그인하세요."
 
-#: src/ui/soloist.rs:129
+#: src/ui/soloist.rs:127
 msgid "1. Get your Soloist key from Spotify"
 msgstr "1. Spotify에서 Soloist 키 받기"
 
-#: src/ui/soloist.rs:138
-msgid ""
-"Create a Soloist key in Spotify's developer dashboard. This is separate from "
-"your Web API app's Client ID."
-msgstr ""
-"Spotify 개발자 대시보드에서 Soloist 키를 만드세요. Web API 앱의 Client ID와"
-"는 별개입니다."
-
-#: src/ui/soloist.rs:140
-msgid ""
-"Soloist makes its own Spotify connections. Spotifast's proxy settings do not "
-"route its audio traffic."
-msgstr ""
-"Soloist는 자체적으로 Spotify에 연결합니다. Spotifast의 프록시 설정은 Soloist"
-"의 오디오 트래픽에 적용되지 않습니다."
-
-#: src/ui/soloist.rs:146
+#: src/ui/soloist.rs:141
 msgid "Paste your personal Soloist key"
 msgstr "개인 Soloist 키 붙여넣기"
 
-#: src/ui/soloist.rs:153
+#: src/ui/soloist.rs:148
 msgid "Retry with saved key"
 msgstr "저장된 키로 다시 시도"
 
-#: src/ui/soloist.rs:155
+#: src/ui/soloist.rs:150
 msgid "2. Download and enable Soloist"
 msgstr "2. Soloist 다운로드 및 활성화"
 
-#: src/ui/soloist.rs:173
+#: src/ui/soloist.rs:168
 msgid "Enable with saved key"
 msgstr "저장된 키로 활성화"
 
-#: src/ui/soloist.rs:181
+#: src/ui/soloist.rs:199 src/ui/soloist.rs:218
 msgid ""
-"Downloads directly from Spotify and saves your key in the system credential "
-"store. By enabling Soloist, you use Spotify's separate software under its "
-"terms."
-msgstr ""
-"Spotify에서 직접 다운로드하고 시스템 자격 증명 저장소에 키를 저장합니다. "
-"Soloist를 활성화하면 Spotify의 별도 소프트웨어를 해당 약관에 따라 사용하게 됩"
-"니다."
+"Open Spotify with the same account and network. In its device picker, choose:"
+msgstr "같은 계정과 네트워크로 Spotify를 열고 기기 목록에서 다음을 선택하세요:"
 
-#: src/ui/soloist.rs:204
-msgid ""
-"Open Spotify on the same network, using the account signed in here. In the "
-"device picker, choose:"
-msgstr ""
-"같은 네트워크에서 여기에 로그인한 계정으로 Spotify를 여세요. 기기 목록에서 다"
-"음을 선택하세요:"
-
-#: src/ui/soloist.rs:206
-msgid ""
-"Spotifast will notice when pairing finishes. Future starts reconnect "
-"automatically."
-msgstr ""
-"Spotifast가 페어링 완료를 감지합니다. 이후 시작할 때는 자동으로 다시 연결합니"
-"다."
-
-#: src/ui/soloist.rs:221
-msgid ""
-"If this takes a while, make sure Spotify is signed in to the same account as "
-"Spotifast, then select this device there."
-msgstr ""
-"오래 걸리면 Spotify가 Spotifast와 같은 계정에 로그인되어 있는지 확인한 후 "
-"Spotify에서 이 기기를 선택하세요."
-
-#: src/ui/soloist.rs:232
+#: src/ui/soloist.rs:230
 msgid "Update ready. It will install when Soloist is inactive."
 msgstr "업데이트가 준비되었습니다. Soloist가 비활성 상태일 때 설치됩니다."
 
-#: src/ui/soloist.rs:250
+#: src/ui/soloist.rs:248
 #, rust-format
 msgid "Version {version} · expires {date}"
 msgstr "버전 {version} · 만료일 {date}"
@@ -2282,7 +2225,7 @@ msgstr "버전 {version} · 만료일 {date}"
 msgid "Spotify manages audio quality."
 msgstr "Spotify가 음질을 관리합니다."
 
-#: src/ui/soloist.rs:263
+#: src/ui/soloist.rs:261
 msgid "Setup, privacy and limitations"
 msgstr "설정, 개인정보 및 제한 사항"
 
@@ -3834,6 +3777,67 @@ msgstr ""
 "데, 이 PC 또는 가상 머신에서는 제공되지 않습니다. 그래픽 드라이버를 설치하거"
 "나 가상 머신의 GPU 가속을 켜세요. 자세한 내용을 보려면 {url}을(를) 여시겠습니"
 "까?"
+
+#~ msgid "Spotify's own player, with lossless support."
+#~ msgstr "무손실 오디오를 지원하는 Spotify 공식 플레이어입니다."
+
+#~ msgid ""
+#~ "You'll need Spotify Premium, your personal Soloist key and one pairing in "
+#~ "Spotify. Spotifast handles the download and updates."
+#~ msgstr ""
+#~ "Spotify Premium, 개인 Soloist 키, Spotify에서 한 번의 페어링이 필요합니"
+#~ "다. 다운로드와 업데이트는 Spotifast가 처리합니다."
+
+#~ msgid ""
+#~ "For local files and full queue editing, use the built-in player. You can "
+#~ "switch later in Settings."
+#~ msgstr ""
+#~ "로컬 파일과 전체 대기열 편집 기능을 사용하려면 내장 플레이어를 선택하세"
+#~ "요. 나중에 설정에서 전환할 수 있습니다."
+
+#~ msgid ""
+#~ "Create a Soloist key in Spotify's developer dashboard. This is separate "
+#~ "from your Web API app's Client ID."
+#~ msgstr ""
+#~ "Spotify 개발자 대시보드에서 Soloist 키를 만드세요. Web API 앱의 Client ID"
+#~ "와는 별개입니다."
+
+#~ msgid ""
+#~ "Soloist makes its own Spotify connections. Spotifast's proxy settings do "
+#~ "not route its audio traffic."
+#~ msgstr ""
+#~ "Soloist는 자체적으로 Spotify에 연결합니다. Spotifast의 프록시 설정은 "
+#~ "Soloist의 오디오 트래픽에 적용되지 않습니다."
+
+#~ msgid ""
+#~ "Downloads directly from Spotify and saves your key in the system "
+#~ "credential store. By enabling Soloist, you use Spotify's separate "
+#~ "software under its terms."
+#~ msgstr ""
+#~ "Spotify에서 직접 다운로드하고 시스템 자격 증명 저장소에 키를 저장합니다. "
+#~ "Soloist를 활성화하면 Spotify의 별도 소프트웨어를 해당 약관에 따라 사용하"
+#~ "게 됩니다."
+
+#~ msgid ""
+#~ "Open Spotify on the same network, using the account signed in here. In "
+#~ "the device picker, choose:"
+#~ msgstr ""
+#~ "같은 네트워크에서 여기에 로그인한 계정으로 Spotify를 여세요. 기기 목록에"
+#~ "서 다음을 선택하세요:"
+
+#~ msgid ""
+#~ "Spotifast will notice when pairing finishes. Future starts reconnect "
+#~ "automatically."
+#~ msgstr ""
+#~ "Spotifast가 페어링 완료를 감지합니다. 이후 시작할 때는 자동으로 다시 연결"
+#~ "합니다."
+
+#~ msgid ""
+#~ "If this takes a while, make sure Spotify is signed in to the same account "
+#~ "as Spotifast, then select this device there."
+#~ msgstr ""
+#~ "오래 걸리면 Spotify가 Spotifast와 같은 계정에 로그인되어 있는지 확인한 후 "
+#~ "Spotify에서 이 기기를 선택하세요."
 
 #~ msgid ""
 #~ "For EQ, visualizers, local files and queue editing, use the built-in "

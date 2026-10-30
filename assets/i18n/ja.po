@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:57+0100\n"
+"POT-Creation-Date: 2026-10-30 13:46+0100\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Japanese\n"
@@ -704,19 +704,19 @@ msgstr "プロキシ設定を復元中"
 msgid "Couldn't change how Spotifast starts with your computer."
 msgstr "コンピュータの起動時のSpotifastの開き方を変更できませんでした。"
 
-#: src/app.rs:1773 src/ui/soloist.rs:186
+#: src/app.rs:1773 src/ui/soloist.rs:179
 msgid "Starting Soloist…"
 msgstr "Soloistを起動中…"
 
-#: src/app.rs:1774 src/ui/soloist.rs:190
+#: src/app.rs:1774 src/ui/soloist.rs:183
 msgid "Downloading Soloist from Spotify…"
 msgstr "SpotifyからSoloistをダウンロード中…"
 
-#: src/app.rs:1775 src/ui/soloist.rs:219
+#: src/app.rs:1775 src/ui/soloist.rs:214
 msgid "Verifying Soloist…"
 msgstr "Soloist を確認中…"
 
-#: src/app.rs:1776 src/ui/soloist.rs:203
+#: src/app.rs:1776 src/ui/soloist.rs:196
 msgid "3. Pair once in Spotify"
 msgstr "3. Spotifyで初回ペアリング"
 
@@ -2172,16 +2172,12 @@ msgid "Listen with Spotify Soloist"
 msgstr "Spotify Soloistで聴く"
 
 #: src/ui/soloist.rs:40
-msgid "Spotify's own player, with lossless support."
-msgstr "ロスレス音声に対応したSpotify公式プレーヤー。"
+msgid "Spotify's official player for listening outside the Spotify app."
+msgstr "Spotifyアプリの外で音楽を聴くためのSpotify公式プレーヤーです。"
 
 #: src/ui/soloist.rs:43
-msgid ""
-"You'll need Spotify Premium, your personal Soloist key and one pairing in "
-"Spotify. Spotifast handles the download and updates."
-msgstr ""
-"Spotify Premium、個人用のSoloistキー、Spotifyでの初回ペアリングが必要です。ダ"
-"ウンロードと更新はSpotifastが行います。"
+msgid "Requires Spotify Premium. Spotifast handles downloads and updates."
+msgstr "Spotify Premiumが必要です。ダウンロードと更新はSpotifastが行います。"
 
 #: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
@@ -2192,34 +2188,26 @@ msgid "Start listening"
 msgstr "聴き始める"
 
 #: src/ui/soloist.rs:60
-msgid ""
-"For local files and full queue editing, use the built-in player. You can "
-"switch later in Settings."
-msgstr ""
-"ローカルファイルとキューの全編集機能には内蔵プレーヤーを使用してください。後"
-"で設定から切り替えられます。"
-
-#: src/ui/soloist.rs:62
 msgid "Use the built-in player"
 msgstr "内蔵プレーヤーを使用"
 
-#: src/ui/soloist.rs:82 src/ui/soloist.rs:212
+#: src/ui/soloist.rs:80 src/ui/soloist.rs:207
 msgid "Enabled on this computer"
 msgstr "このコンピューターで有効"
 
-#: src/ui/soloist.rs:83 src/ui/soloist.rs:214
+#: src/ui/soloist.rs:81 src/ui/soloist.rs:209
 msgid "Updates automatically."
 msgstr "自動で更新されます。"
 
-#: src/ui/soloist.rs:87
+#: src/ui/soloist.rs:85
 msgid "Spotify's player, with lossless support. Requires Premium."
 msgstr "ロスレス音声に対応したSpotifyのプレーヤーです。Premiumが必要です。"
 
-#: src/ui/soloist.rs:93
+#: src/ui/soloist.rs:91
 msgid "Turn off Soloist"
 msgstr "Soloistをオフにする"
 
-#: src/ui/soloist.rs:109
+#: src/ui/soloist.rs:107
 msgid ""
 "Spotify has not published Soloist for this platform. The built-in player "
 "remains available."
@@ -2227,86 +2215,41 @@ msgstr ""
 "このプラットフォーム向けのSoloistはSpotifyから公開されていません。内蔵プレー"
 "ヤーは引き続き利用できます。"
 
-#: src/ui/soloist.rs:115
+#: src/ui/soloist.rs:113
 msgid "Sign in to Spotify before setting up Soloist."
 msgstr "Soloistを設定する前にSpotifyにログインしてください。"
 
-#: src/ui/soloist.rs:129
+#: src/ui/soloist.rs:127
 msgid "1. Get your Soloist key from Spotify"
 msgstr "1. SpotifyでSoloistキーを取得"
 
-#: src/ui/soloist.rs:138
-msgid ""
-"Create a Soloist key in Spotify's developer dashboard. This is separate from "
-"your Web API app's Client ID."
-msgstr ""
-"Spotifyの開発者ダッシュボードでSoloistキーを作成してください。Web APIアプリの"
-"Client IDとは別のものです。"
-
-#: src/ui/soloist.rs:140
-msgid ""
-"Soloist makes its own Spotify connections. Spotifast's proxy settings do not "
-"route its audio traffic."
-msgstr ""
-"Soloistは独自にSpotifyに接続します。Spotifastのプロキシ設定はSoloistの音声通"
-"信には適用されません。"
-
-#: src/ui/soloist.rs:146
+#: src/ui/soloist.rs:141
 msgid "Paste your personal Soloist key"
 msgstr "個人用のSoloistキーを貼り付け"
 
-#: src/ui/soloist.rs:153
+#: src/ui/soloist.rs:148
 msgid "Retry with saved key"
 msgstr "保存したキーで再試行"
 
-#: src/ui/soloist.rs:155
+#: src/ui/soloist.rs:150
 msgid "2. Download and enable Soloist"
 msgstr "2. Soloistをダウンロードして有効化"
 
-#: src/ui/soloist.rs:173
+#: src/ui/soloist.rs:168
 msgid "Enable with saved key"
 msgstr "保存済みのキーで有効にする"
 
-#: src/ui/soloist.rs:181
+#: src/ui/soloist.rs:199 src/ui/soloist.rs:218
 msgid ""
-"Downloads directly from Spotify and saves your key in the system credential "
-"store. By enabling Soloist, you use Spotify's separate software under its "
-"terms."
-msgstr ""
-"Spotifyから直接ダウンロードし、キーをシステムの資格情報ストアに保存します。"
-"Soloistを有効にすると、Spotifyの別ソフトウェアをその利用規約に従って使用する"
-"ことになります。"
+"Open Spotify with the same account and network. In its device picker, choose:"
+msgstr "同じアカウントとネットワークでSpotifyを開き、デバイス一覧から次を選んでください："
 
-#: src/ui/soloist.rs:204
-msgid ""
-"Open Spotify on the same network, using the account signed in here. In the "
-"device picker, choose:"
-msgstr ""
-"同じネットワーク上で、ここにログインしているアカウントを使ってSpotifyを開いて"
-"ください。デバイス一覧で次を選択します："
-
-#: src/ui/soloist.rs:206
-msgid ""
-"Spotifast will notice when pairing finishes. Future starts reconnect "
-"automatically."
-msgstr ""
-"ペアリングの完了はSpotifastが検出します。次回以降の起動時は自動的に再接続しま"
-"す。"
-
-#: src/ui/soloist.rs:221
-msgid ""
-"If this takes a while, make sure Spotify is signed in to the same account as "
-"Spotifast, then select this device there."
-msgstr ""
-"時間がかかる場合は、SpotifyがSpotifastと同じアカウントにログインしていること"
-"を確認し、Spotifyでこのデバイスを選択してください。"
-
-#: src/ui/soloist.rs:232
+#: src/ui/soloist.rs:230
 msgid "Update ready. It will install when Soloist is inactive."
 msgstr ""
 "更新の準備ができました。Soloistが非アクティブになるとインストールされます。"
 
-#: src/ui/soloist.rs:250
+#: src/ui/soloist.rs:248
 #, rust-format
 msgid "Version {version} · expires {date}"
 msgstr "バージョン {version} · 有効期限 {date}"
@@ -2315,7 +2258,7 @@ msgstr "バージョン {version} · 有効期限 {date}"
 msgid "Spotify manages audio quality."
 msgstr "音質はSpotifyが管理します。"
 
-#: src/ui/soloist.rs:263
+#: src/ui/soloist.rs:261
 msgid "Setup, privacy and limitations"
 msgstr "設定、プライバシーと制限"
 
@@ -3871,6 +3814,67 @@ msgstr ""
 "この PC または仮想マシンにはありません。グラフィックドライバーをインストール"
 "するか、仮想マシンの GPU アクセラレーションを有効にしてください。詳しくは "
 "{url} を開きますか？"
+
+#~ msgid "Spotify's own player, with lossless support."
+#~ msgstr "ロスレス音声に対応したSpotify公式プレーヤー。"
+
+#~ msgid ""
+#~ "You'll need Spotify Premium, your personal Soloist key and one pairing in "
+#~ "Spotify. Spotifast handles the download and updates."
+#~ msgstr ""
+#~ "Spotify Premium、個人用のSoloistキー、Spotifyでの初回ペアリングが必要で"
+#~ "す。ダウンロードと更新はSpotifastが行います。"
+
+#~ msgid ""
+#~ "For local files and full queue editing, use the built-in player. You can "
+#~ "switch later in Settings."
+#~ msgstr ""
+#~ "ローカルファイルとキューの全編集機能には内蔵プレーヤーを使用してください。"
+#~ "後で設定から切り替えられます。"
+
+#~ msgid ""
+#~ "Create a Soloist key in Spotify's developer dashboard. This is separate "
+#~ "from your Web API app's Client ID."
+#~ msgstr ""
+#~ "Spotifyの開発者ダッシュボードでSoloistキーを作成してください。Web APIアプ"
+#~ "リのClient IDとは別のものです。"
+
+#~ msgid ""
+#~ "Soloist makes its own Spotify connections. Spotifast's proxy settings do "
+#~ "not route its audio traffic."
+#~ msgstr ""
+#~ "Soloistは独自にSpotifyに接続します。Spotifastのプロキシ設定はSoloistの音声"
+#~ "通信には適用されません。"
+
+#~ msgid ""
+#~ "Downloads directly from Spotify and saves your key in the system "
+#~ "credential store. By enabling Soloist, you use Spotify's separate "
+#~ "software under its terms."
+#~ msgstr ""
+#~ "Spotifyから直接ダウンロードし、キーをシステムの資格情報ストアに保存しま"
+#~ "す。Soloistを有効にすると、Spotifyの別ソフトウェアをその利用規約に従って使"
+#~ "用することになります。"
+
+#~ msgid ""
+#~ "Open Spotify on the same network, using the account signed in here. In "
+#~ "the device picker, choose:"
+#~ msgstr ""
+#~ "同じネットワーク上で、ここにログインしているアカウントを使ってSpotifyを開"
+#~ "いてください。デバイス一覧で次を選択します："
+
+#~ msgid ""
+#~ "Spotifast will notice when pairing finishes. Future starts reconnect "
+#~ "automatically."
+#~ msgstr ""
+#~ "ペアリングの完了はSpotifastが検出します。次回以降の起動時は自動的に再接続"
+#~ "します。"
+
+#~ msgid ""
+#~ "If this takes a while, make sure Spotify is signed in to the same account "
+#~ "as Spotifast, then select this device there."
+#~ msgstr ""
+#~ "時間がかかる場合は、SpotifyがSpotifastと同じアカウントにログインしているこ"
+#~ "とを確認し、Spotifyでこのデバイスを選択してください。"
 
 #~ msgid ""
 #~ "For EQ, visualizers, local files and queue editing, use the built-in "

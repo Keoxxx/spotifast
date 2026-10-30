@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-30 12:57+0100\n"
+"POT-Creation-Date: 2026-10-30 13:46+0100\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
 "Last-Translator: Spotifast contributors\n"
 "Language-Team: Simplified Chinese\n"
@@ -701,19 +701,19 @@ msgstr "正在恢复代理设置"
 msgid "Couldn't change how Spotifast starts with your computer."
 msgstr "无法更改 Spotifast 随电脑启动的方式。"
 
-#: src/app.rs:1773 src/ui/soloist.rs:186
+#: src/app.rs:1773 src/ui/soloist.rs:179
 msgid "Starting Soloist…"
 msgstr "正在启动 Soloist…"
 
-#: src/app.rs:1774 src/ui/soloist.rs:190
+#: src/app.rs:1774 src/ui/soloist.rs:183
 msgid "Downloading Soloist from Spotify…"
 msgstr "正在从 Spotify 下载 Soloist…"
 
-#: src/app.rs:1775 src/ui/soloist.rs:219
+#: src/app.rs:1775 src/ui/soloist.rs:214
 msgid "Verifying Soloist…"
 msgstr "正在验证 Soloist…"
 
-#: src/app.rs:1776 src/ui/soloist.rs:203
+#: src/app.rs:1776 src/ui/soloist.rs:196
 msgid "3. Pair once in Spotify"
 msgstr "3. 在 Spotify 中配对一次"
 
@@ -2101,16 +2101,12 @@ msgid "Listen with Spotify Soloist"
 msgstr "用 Spotify Soloist 聆听"
 
 #: src/ui/soloist.rs:40
-msgid "Spotify's own player, with lossless support."
-msgstr "Spotify 官方播放器，支持无损音频。"
+msgid "Spotify's official player for listening outside the Spotify app."
+msgstr "Spotify 官方播放器，可在 Spotify 应用之外收听音乐。"
 
 #: src/ui/soloist.rs:43
-msgid ""
-"You'll need Spotify Premium, your personal Soloist key and one pairing in "
-"Spotify. Spotifast handles the download and updates."
-msgstr ""
-"需要 Spotify Premium、你的个人 Soloist 密钥，以及在 Spotify 中完成一次配对。"
-"Spotifast 会负责下载和更新。"
+msgid "Requires Spotify Premium. Spotifast handles downloads and updates."
+msgstr "需要 Spotify Premium。Spotifast 会处理下载和更新。"
 
 #: src/ui/soloist.rs:45 src/ui/login.rs:352
 msgid "Set up Soloist"
@@ -2121,111 +2117,65 @@ msgid "Start listening"
 msgstr "开始聆听"
 
 #: src/ui/soloist.rs:60
-msgid ""
-"For local files and full queue editing, use the built-in player. You can "
-"switch later in Settings."
-msgstr ""
-"如需播放本地文件和完整的队列编辑功能，请使用内置播放器。稍后可在设置中切换。"
-
-#: src/ui/soloist.rs:62
 msgid "Use the built-in player"
 msgstr "使用内置播放器"
 
-#: src/ui/soloist.rs:82 src/ui/soloist.rs:212
+#: src/ui/soloist.rs:80 src/ui/soloist.rs:207
 msgid "Enabled on this computer"
 msgstr "已在此电脑上启用"
 
-#: src/ui/soloist.rs:83 src/ui/soloist.rs:214
+#: src/ui/soloist.rs:81 src/ui/soloist.rs:209
 msgid "Updates automatically."
 msgstr "自动更新。"
 
-#: src/ui/soloist.rs:87
+#: src/ui/soloist.rs:85
 msgid "Spotify's player, with lossless support. Requires Premium."
 msgstr "Spotify 播放器，支持无损音频。需要 Premium。"
 
-#: src/ui/soloist.rs:93
+#: src/ui/soloist.rs:91
 msgid "Turn off Soloist"
 msgstr "关闭 Soloist"
 
-#: src/ui/soloist.rs:109
+#: src/ui/soloist.rs:107
 msgid ""
 "Spotify has not published Soloist for this platform. The built-in player "
 "remains available."
 msgstr "Spotify 尚未发布适用于此平台的 Soloist。内置播放器仍可使用。"
 
-#: src/ui/soloist.rs:115
+#: src/ui/soloist.rs:113
 msgid "Sign in to Spotify before setting up Soloist."
 msgstr "设置 Soloist 前，请先登录 Spotify。"
 
-#: src/ui/soloist.rs:129
+#: src/ui/soloist.rs:127
 msgid "1. Get your Soloist key from Spotify"
 msgstr "1. 从 Spotify 获取 Soloist 密钥"
 
-#: src/ui/soloist.rs:138
-msgid ""
-"Create a Soloist key in Spotify's developer dashboard. This is separate from "
-"your Web API app's Client ID."
-msgstr ""
-"在 Spotify 开发者控制台中创建 Soloist 密钥。它与你的 Web API 应用的 Client "
-"ID 不同。"
-
-#: src/ui/soloist.rs:140
-msgid ""
-"Soloist makes its own Spotify connections. Spotifast's proxy settings do not "
-"route its audio traffic."
-msgstr ""
-"Soloist 自行连接 Spotify。Spotifast 的代理设置不适用于 Soloist 的音频流量。"
-
-#: src/ui/soloist.rs:146
+#: src/ui/soloist.rs:141
 msgid "Paste your personal Soloist key"
 msgstr "粘贴你的个人 Soloist 密钥"
 
-#: src/ui/soloist.rs:153
+#: src/ui/soloist.rs:148
 msgid "Retry with saved key"
 msgstr "使用已保存的密钥重试"
 
-#: src/ui/soloist.rs:155
+#: src/ui/soloist.rs:150
 msgid "2. Download and enable Soloist"
 msgstr "2. 下载并启用 Soloist"
 
-#: src/ui/soloist.rs:173
+#: src/ui/soloist.rs:168
 msgid "Enable with saved key"
 msgstr "使用已保存的密钥启用"
 
-#: src/ui/soloist.rs:181
+#: src/ui/soloist.rs:199 src/ui/soloist.rs:218
 msgid ""
-"Downloads directly from Spotify and saves your key in the system credential "
-"store. By enabling Soloist, you use Spotify's separate software under its "
-"terms."
-msgstr ""
-"直接从 Spotify 下载，并将密钥保存在系统凭据存储中。启用 Soloist 即表示你使用 "
-"Spotify 的独立软件，并遵守其条款。"
+"Open Spotify with the same account and network. In its device picker, choose:"
+msgstr "使用相同账号和网络打开 Spotify，然后在设备列表中选择："
 
-#: src/ui/soloist.rs:204
-msgid ""
-"Open Spotify on the same network, using the account signed in here. In the "
-"device picker, choose:"
-msgstr "在同一网络上打开 Spotify，使用此处登录的账号。在设备列表中选择："
-
-#: src/ui/soloist.rs:206
-msgid ""
-"Spotifast will notice when pairing finishes. Future starts reconnect "
-"automatically."
-msgstr "Spotifast 会检测到配对完成。以后启动时会自动重新连接。"
-
-#: src/ui/soloist.rs:221
-msgid ""
-"If this takes a while, make sure Spotify is signed in to the same account as "
-"Spotifast, then select this device there."
-msgstr ""
-"如果等待较久，请确认 Spotify 与 Spotifast 登录的是同一个账号，然后在 Spotify "
-"中选择此设备。"
-
-#: src/ui/soloist.rs:232
+#: src/ui/soloist.rs:230
 msgid "Update ready. It will install when Soloist is inactive."
 msgstr "更新已就绪，将在 Soloist 处于非活动状态时安装。"
 
-#: src/ui/soloist.rs:250
+#: src/ui/soloist.rs:248
 #, rust-format
 msgid "Version {version} · expires {date}"
 msgstr "版本 {version} · 到期日期 {date}"
@@ -2234,7 +2184,7 @@ msgstr "版本 {version} · 到期日期 {date}"
 msgid "Spotify manages audio quality."
 msgstr "音质由 Spotify 管理。"
 
-#: src/ui/soloist.rs:263
+#: src/ui/soloist.rs:261
 msgid "Setup, privacy and limitations"
 msgstr "设置、隐私和限制"
 
@@ -3764,6 +3714,62 @@ msgstr ""
 "Spotifast 需要支持 OpenGL 2.0 或更高版本的显卡驱动程序，而这台电脑或虚拟机没"
 "有提供。请安装显卡驱动程序，或为虚拟机开启 GPU 加速。要打开 {url} 了解更多"
 "吗？"
+
+#~ msgid "Spotify's own player, with lossless support."
+#~ msgstr "Spotify 官方播放器，支持无损音频。"
+
+#~ msgid ""
+#~ "You'll need Spotify Premium, your personal Soloist key and one pairing in "
+#~ "Spotify. Spotifast handles the download and updates."
+#~ msgstr ""
+#~ "需要 Spotify Premium、你的个人 Soloist 密钥，以及在 Spotify 中完成一次配"
+#~ "对。Spotifast 会负责下载和更新。"
+
+#~ msgid ""
+#~ "For local files and full queue editing, use the built-in player. You can "
+#~ "switch later in Settings."
+#~ msgstr ""
+#~ "如需播放本地文件和完整的队列编辑功能，请使用内置播放器。稍后可在设置中切"
+#~ "换。"
+
+#~ msgid ""
+#~ "Create a Soloist key in Spotify's developer dashboard. This is separate "
+#~ "from your Web API app's Client ID."
+#~ msgstr ""
+#~ "在 Spotify 开发者控制台中创建 Soloist 密钥。它与你的 Web API 应用的 "
+#~ "Client ID 不同。"
+
+#~ msgid ""
+#~ "Soloist makes its own Spotify connections. Spotifast's proxy settings do "
+#~ "not route its audio traffic."
+#~ msgstr ""
+#~ "Soloist 自行连接 Spotify。Spotifast 的代理设置不适用于 Soloist 的音频流"
+#~ "量。"
+
+#~ msgid ""
+#~ "Downloads directly from Spotify and saves your key in the system "
+#~ "credential store. By enabling Soloist, you use Spotify's separate "
+#~ "software under its terms."
+#~ msgstr ""
+#~ "直接从 Spotify 下载，并将密钥保存在系统凭据存储中。启用 Soloist 即表示你使"
+#~ "用 Spotify 的独立软件，并遵守其条款。"
+
+#~ msgid ""
+#~ "Open Spotify on the same network, using the account signed in here. In "
+#~ "the device picker, choose:"
+#~ msgstr "在同一网络上打开 Spotify，使用此处登录的账号。在设备列表中选择："
+
+#~ msgid ""
+#~ "Spotifast will notice when pairing finishes. Future starts reconnect "
+#~ "automatically."
+#~ msgstr "Spotifast 会检测到配对完成。以后启动时会自动重新连接。"
+
+#~ msgid ""
+#~ "If this takes a while, make sure Spotify is signed in to the same account "
+#~ "as Spotifast, then select this device there."
+#~ msgstr ""
+#~ "如果等待较久，请确认 Spotify 与 Spotifast 登录的是同一个账号，然后在 "
+#~ "Spotify 中选择此设备。"
 
 #~ msgid ""
 #~ "For EQ, visualizers, local files and queue editing, use the built-in "
