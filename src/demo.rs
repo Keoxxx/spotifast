@@ -1531,13 +1531,22 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                 app.actions.push(Action::Next);
             }
             // Use the built-in skin for deterministic screenshots.
-            "winamp" | "winamp-bars" | "winamp-scope" => {
+            "winamp" | "winamp-bars" | "winamp-scope" | "winamp-turkish" => {
                 app.settings.winamp_window = true;
                 app.settings.skin = None;
                 // Two screen pixels per skin pixel, whatever the display, so
                 // captures match the pages that show them.
                 app.settings.skin_scale = Some(2);
-                if surface != "winamp" {
+                if surface == "winamp-turkish"
+                    && let Some(remote) = &mut app.remote
+                    && let Some(PlayableItem::Track(track)) = &mut remote.state.item
+                {
+                    // A dotless i must keep the skin font for the whole title.
+                    track.name = "Tokyo Manifesto".into();
+                    track.duration_ms = 265_000;
+                    track.artists[0].name = "Cihangir Eryıldız".into();
+                }
+                if matches!(surface, "winamp-bars" | "winamp-scope") {
                     app.settings.vis = if surface == "winamp-bars" {
                         crate::settings::VisMode::Bars
                     } else {
